@@ -1,5 +1,12 @@
 # Integration contract (v4 — assigned experiments and unified reports)
 
+Execution-fact extension: every prepared model context includes `execution_state`
+with current public revision, this request's commit revisions and recent settled
+outcomes. Native superseded receipts retain their original request/call association
+and distinguish skipped from attempted-but-uncommitted calls. Previously committed
+calls retain their true revision. This does not classify speech semantics or
+guarantee that a model follows the facts; see [runtime review](RUNTIME_TRUTH_REVIEW.md).
+
 Current execution extension: [GOAL_EXECUTION.md](GOAL_EXECUTION.md). `revise_analysis` is the primary single-call analytical edit with flat source fields. `preview_revision` remains for explicit preview workflows but no longer advertises an `evidence` object in its model schema; manual HTTP/internal payloads still support their existing evidence references. Request-scoped execution receipts, provider settlement and awaited voice shutdown are described below.
 
 Current extension: [JARVIS_ADAPTATION.md](JARVIS_ADAPTATION.md) specifies dual-time packages, candidate tools, exact outbound request records, AudioWorklet receipts and delivery reports. Images include captured_client_ms/client_clock_id; a frame without a calibrated capture is retained but cannot qualify for an application evidence package. Native history remains outside package freezing.

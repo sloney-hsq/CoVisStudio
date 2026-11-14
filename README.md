@@ -123,6 +123,17 @@ npm --prefix frontend run build
 Tests use local fixtures or authored Olist operations unless an explicit real-run
 flag is supplied. Local tests do not contact paid model services.
 
+The complete-flow driver now exports `video/recording-with-audio.mp4` after closing
+the API. It mixes the injected user recordings with only the assistant samples
+confirmed as played, retaining interruptions and silent gaps. This is an offline
+reconstruction aligned to the traced browser clock and first video frame, not a
+microphone recording of the room. The original silent video and WAVs remain intact.
+Existing complete-flow archives can be converted without any API calls:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\render_recording_audio.py traces\complete-flow-20261113\run
+```
+
 ## Code and documentation
 
 | Location | Responsibility |

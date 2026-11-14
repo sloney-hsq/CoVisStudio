@@ -85,6 +85,12 @@ def stage_wait_result(events, request_id, *, editing=True):
     return 'pending'
 
 
+def stage_request_id(events, start_index):
+    """Follow VAD fragments belonging to this injected clip, not an obsolete prefix."""
+    accepted = [e for e in events if e['name'] in ('speech_start', 'request_accepted') and e['index'] >= start_index]
+    return accepted[-1]['request_id'] if accepted else None
+
+
 def finish_reason(report, events):
     if report.get('edit_not_committed'):
         return 'edit_not_committed'
@@ -122,7 +128,8 @@ async def run_case(args, names, report, settings):
         async with async_playwright() as playwright:
             browser = await playwright.chromium.launch(headless=True, args=['--autoplay-policy=no-user-gesture-required'])
             context = await browser.new_context(viewport={'width': 2560, 'height': 1440}, device_scale_factor=1.5,
-                                                record_video_dir=str(args.output_dir / 'video'))
+                                                record_video_dir=str(args.output_dir / 'video'),
+                                                record_video_size={'width': 1920, 'height': 1080})
             await context.tracing.start(screenshots=True, snapshots=True, sources=True)
             await context.add_init_script(microphone_script({name: args.audio_dir / f'{name}.wav' for name in names}))
             page = await context.new_page()
@@ -223,8 +230,10 @@ async def run_case(args, names, report, settings):
                             break
                         stage['request_id'] = accepted[-1]['request_id']
                         if index:
-                            await wait_until(lambda: stage_wait_result(workspace.trace.events, stage['request_id']) != 'pending'
-                                or workspace.voice is None, 35)
+                            def edit_settled():
+                                stage['request_id'] = stage_request_id(workspace.trace.events, stage['input_start_event_index'])
+                                return stage_wait_result(workspace.trace.events, stage['request_id']) != 'pending' or workspace.voice is None
+                            await wait_until(edit_settled, 35)
                             if stage_wait_result(workspace.trace.events, stage['request_id']) != 'committed':
                                 stage['not_committed'] = True
                                 stage['terminal_events'] = request_events(workspace.trace.events, stage['request_id'])
@@ -370,6 +379,10 @@ async def main():
     finally:
         save(args.output_dir, report)
         print(json.dumps({'status': report['status'], 'report': str(args.output_dir / 'report.json')}))
+    # Media export is offline and must not rewrite the original model outcome.
+    if report.get('browser_input_segments'):
+        from scripts.render_recording_audio import render
+        print(json.dumps({'recording_with_audio': str(render(args.output_dir))}))
     if report['status'] == 'failed':
         raise SystemExit(1)
 

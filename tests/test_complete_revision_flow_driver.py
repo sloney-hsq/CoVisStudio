@@ -1,5 +1,5 @@
 """Offline control checks for the authored voice driver; no model connection."""
-from scripts.verify_complete_revision_flow import stage_wait_result
+from scripts.verify_complete_revision_flow import stage_wait_result, stage_request_id
 
 
 def event(name, request_id='r1', **fields):
@@ -29,3 +29,14 @@ def test_initial_explanation_no_changes_is_expected():
 def test_failure_and_confirmation_are_uncommitted():
     for status in ('failed', 'awaiting_confirmation'):
         assert stage_wait_result([event('request_outcome', status=status)], 'r1') == 'not_committed'
+
+
+def test_fragment_supersession_follows_latest_request_until_terminal():
+    events = [event('request_accepted', 'old', index=10),
+              event('speech_start', 'new', index=11),
+              event('request_outcome', 'old', index=12, status='no_changes')]
+    assert stage_request_id(events, 10) == 'new'
+    assert stage_wait_result(events, stage_request_id(events, 10)) == 'pending'
+    events.extend([event('request_accepted', 'new', index=13),
+                   event('request_outcome', 'new', index=14, status='no_changes')])
+    assert stage_wait_result(events, stage_request_id(events, 10)) == 'not_committed'

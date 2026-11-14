@@ -309,7 +309,10 @@ def test_live_revision_during_query_prevents_obsolete_half_year_commit():
                                if e["type"] == "conversation.item.create"]
                     assert len(outputs) == 2
                     assert outputs[0]["status"] == "superseded" and not outputs[0]["committed"]
-                    assert set(outputs[0]) == {"status", "committed", "message"}
+                    assert outputs[0]['execution_attempted'] is True
+                    assert 'executed' not in outputs[0]  # Computed privately, never published.
+                    assert outputs[0]['public_revision'] == initial['revision']
+                    assert 'state' not in outputs[0] and 'result' not in outputs[0]
                     assert outputs[1]["committed"]
                     assert outputs[1]["state"]["views"][0]["source"]["end"] == "2017-04-01"
                     await browser.send(json.dumps({"type": "voice_stop"}))

@@ -90,6 +90,12 @@ async def controlled(out, data_dir):
             edit = await ws.execute('revise_analysis', {'view_ids': ['v2', 'v3'],
                 'member_action': 'use_evidence', 'candidate_id': f"chart:{old['revision']}:v1"})
             post_context = json.loads(ws.context())
+            # Normalize only the random session prefix, retaining request numbers
+            # and every execution fact in the B0/B2 comparison.
+            for payload in (context, post_context):
+                execution = payload['execution_state']
+                for item in [execution, *execution['recent_request_outcomes']]:
+                    item['request_id'] = item['request_id'].replace(ws.session['id'] + ':', '<session>:')
             # A local proposal UUID is transport identity; card.condition remains visible.
             if post_context['last_proposal']:
                 post_context['last_proposal']['id'] = '<local-proposal-id>'

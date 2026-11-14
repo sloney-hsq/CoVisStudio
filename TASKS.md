@@ -1,5 +1,32 @@
 # Implementation and acceptance — 2026-11-13
 
+## Runtime execution facts after external review — local only
+
+- Every prepared response now includes request-scoped commit facts and recent
+  settled outcomes, derived from the ledger in both B0 and B2. Current chart
+  context was already sent in the failed run; this is not a missing-state fix.
+- Stale native receipts include public revision and distinguish never-invoked
+  work from attempted-but-uncommitted work. Earlier legal commits remain legal.
+- The complete-flow wait follows a clip's superseding VAD request instead of
+  waiting on an obsolete prefix. Terminal no-change edits stop; discussion does not.
+- No keyword-based semantic verdict, automatic retry, VAD change or paid API call.
+  Model compliance and human interpretation remain unverified. See
+  [source review and repair boundaries](docs/RUNTIME_TRUTH_REVIEW.md).
+- Validation: initial full run 389 passed / two legacy assertions failed; after
+  updating receipt expectations and session-prefix normalization, all 46 tests in
+  the affected seven modules passed. No second full run; no real-model claim.
+
+## Browser replay with synchronized audio
+
+- Complete-flow runs export an MP4 containing injected user speech and the actual
+  played assistant sample intervals after the API closes. Interrupted unplayed
+  tails are excluded; gaps and overlap are retained. Original media is unchanged.
+- The existing failed flow now has a derived audiovisual replay and alignment
+  manifest; its review page uses this recording. This changes no test outcome.
+- Video alignment uses the first traced screencast frame and calibrated browser
+  timing; it is not a sample-exact acoustic recording. Future source videos use
+  1920×1080 capture. Conversion and verification require no model calls.
+
 ## Latest cumulative real-flow check — failed, retained
 
 - One authorized connection ended **failed/timeout at 56.36 s**, no retries.

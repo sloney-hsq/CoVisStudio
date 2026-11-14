@@ -1,5 +1,6 @@
 """Offline execution/outcome/shutdown checks; real Olist, no model connections."""
 import asyncio
+import json
 from copy import deepcopy
 from pathlib import Path
 
@@ -7,6 +8,7 @@ import pytest
 
 from backend.app import Workspace
 from backend.oracle import category_rows, numeric_rows_equal
+from backend.providers import QwenRealtime
 
 
 @pytest.fixture(scope="module")
@@ -127,6 +129,91 @@ def test_failed_settlement_reports_failure(workspace):
         outcome = ws.trace.events[-1]
         assert outcome["status"] == "failed" and not outcome["committed"]
         assert outcome["message"]
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize('condition', ['direct', 'bound_revision'])
+@pytest.mark.parametrize('reissue', [False, True])
+def test_superseded_native_call_then_reissue_or_false_claim(workspace, condition, reissue):
+    """Production native handlers and Olist; scripted decisions, no remote connection."""
+    async def run():
+        ws = workspace
+        ws.reset('live_voice', 'starter', '', condition)
+        initial = ws.store.snapshot()
+        client = QwenRealtime({}, 'live_voice', [], ws.provider_event, ws.execute_model)
+        wire = []
+
+        class Socket:
+            async def send(self, text):
+                message = json.loads(text)
+                wire.append(message)
+                if message['type'] == 'conversation.item.create':
+                    await client._handle({'type': 'conversation.item.created', 'item': message['item']})
+            async def close(self):
+                pass
+
+        client.ws = Socket()
+        ws.voice = client
+        async def utterance(item, text):
+            await client._speech_started(item)
+            await client._handle({'type': 'conversation.item.input_audio_transcription.completed',
+                                  'item_id': item, 'transcript': text})
+        call = {'type': 'function_call', 'name': 'revise_analysis', 'call_id': 'old-call',
+                'arguments': json.dumps({'view_ids': ['v2', 'v3'], 'member_action': 'keep_current',
+                                         'end': '2017-04-01'})}
+        async def done(rid, calls):
+            await client._handle({'type': 'response.done', 'response': {
+                'id': rid, 'status': 'completed', 'output': calls}})
+            await asyncio.gather(*list(client.jobs))
+        try:
+            await utterance('prefix', 'Change charts two and three to Q1.')
+            await utterance('tail', 'Keep their current categories and metrics.')
+            await client._handle({'type': 'response.created', 'response': {'id': 'old'}})
+            await done('old', [call])
+            receipt = json.loads(next(e['item']['output'] for e in wire if e['type'] == 'conversation.item.create'))
+            assert receipt['executed'] is False and receipt['committed'] is False
+            assert receipt['public_revision'] == initial['revision']
+            assert ws.store.snapshot() == initial
+            assert any(e['name'] == 'superseded_receipt' for e in ws.trace.events)
+            prepared = json.loads([e for e in wire if e['type'] == 'session.update'][-1]['session']['instructions'].split('\n')[-1])
+            assert prepared['execution_state']['request_committed'] is False
+            await client._handle({'type': 'response.created', 'response': {'id': 'current'}})
+            rid = 'current'
+            if reissue:
+                await done(rid, [{**call, 'call_id': 'new-call'}])
+                rid = 'followup'
+                await client._handle({'type': 'response.created', 'response': {'id': rid}})
+            await client._handle({'type': 'response.audio_transcript.done', 'response_id': rid,
+                                  'transcript': 'Charts two and three now show Q1.'})
+            await done(rid, [])
+            outcome = [e for e in ws.trace.events if e['name'] == 'request_outcome'][-1]
+            assert outcome['committed'] is reissue
+            assert outcome['status'] == ('committed' if reissue else 'no_changes')
+            assert ws.store.state['revision'] == initial['revision'] + int(reissue)
+            await utterance('next', 'Explain the current dates.')
+            prepared = json.loads([e for e in wire if e['type'] == 'session.update'][-1]['session']['instructions'].split('\n')[-1])
+            state = prepared['execution_state']
+            assert state['request_committed'] is False
+            assert state['recent_request_outcomes'][-1]['committed'] is reissue
+            assert prepared['current_dashboard'] == ws.store.snapshot()
+            assert_oracle(ws, ws.store.snapshot())
+        finally:
+            await client.close()
+            ws.voice = None
+    asyncio.run(run())
+
+
+def test_superseded_receipt_does_not_call_prepared_work_unexecuted(workspace):
+    async def run():
+        ws = workspace
+        ws.reset('live_voice', 'starter', '')
+        origin = await accepted(ws, 'computed')
+        receipt = await ws.provider_event({'type': 'superseded_receipt',
+            'context': origin, 'execution_attempted': True})
+        assert receipt['execution_attempted'] is True
+        assert receipt['committed'] is False
+        assert 'executed' not in receipt
+        assert receipt['public_revision'] == ws.store.state['revision']
     asyncio.run(run())
 
 

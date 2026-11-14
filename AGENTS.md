@@ -1,38 +1,86 @@
-# CoVis Studio
+# CoVisStudio — current working agreement
 
-Current 2026-11-13 delivery: see docs/REVISION_SUPPORT_DELIVERY.md. The shared
-revision compiler now archives the exact source patch and actual untouched views;
-correction must preserve original targets and per-view measures. Independent final
-scoring follows still-active cumulative human intent, not every historical request.
-Two explicitly user-authorized real checks passed and were closed; this completed
-authorization is not permission for automatic future calls. B0/B2 remain the only
-primary participant conditions. Secrets and raw traces must stay outside GitHub.
+Read README.md, TASKS.md and docs/CONTRACT.md before editing. Preserve existing
+changes. This is an independent, single-process laboratory workspace; do not
+modify VerbalVis or DuplexVisEval. All participant UI and assistant instructions
+are English. Use real Olist computations.
 
-Current delivery: read docs/REVISION_STUDY_DELIVERY.md and docs/FORMAL_STUDY.md. The participant
-treatment is inline Sources / Change / Keep & release support over shared execution. New study_*
-materials allow cohort choices; old exp_* fixed-answer checks remain authored diagnostics.
-Formal tasks lock direct/bound_revision and one live_voice window of at most 60 seconds within
-480 task seconds. Independent intent locks, terminal episode designation and SQL scores are
-researcher-only sidecars; never provide them to model inputs. Preserve finished session.json
-through review/export/disconnect. Missing intent/playback remains unknown. Material approval,
-human coding/listening and actual participant effects remain pending; local tests do not fill them.
+## Research scope
 
-Current execution update: follow `docs/GOAL_EXECUTION.md` as well as the protocol. Use flat `revise_analysis` for explicit analytical changes; preserve shared direct/bound execution and existing saved-set tools. Do not silently coerce nested JSON strings or add forced-tool fields unsupported by the configured Realtime protocol. Receipt/outcome association is by request ID; no-change discussion is neutral. Failed tool receipts do not trigger an automatic model continuation. Two earlier real attempts failed and remain preserved; this optimization is locally verified only and does not authorize further real calls.
+The primary comparison is B0 (direct) versus B2 (bound_revision), both in the
+same full-duplex environment. Study the support package for separating historical
+evidence from current edit scope: final intent consistency, interface-assisted
+interpretation and repair cost. Do not claim full-duplex superiority, a new
+interruption algorithm, or participant benefits from implementation tests.
 
-2026-11-13 current implementation scope: follow `docs/UNIFIED_RESEARCH_PROTOCOL.md` and `docs/STAGE1_IMPLEMENTATION.md`. Stage 1 adds measurement only and preserves onset revocation/stop. No real API calls are authorized by this delivery. The next primary study has B0/B2 only, both full-duplex; existing runtime condition names and old ablation records remain historical apparatus, not evidence of completed B0/B2 parity. Do not claim complete evidence freezing or episode scoring from instrumentation alone.
+Follow docs/UNIFIED_RESEARCH_PROTOCOL.md and docs/FORMAL_STUDY.md. Four business
+families in study_* are participant materials. Earlier biz_*, exp_*, rev_* and
+unbound_preview remain historical/diagnostic apparatus, not additional primary
+conditions. Preserve archived allocation and original attempts.
 
-Current Jarvis adaptation supersedes the Stage 1 playback estimate: see docs/JARVIS_ADAPTATION.md. AudioWorklet receipts, application evidence packages and dual-time cutoff, exact outbound model-input archives, shared direct/bound candidate compilation, and separate execution/delivery reports are implemented. Native provider history is explicitly not frozen. Human intent/semantics/listening remain pending; no extra experimental condition or paid coordinator is introduced. Latest verification remains local-only.
+Both primary conditions retain the same saved-set and evidence-candidate access,
+member resolution, tools, compiler, permission checks and model budgets. Historical
+members do not restore historical dates, region or metrics. Fixed membership and
+reranking are distinct. Cards reflect actual compiled changes and untouched views;
+correction preserves original targets and per-view metrics.
 
-Independent laboratory project. Read README.md, TASKS.md and docs/CONTRACT.md before editing.
-All participant-facing UI and assistant instructions are English. Use real Olist computations only.
-Keep implementation direct: no automatic retries, speculative compatibility layers, recovery frameworks or mock model in production.
-Keep existing VerbalVis and DuplexVisEval projects untouched. Do not read/copy their credentials unless the user explicitly identifies a configuration to use. Model connections require an explicit user action. On 2026-11-13 the user authorized an API test using their env configuration; this run is capped at one connection of at most 60 seconds, input segments at most 10 seconds, with no automatic retries. Earlier local-only builds and their evidence remain local-only.
-One process and one active workspace. Keep meaningful tool/schema validation, atomic chart commits and stale-response suppression: these are normal task correctness, not speculative failure handling.
-The user explicitly identified DuplexVisEval and VerbalVis API configuration on 2026-11-13. CoVisStudio may read the explicitly selected `C:\DuplexVisEval\.env.local` (DASHSCOPE_API_KEY) for the authorized single short test. Do not copy or print keys; close the provider and isolated test process afterward. The normal app still loads its own file unless an env path is explicitly supplied.
-Never equate local provider fixtures with real model validation or human review. Preserve verification records in ignored traces/.
-All three conditions expose the same save/list/apply category-set tools. Preserve this strong baseline; do not force controls to copy member names. Four business-goal tasks are primary participant materials; eighteen frozen revision cases remain separate diagnostics. Record actual card exposure, opening and successful user application separately; never infer reading from a generated preview. Business conclusions and understanding remain human-review fields, even when technical checks pass.
-Assigned studies use eight exp_* parallel materials (two per business family), a fixed four-trial assignment, explicit Begin and terminal events. Preserve original biz_* and rev_* cases. Keep local authored evidence separate from participant data, retain all repeated/failed attempts, and never call objective structural matching empirically equal human difficulty. The 480-second task timer does not expand the 60-second voice budget. See docs/EXPERIMENT_PROTOCOL.md and the saved 30-slot allocation audit.
-Archived review reads exact attempt records without replacing the active workspace. New exports snapshot the public task brief. Coding drafts append separately, link to measured event indices and never approve human outcomes or change original traces/automatic scores. Keep repair, exploration and intentional goal changes distinct; no event-count heuristic may fill human repair metrics.
-The research question is fixed: does explicitly separating historical evidence from current edit scope reduce reference errors, loss of valid conditions and repair cost? Study configurations are direct, bound_revision and unbound_preview. Text, push_to_talk and live_voice are input transports, not the primary experimental conditions. The main participant comparison is direct versus bound_revision in the same live-voice environment; unbound_preview is a mechanism ablation. Do not claim full-duplex superiority.
-Read docs/RESEARCH_PLAN.md and docs/STUDY_PROTOCOL.md for the frozen design. Keep evaluator-only expected sources and reference trajectories out of model context. Historical evidence supplies object identities, not a rollback of the current region, dates or metrics. Unbound controls execute supplied categories without hidden correction.
-Optimize desktop layout for a 27-inch 3840x2160 display with Windows scaling (1920–2560 CSS pixels), and verify native 3840 width too. Prioritize charts, conversation and a collapsible revision journey.
+## Runtime and implementation
+
+Keep code direct: no automatic retries, speculative compatibility branches,
+recovery frameworks or production mock models. Keep normal domain/schema validation,
+private candidates, atomic commits and stale-response suppression.
+
+Use flat revise_analysis for analytical edits. Keep the declared model top_n
+decimal-string/null contract and domain integer/null contract; compile once at the
+shared gateway. Do not silently repair nested JSON strings or add unsupported
+forced-tool fields. Failed tools do not automatically trigger another model response.
+
+Speech onset revokes old publication permission and stops playback. Previously
+legal commits remain legal. Receipt/outcome association is by request ID.
+Unexecuted stale calls report no commit and the actual public revision. Every
+response preparation includes runtime execution facts and recent request outcomes;
+assistant promises are never a source of chart state. No-change discussion is
+neutral and must not be classified as a semantic error using completion keywords.
+
+AudioWorklet output samples, image delivery, rendering, visibility and commits are
+different observations. Application evidence packages use capture and availability
+cutoffs; native provider history is not frozen. Follow docs/JARVIS_ADAPTATION.md.
+Received/played audio does not establish listening, and image upload does not
+establish model visual understanding.
+
+## Interface and evidence
+
+Prioritize charts, conversation and a collapsible revision journey on a 27-inch
+4K monitor. Verify 1920/2560 CSS widths and native 3840 width. Keep experiment
+controls separate from participant analysis.
+
+Record card exposure, opening and successful application separately. Never infer
+reading from exposure. Keep explicit task start/end and one <=60-second voice
+window inside the 480-second task; input recordings are <=10 seconds. A task timer
+does not expand the voice budget.
+
+Independent intent locks, terminal episode selection and SQL scores are private
+researcher sidecars and never enter model context. Score still-active cumulative
+intent, not superseded goals. Missing intent/playback stays unknown. Distinguish
+repair from exploration and intentional goal change; no event-count heuristic
+grades human understanding. Preserve finished session.json and original traces
+through review, export and disconnect.
+
+## API and delivery
+
+Model connections require explicit user action or an unconsumed user authorization
+for a specified test. Completed historical authorizations are not permission for
+new paid calls. Use this project's local configuration unless the user explicitly
+selects another one; do not copy or print credentials. Close API connections and
+test-owned processes after each authorized test. Never restart an active user
+session merely to install changes.
+
+Keep secrets, raw Olist CSVs, traces, recordings and participant identities out of
+Git. Preserve failed and repeated attempts under ignored traces/. Audiovisual
+replays reconstructed from input clips and played output samples must be labeled
+derived; keep original media.
+
+Report actual checks and limitations. Local native-protocol fixtures are not real
+Qwen or participant evidence. Existing successful runs do not overwrite later
+failures. TASKS.md is the verification history; docs/REVISION_SUPPORT_DELIVERY.md
+describes the prior support delivery. New local repairs must be labeled local-only.

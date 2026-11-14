@@ -60,6 +60,11 @@ Use the explicit reference when the user says 'these' or 'this chart'. Ask one s
 The same tools are available in every interaction mode. Do not automatically synchronize other charts;
 apply shared edits only when requested. Reply briefly and distinguish changed, unchanged and unexecuted work.
 You may discuss an observation without editing. Never invent measurements, study scores or user intentions.
+execution_state is the runtime's account of actual commits, not an assistant interpretation.
+If it records no commit for a request, that request did not change the charts, regardless of prior speech.
+Cancelled, unexecuted calls changed nothing. If their work still applies, issue a new tool call under
+the current request. Do not apply a date-only correction on the assumption that an earlier promise ran:
+read current_dashboard and the recorded outcomes, then resolve the still-requested changes.
 """
 
 CONDITION_OPTIONS = [
@@ -576,6 +581,19 @@ class Workspace:
             await self.send({'type': 'status', 'status': 'ready'})
             return {**receipt, 'status': 'completed', 'committed': True, 'node': node, 'proposal': deepcopy(proposal)}
 
+    def execution_state(self, request_id=None):
+        """Execution facts from public state and the existing request ledger."""
+        request_id = request_id or self.trace.current.get('request_id')
+        commits = [event for event in self.trace.events
+                   if event['name'] == 'tool_committed' and event.get('request_id') == request_id]
+        outcomes = [event for event in self.trace.events if event['name'] == 'request_outcome']
+        return {'request_id': request_id, 'public_revision': self.store.state['revision'],
+                'request_committed': bool(commits),
+                'request_commit_revisions': [event['revision'] for event in commits],
+                'recent_request_outcomes': [{key: event.get(key) for key in
+                    ('request_id', 'status', 'committed', 'revision', 'view_numbers')}
+                    for event in outcomes[-6:]]}
+
     def context(self):
         snapshots, sets = self.decision_material()
         revision = self.bound_reference['revision']
@@ -587,7 +605,8 @@ class Workspace:
                     details = item['content']
                     playback[item['response_id']] = {key: details[key] for key in
                         ('response_id', 'played_samples', 'received_samples', 'interrupted', 'timing_basis') if key in details}
-        return json.dumps({'reference': self.bound_reference, 'visible_dashboard': visible,
+        return json.dumps({'execution_state': self.execution_state(),
+                           'reference': self.bound_reference, 'visible_dashboard': visible,
                            'current_dashboard': snapshots[max(snapshots)], 'evidence': self.bound_evidence,
                            'history_index': self.history_index(snapshots),
                            'category_sets': sets, 'evidence_candidates': self.candidates(),
@@ -667,6 +686,21 @@ class Workspace:
 
     async def provider_event(self, event, expected_epoch=None):
         kind = event['type']
+        if kind == 'superseded_receipt':
+            origin = event['context']
+            attempted = event['execution_attempted']
+            receipt = {'status': 'superseded', 'committed': False,
+                       'execution_attempted': attempted,
+                       'public_revision': self.store.state['revision'],
+                       'message': ('Not committed: execution was attempted before supersession. ' if attempted else
+                                   'Not executed: newer user speech superseded this response. ') +
+                                  'This call changed no public charts. Issue a new call under the current '
+                                  'request if this work is still required.'}
+            if not attempted:
+                receipt['executed'] = False
+            with self.trace.scope(origin):
+                self.trace.record('superseded_receipt', receipt=receipt)
+            return receipt
         if kind == 'audio_input':
             origin = self.trace.origin() if event['mode'] == 'push_to_talk' else {}
             with self.trace.scope(origin):
