@@ -23,20 +23,23 @@ def image_sequences(events, session):
     sequences = []
     for commit in (e for e in events if e['name'] == 'tool_committed'):
         revision = commit['revision']
-        result = {'revision': revision, 'commit_index': commit['index'], 'passed': False}
+        request_id = commit.get('request_id')
+        result = {'revision': revision, 'commit_index': commit['index'], 'request_id': request_id, 'passed': False}
         capture = next((e for e in events if e['name'] == 'image_captured'
                         and e['index'] > commit['index'] and e['reference']['revision'] == revision), None)
         if capture:
             jpg = (session / capture['file']).read_bytes()
             digest = hashlib.sha256(jpg).hexdigest()
             image = next(((e, w, valid) for e, w, valid in sent
-                          if e['index'] > capture['index'] and w['type'] == 'input_image_buffer.append'
+                          if e['index'] > capture['index'] and e.get('request_id') == request_id
+                          and w['type'] == 'input_image_buffer.append'
                           and base64.b64decode(w['image']) == jpg), None)
             receipt = next(((e, w, valid) for e, w, valid in sent
                             if e['index'] > commit['index'] and w['type'] == 'conversation.item.create'
                             and w['item'].get('call_id') == commit.get('call_id')), None)
             response = next(((e, w, valid) for e, w, valid in sent
-                             if image and e['index'] > image[0]['index'] and w['type'] == 'response.create'), None)
+                             if image and e['index'] > image[0]['index']
+                             and e.get('request_id') == request_id and w['type'] == 'response.create'), None)
             delivery = next((e for e in events if e['name'] == 'image_delivery'
                              and e.get('status') == 'sent' and e.get('frame_id') == capture['file']), None)
             state = json.loads((session / f'state-r{revision}.json').read_text(encoding='utf-8'))
@@ -50,7 +53,7 @@ def image_sequences(events, session):
                           receipt_index=receipt[0]['index'] if receipt else None,
                           next_response_index=response[0]['index'] if response else None,
                           delivery_index=delivery['index'] if delivery else None)
-            result['passed'] = bool(image and receipt and response and delivery and render_complete
+            result['passed'] = bool(request_id and image and receipt and response and delivery and render_complete
                 and digest == capture.get('sha256') and all(x[2] for x in (image, receipt, response))
                 and capture['index'] < receipt[0]['index'] < image[0]['index']
                 < delivery['index'] < response[0]['index'])
@@ -66,10 +69,12 @@ def audit_run(run, data_dir):
     delivery = audit_session(session, data_dir)
     ordering = image_sequences(report['events'], session)
     checks = dict(report['evaluation']['checks'])
+    checks['original_driver_completed'] = report['status'] == 'passed' and report['finish_reason'] == 'completed'
     checks['every_commit_fresh_native_jpeg_before_followup'] = bool(ordering) and all(x['passed'] for x in ordering)
     checks['all_archived_states_independent_sql'] = bool(delivery['numeric_audit']) and all(
         x['status'] == 'passed' for x in delivery['numeric_audit'])
-    return {'original_driver_status': report['status'], 'checks': checks, 'passed': all(checks.values()),
+    return {'original_driver_status': report['status'], 'original_finish_reason': report['finish_reason'],
+            'checks': checks, 'passed': all(checks.values()),
             'post_commit_sequences': ordering, 'independent_delivery': delivery,
             'boundary': 'Native JPEG bytes were delivered before follow-up; model visual inspection and human listening remain unverified.'}
 

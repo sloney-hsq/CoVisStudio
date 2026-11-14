@@ -4,12 +4,12 @@
 
 ## 交付与编译
 
-- `main-rerank.pdf`：本轮更新后的六页正文，三幅图、十一条实际引用文献。现有 `main.pdf` 被其他进程占用，保留旧版；本轮以 `main-rerank.pdf` 及其渲染、QA为准，未关闭用户应用。
+- `main-current.pdf`：本轮更新后的六页正文，三幅图、十一条实际引用文献。现有 `main.pdf` 被其他进程占用，保留旧版；本轮以 `main-current.pdf` 及其渲染、QA为准，未关闭用户应用。
 - `main.tex`：可编辑源文，IEEEtran conference 默认10pt、双栏、letter；没有缩页边距或正文字号。
 - `references.bib`、`figures/`、`figure_sources/`：参考文献、矢量图和图源。
 - `notes/RERANK_REPAIR_UPDATE.md`：此次事实更新与证据索引；`DEEP_REVIEW_UPDATE.md` 保留上一阶段记录。
 
-通常运行 `./build.ps1`；当前锁定期间以 `xelatex -jobname=main-rerank main.tex`、`bibtex main-rerank`、同一XeLaTeX命令两遍生成另名PDF。按 XeLaTeX → BibTeX → XeLaTeX 两遍编译。使用 TeX Live 的 Fandol 中文字体与 TeX Gyre Termes 西文字体；Overleaf 选择 XeLaTeX。附带 IEEEtran.cls 和 IEEEtran.bst 保留其原许可证。作者栏仍为中文审阅说明，正式提交前必须填真实作者单位；没有虚构资助、伦理批准或录用信息。
+通常运行 `./build.ps1`；当前锁定期间以 `xelatex -jobname=main-current main.tex`、`bibtex main-current`、同一XeLaTeX命令两遍生成另名PDF。按 XeLaTeX → BibTeX → XeLaTeX 两遍编译。使用 TeX Live 的 Fandol 中文字体与 TeX Gyre Termes 西文字体；Overleaf 选择 XeLaTeX。附带 IEEEtran.cls 和 IEEEtran.bst 保留其原许可证。作者栏仍为中文审阅说明，正式提交前必须填真实作者单位；没有虚构资助、伦理批准或录用信息。
 
 本轮已重新编译六页并逐页渲染检查。中英文必须各自检查篇幅，中文六页不保证翻译后仍为六页。会议要求的核验入口为 [CSCWD 2027 投稿页](https://cscwd2027.dailyeliteevents.com.au/submission.html)，提交前需再次核对当时要求。
 
@@ -51,3 +51,5 @@ DataTone、CLEO、VoCa 已按一手来源复核。它们提供歧义纠正、执
 - `docs/UNIFIED_RESEARCH_PROTOCOL.md`、`STUDY_PARITY_AUDIT.md`、`RESEARCH_CLAIM_REVIEW.md`：当前协议、应用等价性边界和研究主张复核。
 
 图1和图2为示意，图3为此前本地脚本验证截图，不是假造真实模型或参与者成功画面。没有新增公开上传；数据、音频、traces与凭证不随论文自动公开。
+
+本轮共享支持工程诊断：35.360/33.141秒，两次均完成，36项独立SQL通过；原始驱动completed及同请求续答关联经加强审核。仍保留ASR错误及原生音频因果未知，不作参与者收益或核听结论。

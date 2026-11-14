@@ -1,5 +1,13 @@
 # CoVis Studio
 
+Current 2026-11-13 delivery: see docs/REVISION_SUPPORT_DELIVERY.md. The shared
+revision compiler now archives the exact source patch and actual untouched views;
+correction must preserve original targets and per-view measures. Independent final
+scoring follows still-active cumulative human intent, not every historical request.
+Two explicitly user-authorized real checks passed and were closed; this completed
+authorization is not permission for automatic future calls. B0/B2 remain the only
+primary participant conditions. Secrets and raw traces must stay outside GitHub.
+
 Current delivery: read docs/REVISION_STUDY_DELIVERY.md and docs/FORMAL_STUDY.md. The participant
 treatment is inline Sources / Change / Keep & release support over shared execution. New study_*
 materials allow cohort choices; old exp_* fixed-answer checks remain authored diagnostics.

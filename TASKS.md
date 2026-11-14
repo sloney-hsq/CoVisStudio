@@ -1,5 +1,36 @@
 # Implementation and acceptance — 2026-11-13
 
+## Current delivery — correctable interpretation and active terminal intent
+
+- Revision cards now retain the exact compiled patch, fixed-versus-ranked membership,
+  current computation scope and immutable untouched-view facts. Correct interpretation
+  restores original target IDs instead of the currently selected chart, preserving
+  distinct measures across target charts. Participant-facing wording is plain English.
+- Shared model instructions explicitly distinguish historical identities from current
+  conditions and respect a later request to release a fixed set and rerank.
+- Private independent scoring follows actual episode chronology and the still-active
+  cumulative intent. Per-view overrides express different continuing obligations;
+  later unknown intent cannot be replaced with an earlier successful score.
+- Offline real-run audits now require the original live attempt to have completed,
+  and associate the fresh JPEG and following response with the committing request.
+- Verification: **377 backend tests**, **51 frontend tests**, production build and
+  **14 local browser checks** passed. Browser checks cover actual correction controls,
+  logging, B0/B2 shared execution and 1920/2560/3840 CSS-pixel layouts.
+- Exactly two newly authorized real Qwen Realtime attempts passed: reranking
+  **35.360 s**, historical-member reuse **33.141 s**. Input segments were
+  **4.24/8.08 s** and **4.24/6.64 s**. Both revisions occurred during actual playback;
+  no automatic retries or new TTS calls. **36/36** archived SQL checks and both
+  same-request post-commit JPEG sequences passed; final audio ended naturally.
+- Transcription imperfections remain recorded; human listening and participant
+  effects remain pending. These authored cases are not a B0/B2 outcome comparison.
+- Both manuscript sources and six-page PDFs are synchronized. Current Chinese PDF:
+  `paper/cscwd_zh/main-current.pdf`; English: `paper/cscwd_en/main.pdf`.
+- Current description: [revision support delivery](docs/REVISION_SUPPORT_DELIVERY.md).
+  Private real evidence: `traces/revision-support-20261113-164326/`.
+  Final browser evidence: `traces/revision-support-final-20261113/browser-20261114-045315-656196/`.
+
+The entries below preserve earlier implementation stages and their original outcomes.
+
 ## Current focused repair — declared ranking contract and real post-edit images
 
 - Added `backend/model_contract.py` and the shared `Workspace.execute_model` gateway.

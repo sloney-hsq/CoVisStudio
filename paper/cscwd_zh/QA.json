@@ -57,8 +57,14 @@
       "matches_other_language": true
     }
   },
-  "visual_review": "All six latest rendered pages inspected; no clipping, overlap, or missing figure/reference text.",
+  "visual_review": "All six current pages rendered; all-page montage inspected, Chinese page 3 also inspected separately. No clipping, overlap or missing glyphs observed.",
   "evidence_version": "rerank-repair-20261113; old versions remain separate",
   "new_api_calls_by_paper_task": 0,
-  "render_source": "C:\\CoVisStudio\\paper\\cscwd_zh\\main-rerank.pdf"
+  "render_source": "C:\\CoVisStudio\\paper\\cscwd_zh\\main-rerank.pdf",
+  "pdf": "main-current.pdf",
+  "pdf_sha256": "961ac68474ee5e48fae402c74a63fd3785823ae99ce5a2514fc9cc738ae5b6ce",
+  "source_sha256": "5133cc2a0b3c62720a63431072c16b4eeb83eebbac4c13ea39abd7d8640086cf",
+  "verification_log": "traces/intent-terminal-review/paper-zh-build4.txt",
+  "known_warning": "Existing balance package call in second column warning; no overfull box or undefined reference warning.",
+  "current_diagnostics": "02-direct 35.360 s; 03-bound_revision 33.141 s; 36 SQL checks; separate engineering records, no participant/listening effect."
 }

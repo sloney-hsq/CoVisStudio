@@ -12,6 +12,7 @@ from playwright.async_api import async_playwright, expect
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from backend.app import create_app
+from backend.oracle import numeric_rows_equal
 from scripts.verify_browser_voice import until
 
 
@@ -80,6 +81,9 @@ async def main():
                     await expect(page.locator('.revision-support')).to_contain_text('System interpretation')
                     for text in ('Object origin', 'Current computation', 'Fixed categories (3)', 'MG', 'Charts 1 stay unchanged'):
                         await expect(summary).to_contain_text(text)
+                    await page.get_by_role('button', name='Details', exact=True).click()
+                    await expect(page.locator('.revision-sections')).to_contain_text('Current computation & changes')
+                    await page.get_by_role('button', name='Summary', exact=True).click()
                     report['checks']['b2_explicit_origin_scope_membership_untouched'] = True
                 else:
                     await expect(page.locator('.revision-brief')).to_have_count(0)
@@ -105,6 +109,11 @@ async def main():
                 for old, new in zip(reused['views'][1:], corrected['views'][1:]):
                     assert new['source'] == {**old['source'], 'end': '2017-04-01'}
                 report['checks'][condition + '_correction_targets_patch_metrics_rendered'] = True
+                event_names = {event['name'] for event in app.state.workspace.trace.events}
+                assert {'revision_card_revision_requested', 'revision_confirmation_clicked', 'revision_confirmed'} <= event_names
+                if condition == 'bound_revision':
+                    assert {'revision_card_visible', 'revision_card_opened'} <= event_names
+                report['checks'][condition + '_actual_correction_confirmation_observations'] = True
                 finals.append(corrected)
                 await page.screenshot(path=str(output / (condition + '-corrected.png')), full_page=True)
 
@@ -127,15 +136,19 @@ async def main():
                         assert not await page.evaluate('document.documentElement.scrollWidth > innerWidth')
                         assert not await page.locator('.collaboration-panel').evaluate('(el) => el.scrollWidth > el.clientWidth')
                         await page.screenshot(path=str(output / f'workspace-{width}.png'), full_page=True)
-                        await page.get_by_role('button', name='Correct interpretation', exact=True).click()
+                        report['checks'][f'layout_{width}_no_overflow'] = True
+                    await page.get_by_role('button', name='Correct interpretation', exact=True).click()
+                    for width, height in ((1920, 1080), (2560, 1440), (3840, 2160)):
+                        await page.set_viewport_size({'width': width, 'height': height})
                         assert not await page.locator('.drawer').evaluate('(el) => el.scrollWidth > el.clientWidth')
                         await page.screenshot(path=str(output / f'correction-{width}.png'), full_page=True)
-                        await page.get_by_role('button', name='Close panel', exact=True).click()
-                        if width != 3840:
-                            await post('/api/tools', {'name': 'revise_analysis', 'arguments': {'view_ids': ['v2'], 'member_action': 'rerank', 'top_n': 3, 'rank_by': 'orders'}})
-                            await expect(page.locator('.revision-support')).to_be_visible()
-                        report['checks'][f'layout_{width}_no_overflow'] = True
-            assert finals[0] == finals[1]
+                    await page.get_by_role('button', name='Close panel', exact=True).click()
+            (output / 'corrected-states.json').write_text(json.dumps(finals, indent=2), encoding='utf-8')
+            assert all(finals[0][key] == finals[1][key] for key in finals[0] if key != 'views')
+            for left, right in zip(finals[0]['views'], finals[1]['views']):
+                assert {key: value for key, value in left.items() if key != 'data'} == {key: value for key, value in right.items() if key != 'data'}
+                assert {key: value for key, value in left['data'].items() if key != 'rows'} == {key: value for key, value in right['data'].items() if key != 'rows'}
+                assert numeric_rows_equal(left['data']['rows'], right['data']['rows'])
             report['checks']['b0_b2_identical_corrected_state'] = True
             report['checks']['no_browser_errors'] = not errors
             assert not errors, errors

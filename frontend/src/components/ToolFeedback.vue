@@ -11,7 +11,7 @@ const feedback = computed(() => props.result && toolFeedback(props.result))
     <TriangleAlert v-if="feedback.tone === 'failed'" :size="17"/>
     <CircleHelp v-else-if="feedback.tone === 'pending' || feedback.tone === 'neutral'" :size="17"/>
     <CheckCheck v-else :size="17"/>
-    <div><strong>{{ feedback.title }}</strong><span>{{ feedback.detail }}</span><small v-if="result.committed || result.status === 'committed'">Publication and rendering do not record user confirmation.</small></div>
+    <div><strong>{{ feedback.title }}</strong><span>{{ feedback.detail }}</span><small v-if="result.committed || result.status === 'committed'">Review the updated charts.</small></div>
   </div>
 </template>
 

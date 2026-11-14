@@ -8,3 +8,19 @@ traces/
 data/
 frontend/node_modules/
 frontend/dist/
+
+# Share only the blank configuration template
+!.env.example
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Generated paper build caches
+*.aux
+*.blg
+*.log
+*.out
+paper/**/review/
+paper/**/review-*.png
