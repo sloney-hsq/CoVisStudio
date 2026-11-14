@@ -70,7 +70,7 @@ export function chartOption(view, selected = []) {
     series: [{ type: view.chart_type === 'bar' ? 'bar' : 'line', data, barMaxWidth: 36, symbol: 'circle', symbolSize: 7,
       lineStyle: { width: 3 }, itemStyle: { borderRadius: horizontal ? [0, 5, 5, 0] : [5, 5, 0, 0] },
       areaStyle: view.chart_type === 'area' ? { opacity: 0.13 } : undefined,
-      label: { show: view.style.show_labels, position: horizontal ? 'right' : 'top', color: '#36535d', formatter: p => numberLabel(p.value), fontSize: 12 }
+      label: { show: view.style.show_labels, position: horizontal ? 'right' : 'top', color: '#36535d', formatter: p => numberLabel(p.value), fontSize }
     }]
   }
 }

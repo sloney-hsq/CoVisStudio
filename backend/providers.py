@@ -265,6 +265,7 @@ class QwenRealtime:
         if self.response_started_since_speech:
             self.speech_items.clear()
             self.speech_failed = False
+        continuation = bool(self.speech_items)
         self.response_started_since_speech = False
         self.transcript_epoch = None
         if item_id is not None:
@@ -274,7 +275,9 @@ class QwenRealtime:
         if item_id is not None:
             self.item_epochs[item_id] = self.epoch
         # Revoke Workspace permissions and stop local playback before network I/O.
-        await self.on_event({"type": "speech_start", "item_id": item_id, **offsets})
+        await self.on_event({"type": "speech_start", "item_id": item_id,
+                             "continuation": continuation,
+                             "speech_group_id": next(iter(self.speech_items), item_id), **offsets})
         if self.active is not None and self.active not in self.draining:
             await self._send({"type": "response.cancel", "response_id": self.active})
 

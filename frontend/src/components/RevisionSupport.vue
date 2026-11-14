@@ -33,5 +33,5 @@ function toggle() {
 </style>
 
 <style scoped>
-.revision-interpretation-label{display:block;font-size:11px;line-height:1.5;color:#647a6c;margin-bottom:2px}.revision-support-footer{position:sticky;bottom:0;background:#f5f9f3;padding:8px 0 2px;border-top:1px solid #dce6dd;margin-top:9px;z-index:1}.revision-support-footer .revision-publication-note{margin-top:0}.revision-support-footer .revision-support-actions{margin-top:6px}.compact .revision-support-footer{background:#f7f8f5}.revision-question{padding:8px;margin-bottom:8px}.revision-detail-toggle{font-size:12px;flex:none}
+.revision-interpretation-label{display:block;font-size:11px;line-height:1.5;color:#647a6c;margin-bottom:2px}.revision-support-footer{background:#f5f9f3;padding:8px 0 2px;border-top:1px solid #dce6dd;margin-top:9px;z-index:1}.revision-support-footer .revision-publication-note{margin-top:0}.revision-support-footer .revision-support-actions{margin-top:6px}.compact .revision-support-footer{background:#f7f8f5}.revision-question{padding:8px;margin-bottom:8px}.revision-detail-toggle{font-size:12px;flex:none}
 </style>

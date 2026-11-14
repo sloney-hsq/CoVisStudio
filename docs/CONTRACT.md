@@ -79,6 +79,21 @@ The microphone worklet owns capture boundaries: start resets the segment, pause 
 
 ## Historical evidence and revision tools (backend/revisions.py)
 
+`prepare_revision(..., selected_evidence=...)` produces one `execution_provenance`
+record used by the receipt, card and trace. It contains `selected_source_at_onset`,
+`executed_source`, `source_basis`, `overrides_selection` and `members_equal`.
+Chart candidate IDs have format `chart:{revision}:{view_id}`; `chart:3:v1` means
+chart 1 at revision 3. An omitted candidate uses the bound selection; an explicit
+candidate remains an allowed override. Member equality never merges identities.
+For manual edits, selected context is captured at invocation, not an audio onset.
+
+`use_evidence` persists the consumed reference as each target's `membership_origin`.
+Scope-only edits retain it. Reranking clears it only on the targeted views, and its
+card has no executed historical source. Direct replacement of membership through
+`edit_charts` also clears the old attribution rather than inventing a new source.
+Saved states and undo/restore retain their original provenance. The old records are
+not rewritten. See [the review and scoring contract](PROVENANCE_REVIEW.md).
+
 The model receives the same tool definitions in every condition; model history/set/candidate reads use the current application evidence package. `read_history({revision?})` returns a complete saved state, or a version index when revision is omitted. It never restores the canvas. The chart and saved-set tools remain available alongside list_evidence_candidates and apply_evidence_candidate. Candidate-based preview_revision accepts candidate_id instead of an explicit evidence object.
 
 `revise_analysis({view_ids,member_action,candidate_id?,start?,end?,region?,metric?,dimension?,status?,categories?,top_n?,rank_by?,needs_confirmation?,question?})` validates flat fields, compiles a normal private revision, and applies it immediately for an explicit request. When `needs_confirmation=true`, it returns `awaiting_confirmation` without publishing. Omitted source fields remain unchanged; dates use inclusive start/exclusive end. Both direct and bound paths share this execution mechanism. B2 exposes its revision card; B0 retains the same exact-member resolution. No string-to-object repair or hidden reference answer is introduced.

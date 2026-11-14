@@ -34,6 +34,7 @@ def coding_template(packet):
             'status': 'pending', 'intent': {
                 'status': 'unknown', 'target_view_ids': [], 'source_patch': {},
                 'members': {'mode': 'keep_current'},
+                'source_requirement': {'mode': 'unknown', 'candidate_id': None, 'reason': ''},
                 'retained_fields': [], 'released_fields': [], 'view_overrides': {},
                 'reason': '', 'evidence_indices': []},
             'speech_verification': 'pending'}
@@ -62,7 +63,7 @@ def lock_intent(packet, coder_a, coder_b, adjudication):
         for view_id, override in intent.get('view_overrides', {}).items():
             if view_id not in intent['target_view_ids']:
                 raise ValueError('Per-view overrides must identify an intended target view.')
-            if set(override) - {'source_patch', 'members', 'retained_fields', 'released_fields'}:
+            if set(override) - {'source_patch', 'members', 'source_requirement', 'retained_fields', 'released_fields'}:
                 raise ValueError('Per-view overrides use the existing analytical intent fields.')
             validate_resolved_intent({**intent, **override, 'target_view_ids': [view_id]})
     record = {'schema': SCHEMA, 'packet_id': packet['packet_id'], 'packet_hash': digest(packet),
@@ -102,6 +103,13 @@ def validate_resolved_intent(intent):
         raise ValueError('Retained fields cannot also be changed or released.')
     if not released <= changed:
         raise ValueError('Released fields need an explicit replacement; unresolved choices must stay unknown.')
+    requirement = intent.get('source_requirement', {'mode': 'unknown'})
+    if requirement['mode'] not in ('exact', 'members_only', 'none', 'unknown'):
+        raise ValueError('Code whether source identity is exact, members-only, not required, or unknown.')
+    if requirement['mode'] != 'unknown' and not requirement.get('reason', '').strip():
+        raise ValueError('Explain the source requirement using the cited participant evidence.')
+    if requirement['mode'] == 'exact' and not requirement.get('candidate_id'):
+        raise ValueError('An exact source requirement needs an independently coded candidate ID.')
 
 
 def state_at(archive, index):
@@ -137,6 +145,7 @@ def expected_sources(base, intent):
 
 def compare_state(base, observed, intent, data):
     expected = expected_sources(base, intent)
+    original = {view['id']: view for view in base['views']}
     actual = {view['id']: view for view in observed['views']}
     checks = [{'name': 'view_membership', 'passed': actual.keys() == expected.keys()}]
     for view_id, source in expected.items():
@@ -155,9 +164,28 @@ def compare_state(base, observed, intent, data):
         else:
             checks.append({'name': f'{view_id}:independent_numbers',
                            'passed': numeric_rows_equal(view['data']['rows'], category_rows(data, source))})
+        if view_id in intent['target_view_ids']:
+            scoped = {**intent, **intent.get('view_overrides', {}).get(view_id, {})}
+            requirement = scoped.get('source_requirement', {'mode': 'unknown'})
+            actual_origin = view.get('membership_origin')
+            if requirement['mode'] == 'exact':
+                passed = actual_origin['candidate_id'] == requirement['candidate_id'] if actual_origin else None
+            else:
+                passed = None if requirement['mode'] == 'unknown' else True
+            checks.append({'name': f'{view_id}:provenance', 'passed': passed,
+                           'requirement': requirement, 'actual': actual_origin})
+        else:
+            checks.append({'name': f'{view_id}:preserved_origin',
+                           'passed': view.get('membership_origin') == original[view_id].get('membership_origin')})
     values = [check['passed'] for check in checks]
     correctness = False if False in values else None if None in values else True
-    return {'correct': correctness, 'checks': checks}
+    provenance = [c['passed'] for c in checks if c['name'].endswith(':provenance')]
+    numeric = [c['passed'] for c in checks if c['name'].endswith(':independent_numbers')]
+    analytical = [c['passed'] for c in checks if not c['name'].endswith((':provenance', ':independent_numbers'))]
+    combine = lambda values: False if False in values else None if None in values else True
+    return {'correct': correctness, 'checks': checks,
+            'analytical_correct': combine(analytical), 'numeric_correct': combine(numeric),
+            'provenance_correct': combine(provenance)}
 
 
 def score_episode(archive, packet, lock, end_event_index, data):
@@ -176,7 +204,7 @@ def score_episode(archive, packet, lock, end_event_index, data):
               'archive_hash': digest(archive), 'packet_hash': digest(packet),
               'request_ids': sorted({event['request_id'] for event in archive['events']
                   if onset <= event['index'] <= end_event_index and event.get('request_id')}),
-              'limits': 'Analytical objects, scopes and SQL values only. Playback, understanding and repair are independent human assessments. Intermediate differences are not automatically errors.'}
+              'limits': 'Analytical objects, scopes, independently required source identity and SQL values. Playback, understanding and repair need separate human assessment. Selection is not intent ground truth.'}
     if lock is None:
         return result
     if lock['status'] != 'locked' or lock['packet_hash'] != digest(packet) or lock['lock_hash'] != digest({k: v for k, v in lock.items() if k != 'lock_hash'}):
@@ -191,6 +219,8 @@ def score_episode(archive, packet, lock, end_event_index, data):
                     and e['name'] in ('tool_committed', 'undo', 'restore')]
     result.update(base_revision=base['revision'], final_revision=final['revision'],
                   final_correct=final_score['correct'], final_checks=final_score['checks'],
+                  final_components={key: final_score[key] for key in
+                      ('analytical_correct', 'numeric_correct', 'provenance_correct')},
                   publication_indices=[e['index'] for e in publications])
     if publications:
         first = compare_state(base, state_at(archive, publications[0]['index']), lock['intent'], data)

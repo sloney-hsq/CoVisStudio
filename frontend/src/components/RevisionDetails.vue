@@ -1,13 +1,14 @@
 <script setup>
 import { computed } from 'vue'
 import { humanize, formatRange } from '../chart.js'
-import { sourceLabels, sourceValue, keptConditions, computationScope, membershipRule, untouchedNumbers } from '../revisionDisplay.js'
+import { sourceLabels, sourceValue, keptConditions, computationScope, membershipRule, untouchedNumbers, provenanceNotice } from '../revisionDisplay.js'
 const props = defineProps({ card: Object, state: Object })
 const untouched = computed(() => untouchedNumbers(props.card))
 </script>
 
 <template>
   <div class="revision-sections">
+    <p v-if="provenanceNotice(card)" class="provenance-notice" :class="{ 'provenance-context': !card.execution_provenance.executed_source }" aria-label="Selected and used evidence">{{ provenanceNotice(card) }}</p>
     <section class="revision-section" aria-label="Sources">
       <h3>Object origin</h3>
       <template v-if="card.evidence && card.member_action === 'use_evidence'">

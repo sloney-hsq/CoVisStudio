@@ -21,7 +21,9 @@ EVIDENCE_SCHEMA = {
 }
 REVISION_PROPERTIES = {
     "evidence": EVIDENCE_SCHEMA,
-    "candidate_id": {"type": "string", "minLength": 1},
+    "candidate_id": {"type": "string", "minLength": 1, "description":
+        "For use_evidence, omit this field to use the evidence selected at the start of the utterance. "
+        "Supply an exact listed ID only when the user requests that source. Equal members do not make versions identical."},
     "view_ids": VIEW_IDS,
     "source_patch": SOURCE_SCHEMA,
     "member_action": {"type": "string", "enum": ["keep_current", "use_evidence", "rerank"]},
@@ -121,7 +123,18 @@ def _membership(source):
     }
 
 
-def prepare_revision(store, snapshots, payload, condition="bound_revision", resolved_candidate=None):
+def evidence_source(evidence, candidate=None):
+    """Public source identity; members are recorded separately from version identity."""
+    if evidence is None:
+        return None
+    return {"candidate_id": candidate["candidate_id"] if candidate else f"chart:{evidence['revision']}:{evidence['view_id']}",
+            "label": candidate["label"] if candidate else f"Chart {evidence['number']} · version {evidence['revision']}",
+            "revision": evidence["revision"], "view_id": evidence["view_id"],
+            "members": list(evidence["members"])}
+
+
+def prepare_revision(store, snapshots, payload, condition="bound_revision", resolved_candidate=None,
+                     selected_evidence=None):
     """Build one private chart candidate and its observable source/member differences.
 
     Intent interpretation stays with the user/model. This function resolves an explicit
@@ -132,7 +145,10 @@ def prepare_revision(store, snapshots, payload, condition="bound_revision", reso
     if condition not in CONDITIONS:
         raise ValueError(f"Unknown revision condition: {condition}")
     before = store.snapshot()
-    if payload.get("candidate_id"):
+    member_action = payload["member_action"]
+    if member_action != "use_evidence":
+        evidence = None
+    elif payload.get("candidate_id"):
         if resolved_candidate is None or resolved_candidate["candidate_id"] != payload["candidate_id"]:
             raise ValueError("Resolve the exact candidate ID from available evidence before preparing the edit.")
         if payload.get("evidence") is not None:
@@ -140,9 +156,8 @@ def prepare_revision(store, snapshots, payload, condition="bound_revision", reso
         evidence = deepcopy(resolved_candidate["evidence"])
         evidence["members"] = list(resolved_candidate["members"])
     else:
-        evidence = _read_evidence(snapshots, payload.get("evidence"))
+        evidence = _read_evidence(snapshots, payload.get("evidence") or selected_evidence)
     patch = deepcopy(payload["source_patch"])
-    member_action = payload["member_action"]
     binding_applied = condition in ("direct", "bound_revision") and member_action == "use_evidence"
     if binding_applied:
         if evidence is None:
@@ -162,9 +177,22 @@ def prepare_revision(store, snapshots, payload, condition="bound_revision", reso
     prepared = store.prepare("edit_charts", {"view_ids": payload["view_ids"], "patch": {"source": patch}})
     previous = {view["id"]: view for view in before["views"]}
     candidate = {view["id"]: view for view in prepared["candidate"]["views"]}
+    selected = evidence_source(selected_evidence)
+    executed = evidence_source(evidence, resolved_candidate) if binding_applied else None
+    overrides = (selected["candidate_id"] != executed["candidate_id"] if selected and executed else None)
+    provenance = {"selected_source_at_onset": selected, "executed_source": executed,
+                  "source_basis": ("not_used" if executed is None else
+                      "selection" if not payload.get("candidate_id") and not payload.get("evidence") else
+                      "explicit_override" if overrides else "explicit_match" if selected else "explicit"),
+                  "overrides_selection": overrides,
+                  "members_equal": set(selected["members"]) == set(executed["members"]) if selected and executed else None}
     changes = []
     for view_id in payload["view_ids"]:
         old, new = previous[view_id], candidate[view_id]
+        if binding_applied:
+            new["membership_origin"] = deepcopy(executed)
+        elif member_action == "rerank":
+            new.pop("membership_origin", None)
         changed = [field for field, value in new["source"].items() if old["source"][field] != value]
         changes.append({
             "view_id": view_id, "number": new["number"],
@@ -179,10 +207,11 @@ def prepare_revision(store, snapshots, payload, condition="bound_revision", reso
             "kept_fields": [field for field in new["source"] if field not in changed],
         })
     card = {
+        "execution_provenance": provenance,
         "base_revision": prepared["base_revision"],
         "evidence": evidence, "view_ids": list(payload["view_ids"]),
         "candidate_id": payload.get("candidate_id"),
-        "origin": (deepcopy(resolved_candidate) if payload.get("candidate_id") else
+        "origin": (deepcopy(resolved_candidate) if evidence and payload.get("candidate_id") else
                    {"origin": "chart", "label": f"Chart {evidence['number']}  /  version {evidence['revision']}"}
                    if evidence else None),
         "member_action": member_action, "binding_applied": binding_applied,
@@ -200,5 +229,6 @@ def prepare_revision(store, snapshots, payload, condition="bound_revision", reso
         "changes": changes, "needs_confirmation": payload.get("needs_confirmation", False),
         "question": payload.get("question", ""),
     }
+    prepared["result"]["views"] = [deepcopy(candidate[view_id]) for view_id in payload["view_ids"]]
     prepared["result"]["tool"] = "apply_revision"
     return {"prepared": prepared, "card": card}

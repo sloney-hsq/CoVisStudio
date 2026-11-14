@@ -36,3 +36,15 @@ export function untouchedNumbers(card) {
   // The proposal's snapshot, never a later canvas with different charts.
   return card.untouched_views?.map(view => view.number) || []
 }
+
+export function provenanceNotice(card) {
+  const provenance = card.execution_provenance
+  if (!provenance?.selected_source_at_onset) return ''
+  const selected = provenance.selected_source_at_onset
+  const used = provenance.executed_source
+  if (!used) return `Selected, not used for this edit: ${selected.label}.`
+  if (provenance.overrides_selection || provenance.members_equal === false) {
+    return `Selected ${selected.label}; used ${used.label}. ${provenance.members_equal ? 'Same categories; different source.' : 'Different category selection.'}`
+  }
+  return ''
+}

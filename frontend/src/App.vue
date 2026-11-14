@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { ArrowUp, ArrowUpRight, ArrowLeft, AudioLines, BarChart3, Check, CheckCheck, ChevronDown, ChevronRight, CircleHelp, Clock3, Copy, Download, FileCheck2, GitBranch, History, LayoutDashboard, Link2, Loader2, Mic, MicOff, MoreHorizontal, Plus, Radio, RotateCcw, Settings2, SlidersHorizontal, Square, TextCursorInput, Trash2, Unlink, Volume2, VolumeX, X } from 'lucide-vue-next'
 import ChartCard from './components/ChartCard.vue'
 import RevisionPanel from './components/RevisionPanel.vue'
@@ -38,7 +38,12 @@ const conditions = ref([]), condition = ref('bound_revision'), evidence = ref(nu
 const revisionEditSeed = ref(null), authoredRevision = ref(null)
 const selected = ref([]), entities = reactive({}), messages = ref([])
 const mode = ref('text'), draft = ref(''), panel = ref(''), selectedTask = ref('starter')
+const journeyTrack = ref(null)
 const journeyOpen = ref(true), busy = ref(false), status = ref('ready'), error = ref('')
+watch([() => nodes.value.length, journeyOpen], async () => {
+  await nextTick()
+  if (journeyTrack.value) journeyTrack.value.scrollLeft = journeyTrack.value.scrollWidth
+})
 const connected = ref(false), voiceConnected = ref(false), voiceConnecting = ref(false), recording = ref(false)
 const microphoneLevel = ref(0), speechSeconds = ref(0), playing = ref(false)
 const visualReceipt = ref(null)
@@ -625,7 +630,7 @@ onBeforeUnmount(() => { clearInterval(trialClock); clearTimeout(contextTimer); c
 
           <section class="journey" :class="{ collapsed: !journeyOpen }">
             <button class="journey-heading" @click="journeyOpen = !journeyOpen"><div><History :size="18"/><strong>Your journey</strong><span>{{ nodes.length }} {{ nodes.length === 1 ? 'step' : 'steps' }}</span></div><span class="journey-hint">Every change has a place <ChevronDown :size="16" :class="{ rotated: journeyOpen }"/></span></button>
-            <div v-if="journeyOpen" class="journey-track"><div v-if="!nodes.length" class="journey-empty"><span class="journey-origin"></span>Your first chart will start the story. Committed changes appear here.</div><button v-for="(node, index) in nodes" :key="node.id" class="journey-node" :class="{ latest: index === nodes.length - 1 }" @click="action(() => inspectNode(node))"><div class="node-top"><span class="node-circle">{{ index + 1 }}</span><span>{{ displayTime(node.created_at) }}</span><span class="node-version">v{{ node.revision }}</span></div><strong>{{ nodeName(node) }}</strong><p>{{ node.summary || `${node.view_ids?.length || state.views.length} views · ${humanize(node.actor || 'Workspace')}` }}</p><span v-if="index === nodes.length - 1" class="current-node">Current canvas <Check :size="12"/></span><span v-else class="past-node">View this step <ArrowUpRight :size="12"/></span></button></div>
+            <div v-if="journeyOpen" ref="journeyTrack" class="journey-track"><div v-if="!nodes.length" class="journey-empty"><span class="journey-origin"></span>Your first chart will start the story. Committed changes appear here.</div><button v-for="(node, index) in nodes" :key="node.id" class="journey-node" :class="{ latest: index === nodes.length - 1 }" @click="action(() => inspectNode(node))"><div class="node-top"><span class="node-circle">{{ index + 1 }}</span><span>{{ displayTime(node.created_at) }}</span><span class="node-version">v{{ node.revision }}</span></div><strong>{{ nodeName(node) }}</strong><p>{{ node.summary || `${node.view_ids?.length || state.views.length} views · ${humanize(node.actor || 'Workspace')}` }}</p><span v-if="index === nodes.length - 1" class="current-node">Current canvas <Check :size="12"/></span><span v-else class="past-node">View this step <ArrowUpRight :size="12"/></span></button></div>
           </section>
         </section>
 

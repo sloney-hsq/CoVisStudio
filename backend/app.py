@@ -25,7 +25,7 @@ from .experiment import (formal_allocation_for, formal_allocation_table, formal_
 from .formal_tasks import FORMAL_PROTOCOL, formal_tasks
 from .intent_scoring import (create_episode, lock_intent, score_episode, write_new, episode_index,
                              review_understanding, attach_formal_scores, designate_primary_episode)
-from .revisions import prepare_revision, normalize_revise_analysis, REVISION_TOOL_DEFINITIONS, CONDITIONS
+from .revisions import prepare_revision, normalize_revise_analysis, evidence_source, REVISION_TOOL_DEFINITIONS, CONDITIONS
 from .category_sets import CategorySets, CATEGORY_SET_TOOL_DEFINITIONS
 from .observations import interaction_summary
 from .trace import Trace
@@ -43,8 +43,7 @@ To change an existing chart's query, call revise_analysis before speaking: name 
 member_action, and only the flat fields the user changed. That call computes and commits the edit.
 For a date-only correction, use member_action="keep_current" and change only the requested date fields.
 Dates are start-inclusive and end-exclusive. Derive the year and exact target IDs from the current analysis and user selection.
-Reuse historical members with member_action="use_evidence" and a real candidate_id, or omit
-candidate_id to use explicitly selected evidence. Never serialize an evidence object into a string.
+For historical reuse, follow revise_analysis's candidate_id selection rule. Never serialize evidence into a string.
 If a choice is unresolved, set needs_confirmation=true and question; do not invent an answer.
 Read saved charts before making numerical claims. Only claim an edit after its committed receipt.
 Keep every source condition not explicitly changed. Fixed category IDs and dynamic top-N are different:
@@ -481,10 +480,12 @@ class Workspace:
                 if name == 'apply_category_set':
                     _, sets = self.decision_material(actor)
                     resolve_candidate('set:' + arguments['set_id'], build_candidates({}, sets))
-                    prepared = await asyncio.to_thread(self.category_sets.prepare_apply, self.store, arguments)
+                    prepared = await asyncio.to_thread(self.category_sets.prepare_apply, self.store, arguments,
+                        self.bound_evidence if actor == 'model' else self.evidence)
                 elif name == 'apply_evidence_candidate':
                     candidate = resolve_candidate(arguments['candidate_id'], self.candidates(actor))
-                    prepared = await asyncio.to_thread(prepare_candidate_apply, self.store, candidate, arguments)
+                    prepared = await asyncio.to_thread(prepare_candidate_apply, self.store, candidate, arguments,
+                        self.bound_evidence if actor == 'model' else self.evidence)
                 else:
                     prepared = await asyncio.to_thread(self.store.prepare, name, arguments, self.bound_reference)
                 if epoch != self.epoch:
@@ -515,14 +516,12 @@ class Workspace:
                 return {'status': 'superseded', 'committed': False}
             payload = deepcopy(arguments)
             chosen = self.bound_evidence if actor == 'model' else self.evidence
-            if 'evidence' not in payload and 'candidate_id' not in payload and chosen:
-                payload['evidence'] = {key: chosen[key] for key in ('revision', 'view_id', 'members')}
             self.trace.record('tool_started', tool='preview_revision', arguments=payload, actor=actor, epoch=epoch)
             try:
                 snapshots, _ = self.decision_material(actor)
                 candidate = resolve_candidate(payload['candidate_id'], self.candidates(actor)) if 'candidate_id' in payload else None
                 preview = await asyncio.to_thread(prepare_revision, self.store, snapshots, payload,
-                    self.session['condition'], resolved_candidate=candidate)
+                    self.session['condition'], resolved_candidate=candidate, selected_evidence=deepcopy(chosen))
             except (ValueError, KeyError, ValidationError) as error:
                 message = error.message if isinstance(error, ValidationError) else str(error)
                 self.trace.record('tool_failed', tool='preview_revision', message=message, actor=actor)
@@ -610,6 +609,7 @@ class Workspace:
                            'evidence_revision': max(snapshots),
                            'reference': self.bound_reference, 'visible_dashboard': visible,
                            'current_dashboard': snapshots[max(snapshots)], 'evidence': self.bound_evidence,
+                           'selected_evidence_source': evidence_source(self.bound_evidence),
                            'history_index': self.history_index(snapshots),
                            'category_sets': sets, 'evidence_candidates': self.candidates(),
                            'evidence_package_id': self.evidence_package['package_id'] if self.evidence_package else None,
@@ -759,8 +759,9 @@ class Workspace:
             self.epoch += 1
             self.capture_changed.set()
             self.begin_request(event.get('item_id'))
-            self.bound_reference = deepcopy(self.reference)
-            self.bound_evidence = deepcopy(self.evidence)
+            if not event.get('continuation', False):
+                self.bound_reference = deepcopy(self.reference)
+                self.bound_evidence = deepcopy(self.evidence)
             if self.proposal and self.proposal['status'] == 'pending':
                 self.proposal['status'] = 'superseded'
                 self.prepared_revision = None

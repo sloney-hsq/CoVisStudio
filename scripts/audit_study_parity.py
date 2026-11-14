@@ -13,7 +13,8 @@ from backend.app import Workspace, MODEL_TOOLS
 
 # Authoritative private study fields, not public task 'goal' prose.
 PRIVATE_KEYS = {'expected_sources', 'target_sources', 'resolution', 'evidence_phase',
-                'evidence_indices', 'target_ids', 'expected_members', 'reference_trajectory'}
+                'evidence_indices', 'target_ids', 'expected_members', 'reference_trajectory',
+                'source_requirement'}
 
 
 def digest(value):

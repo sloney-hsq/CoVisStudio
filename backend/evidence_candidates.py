@@ -53,11 +53,12 @@ def resolve_candidate(candidate_id, candidates):
     raise ValueError("Unknown evidence candidate ID. List available candidates and choose an exact ID.")
 
 
-def prepare_candidate_apply(store, candidate, args):
+def prepare_candidate_apply(store, candidate, args, selected_evidence=None):
     validate(args, APPLY_CANDIDATE_TOOL["function"]["parameters"])
     payload = {"candidate_id": args["candidate_id"], "view_ids": args["view_ids"],
                "source_patch": args.get("source_patch", {}), "member_action": "use_evidence"}
-    compiled = prepare_revision(store, {}, payload, "direct", resolved_candidate=candidate)
+    compiled = prepare_revision(store, {}, payload, "direct", resolved_candidate=candidate,
+                                selected_evidence=selected_evidence)
     prepared = compiled["prepared"]
     prepared["result"].update(tool="apply_evidence_candidate", evidence_candidate=deepcopy(candidate),
                                revision_card=compiled["card"])

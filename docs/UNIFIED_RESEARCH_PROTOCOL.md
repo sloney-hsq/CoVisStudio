@@ -68,18 +68,28 @@ The existing 480-second task timer and 60-second development voice-session cap a
 5. Each event keeps raw time and origin. A calibrated timestamp is an estimate with its calibration record and uncertainty, never a replacement for raw clocks. No calibrated estimate means timing relation unknown.
 6. The later evidence package must distinguish interpretation-time evidence from the actual current state used for execution. It must cover images, history, sets, tool reads and native provider conversation. A frozen JSON object alone does not freeze provider context.
 
-The current extension implements points 1–5 with output-worklet receipts and archives dual-time application evidence for point 6. Actual outbound inputs are recorded, but native provider history is not isolated. Speech-to-semantic-segment alignment and an independent intent episode scorer remain pending. The new offline delivery/numeric audit does not substitute for intent scoring. See [JARVIS_ADAPTATION.md](JARVIS_ADAPTATION.md).
+The current extension implements points 1–5 with output-worklet receipts and archives dual-time application evidence for point 6. Actual outbound inputs are recorded, but native provider history is not isolated. Speech-to-semantic-segment alignment remains pending. The offline intent scorer accepts independent human locks; those annotations are not supplied by the delivery/numeric audit. See [JARVIS_ADAPTATION.md](JARVIS_ADAPTATION.md) and [source scoring implementation](PROVENANCE_REVIEW.md).
 
 ## 5. Ground truth and outcomes
 
 Ground truth begins with the user's words, explicit choices and contemporaneously available evidence. Two independent human coders identify: referenced members/source, target views, requested changes, retained conditions, released conditions and unresolved ambiguity. They must not infer intended choices from the model's proposal or final chart. Resolve disagreements using the source evidence and retain uncertainty when it cannot be resolved.
 
+Source requirements are coded as `exact`, `members_only`, `none`, or `unknown`,
+with reasons tied to the cited participant evidence. `exact` identifies the intended
+candidate; deictic wording may establish it through the contemporaneous selection.
+Selection alone is not a label. `none` means no new historical source requirement,
+not an instruction to erase legitimate provenance. Per-view overrides are allowed.
+The scorer separately reports analytical, numeric and provenance correctness.
+Missing provenance for a required exact source remains unknown. A demonstrated
+analytical failure remains failure even when provenance is unknown. Existing
+archives and scores are not retroactively relabeled.
+
 Only after that intent specification is available does independent SQL calculate expected data. SQL validates data and scope; it cannot infer intent. Private annotations, expected results and coding decisions must never enter model inputs. Human listeners may inspect the original speech; hearing/understanding fields remain pending until actually reviewed.
 
 | Outcome | Definition | Current status |
 | --- | --- | --- |
-| Revision correctness | Latest explicit request fulfilled on the intended views; still-valid conditions preserved; values match independent SQL | Existing authored trial checks only; new episode scorer pending |
-| Understanding | Participant correctly identifies object origin, affected views and current computation scope | Responses can be captured; human assessment pending |
+| Revision correctness | Latest explicit request fulfilled on intended views; valid conditions preserved; required source identity and independent SQL checked | Offline scorer implemented; participant intent coding pending |
+| Interface-assisted interpretation | Participant explains object origin, affected views and current computation scope with the interface available | Responses can be captured; human assessment pending |
 | Repair cost | Additional interaction attributable to correcting an identified misunderstanding or execution mistake | Requires human coding; Undo/edit counts alone are insufficient |
 | Interaction time | Recorded expression, execution/response and repair intervals; incomplete outcomes retained | Stage 1 supplies aligned timing, not a completed statistical analysis |
 | Playback/reference relevance | Evidence that a reference depends on the actually played portion, rather than just an explicit source label | Requires semantic alignment and annotation, pending |

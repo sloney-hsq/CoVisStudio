@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { humanize, formatRange } from '../chart.js'
-import { sourceLabels, sourceValue, computationScope, membershipRule, untouchedNumbers } from '../revisionDisplay.js'
+import { sourceLabels, sourceValue, computationScope, membershipRule, untouchedNumbers, provenanceNotice } from '../revisionDisplay.js'
 const props = defineProps({ card: Object, state: Object })
 function groupDescriptions(describe) {
   const groups = new Map()
@@ -21,6 +21,7 @@ const untouched = computed(() => untouchedNumbers(props.card).join(', '))
 
 <template>
   <div class="revision-brief">
+    <p v-if="provenanceNotice(card)" class="provenance-notice" :class="{ 'provenance-context': !card.execution_provenance.executed_source }" aria-label="Selected and used evidence">{{ provenanceNotice(card) }}</p>
     <section class="revision-summary-section" aria-label="Sources"><h3>Object origin</h3><template v-if="card.member_action === 'use_evidence' && card.evidence"><p><strong>{{ card.origin?.label || `Chart ${card.evidence.number} · v${card.evidence.revision}` }}</strong> · {{ card.evidence.source.region || 'All regions' }} · {{ formatRange(card.evidence.source.start, card.evidence.source.end) }}</p><p>{{ card.evidence.members.map(humanize).join(', ') }}</p><small>These category identities carry forward; computation uses the scope below.</small></template><p v-else>{{ card.member_action === 'rerank' ? 'New ranking from the current computation scope.' : `Each target’s current selection or ranking rule · v${card.base_revision}` }}</p></section>
     <section class="revision-summary-section" aria-label="Current computation"><h3>Current computation</h3><p v-for="item in scopes" :key="item.numbers"><strong>Charts {{ item.numbers }}</strong> · {{ item.description }}</p><p v-for="item in membership" :key="item.numbers"><strong>Charts {{ item.numbers }}</strong> · {{ item.description }}</p></section>
     <section class="revision-summary-section" aria-label="Change"><h3>Change &amp; keep</h3><p v-for="item in changes" :key="item.numbers"><strong>Charts {{ item.numbers }}</strong> · {{ item.description }}</p><p v-for="item in released" :key="`release-${item.numbers}`"><strong>Charts {{ item.numbers }} · Release:</strong> {{ item.description }}</p><p v-if="untouched"><strong>Outside this edit:</strong> Charts {{ untouched }} stay unchanged.</p><small>Other conditions on each target are retained. Details show before → after and released conditions.</small></section>

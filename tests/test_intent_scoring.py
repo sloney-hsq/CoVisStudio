@@ -27,6 +27,7 @@ def fixture(data):
               'boundary': {'onset': {'index': 1}, 'utterance_arrival_end': {'index': 2}},
               'prior_context': [], 'participant_input': [{'index': 2, 'text': 'Use RJ; keep the selected group.'}]}
     coder = coding_template(packet)
+    coder['intent']['source_requirement'] = {'mode': 'none', 'candidate_id': None, 'reason': 'Authored fixture requests scope changes without a new historical source.'}
     coder.update(status='completed', reviewer_id='fixture-a')
     coder['intent'].update(status='resolved', target_view_ids=['v2', 'v3'],
                            source_patch={'region': 'RJ'}, retained_fields=['categories', 'start', 'end', 'metric'],
@@ -153,6 +154,7 @@ def test_superseded_goal_is_not_terminal_requirement_and_prior_commit_survives(d
     packet['boundary'] = {'onset': {'index': 4}, 'utterance_arrival_end': {'index': 5}}
     packet['participant_input'] = [{'index': 5, 'text': 'Instead use MG, release the fixed cohort and rank the top three by revenue.'}]
     coder = coding_template(packet)
+    coder['intent']['source_requirement'] = {'mode': 'none', 'candidate_id': None, 'reason': 'Authored fixture requests scope changes without a new historical source.'}
     coder.update(status='completed', reviewer_id='a')
     coder['intent'].update(status='resolved', target_view_ids=['v2', 'v3'],
         source_patch={'region': 'MG'}, members={'mode': 'rank', 'top_n': 3, 'rank_by': 'revenue'},

@@ -80,6 +80,7 @@ async def main():
                     and not {'final', 'report', 'condition', 'expected_sources'} & packet.keys())
             checked('cannot score before independent coding lock', await page.get_by_role('button', name='Score against locked intent', exact=True).is_disabled())
             coder = coding_template(packet)
+            coder['intent']['source_requirement'] = {'mode': 'none', 'candidate_id': None, 'reason': 'Authored fixture requests scope changes without a new historical source.'}
             coder.update(reviewer_id='FIXTURE-A', status='completed')
             coder['intent'].update(status='resolved', target_view_ids=['v2', 'v3'], source_patch={},
                  members={'mode': 'fixed', 'values': evidence['members'], 'origin': {'revision': 3, 'view_id': 'v1'}},

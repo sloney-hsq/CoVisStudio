@@ -56,7 +56,7 @@ defineExpose({
 <template>
   <article class="chart-card" :class="{ selected }" :data-view-id="view.id">
     <header class="chart-header">
-      <button class="view-number" :class="{ active: selected }" :aria-label="`${selected ? 'Deselect' : 'Select'} chart ${view.number}`" :aria-pressed="selected" @click="emit('select', view.id)"><Check v-if="selected" :size="15"/><span v-else>{{ String(view.number).padStart(2, '0') }}</span></button>
+      <button class="view-number" :class="{ active: selected }" :aria-label="`${selected ? 'Deselect' : 'Select'} chart ${view.number}`" :aria-pressed="selected" @click="emit('select', view.id)"><span>{{ String(view.number).padStart(2, '0') }}</span><Check v-if="selected" class="selection-check" :size="11"/></button>
       <div class="chart-heading"><h3>{{ view.title }}</h3><p>{{ metricNames[view.source.metric] }} <span>by {{ view.source.dimension }}</span></p></div>
       <div class="chart-actions"><button v-if="selected && !readonly" class="icon-button" aria-label="Move chart left" @click="emit('move', view.id, -1)"><ChevronLeft :size="15"/></button><button v-if="selected && !readonly" class="icon-button" aria-label="Move chart right" @click="emit('move', view.id, 1)"><ChevronRight :size="15"/></button><button class="icon-button" aria-label="Expand chart" @click="emit('expand', view.id)"><Expand :size="16"/></button><button v-if="!readonly" class="icon-button" aria-label="Edit chart" @click="emit('edit', view.id)"><SlidersHorizontal :size="17"/></button></div>
     </header>

@@ -91,6 +91,8 @@ class ChartStore:
                             view[field] = patch[field]
                     if "source" in patch:
                         view["source"] = normalize_source({**view["source"], **patch["source"]})
+                        if {'categories', 'top_n', 'rank_by'} & patch['source'].keys():
+                            view.pop('membership_origin', None)
                         if "metric" in patch["source"] and "title" not in patch:
                             view["title"] = METRICS[view["source"]["metric"]]["label"]
                     if "style" in patch:

@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "evidence_kind": "local_authored",
+  "paid_api_calls": 0,
+  "checks": {
+    "direct_equal_members_distinct_sources": true,
+    "direct_historical_members_current_scope": true,
+    "b0_no_structured_card": true,
+    "direct_selected_chart_number_visible": true,
+    "direct_correction_targets_patch_metrics_rendered": true,
+    "direct_actual_correction_confirmation_observations": true,
+    "bound_revision_equal_members_distinct_sources": true,
+    "bound_revision_historical_members_current_scope": true,
+    "revision_actions_do_not_cover_summary": true,
+    "b2_explicit_origin_scope_membership_untouched": true,
+    "bound_revision_selected_chart_number_visible": true,
+    "saved_set_metadata_follows_selected_set": true,
+    "bound_revision_correction_targets_patch_metrics_rendered": true,
+    "bound_revision_actual_correction_confirmation_observations": true,
+    "rerank_one_view_release_others_fixed_rendered": true,
+    "layout_1920_no_overflow": true,
+    "layout_2560_no_overflow": true,
+    "layout_3840_no_overflow": true,
+    "correction_1920_preview_visible_canvas_unblurred": true,
+    "correction_2560_preview_visible_canvas_unblurred": true,
+    "correction_3840_preview_visible_canvas_unblurred": true,
+    "b0_b2_identical_corrected_state": true,
+    "no_browser_errors": true
+  },
+  "errors": [],
+  "service_closed": true
+}

@@ -319,6 +319,9 @@ async def run_case(args, names, report, settings):
                     source = expected[view['id']]
                     checks[view['id']+'_source'] = view['source'] == source
                     checks[view['id']+'_sql'] = numeric_rows_equal(view['data']['rows'], category_rows(workspace.data, source))
+                    if view['id'] in ('v2', 'v3'):
+                        required_origin = None if source['categories'] is None else 'chart:3:v1'
+                        checks[view['id']+'_provenance'] = (view.get('membership_origin') or {}).get('candidate_id') == required_origin
                 for i, stage in enumerate(report.get('stages', [])):
                     own = request_events(events, stage.get('request_id'))
                     stage['events'] = own
@@ -334,6 +337,10 @@ async def run_case(args, names, report, settings):
                                 stage_expected[target].update(start=initial['views'][1]['source']['start'], end=initial['views'][1]['source']['end'])
                         snapshot = stage.get('state_after_commit', {})
                         checks[f'stage_{i}_sources'] = bool(snapshot) and all(v['source']==stage_expected[v['id']] for v in snapshot.get('views', []))
+                        checks[f'stage_{i}_provenance'] = bool(snapshot) and all(
+                            (view.get('membership_origin') or {}).get('candidate_id') ==
+                            (None if stage_expected[view['id']]['categories'] is None else 'chart:3:v1')
+                            for view in snapshot.get('views', []) if view['id'] in ('v2', 'v3'))
                         stage['card_events'] = [e for e in events if e['name'].startswith('revision_card_') and stage['input_start_event_index']<=e['index']<end_index]
                     if i == 1:
                         trigger = stage['input_start_event_index']

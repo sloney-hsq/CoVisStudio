@@ -58,7 +58,18 @@ test('reopening a rerank proposal retains its unchanged ranking measure', () => 
   assert.deepEqual(revisionPayload(seed.form, seed.evidence, 'bound_revision').source_patch, { categories: null, top_n: 5, rank_by: 'orders' })
 })
 
-import { computationScope, membershipRule, untouchedNumbers } from '../src/revisionDisplay.js'
+import { computationScope, membershipRule, untouchedNumbers, provenanceNotice } from '../src/revisionDisplay.js'
+
+test('source differences remain visible even when category members are equal', () => {
+  const selected = { label: 'Chart 1 · version 3' }, used = { label: 'Chart 1 · version 1' }
+  const card = { execution_provenance: { selected_source_at_onset: selected, executed_source: used,
+    overrides_selection: true, members_equal: true } }
+  assert.match(provenanceNotice(card), /Selected Chart 1 · version 3; used Chart 1 · version 1/)
+  assert.match(provenanceNotice(card), /Same categories; different source/)
+  card.execution_provenance.executed_source = null
+  assert.match(provenanceNotice(card), /Selected, not used for this edit/)
+  assert.equal(provenanceNotice({}), '')
+})
 
 test('revision display separates fixed category filters from a dynamic ranking for any grouping', () => {
   assert.match(membershipRule({ dimension: 'month', categories: ['health_beauty'], top_n: null }), /^Fixed categories \(1\):/)

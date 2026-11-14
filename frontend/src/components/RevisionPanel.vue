@@ -10,7 +10,7 @@ const emit = defineEmits(['preview', 'apply', 'revise', 'close', 'observation'])
 const form = reactive(props.seed ? JSON.parse(JSON.stringify(props.seed.form)) : revisionDefaults(props.selected, !!props.evidence))
 const selectedEvidence = computed(() => {
   const saved = props.sets.find(item => `set:${item.id}` === form.candidate_id)
-  return saved ? { ...saved.evidence, members: saved.members } : props.evidence
+  return saved ? { ...saved.evidence, members: saved.members, set_name: saved.name } : props.evidence
 })
 const currentRegions = computed(() => {
   const targets = props.proposal ? props.proposal.card.view_ids : form.view_ids
@@ -31,7 +31,7 @@ function chooseSource() {
     <div v-if="condition !== 'direct' && !proposal" class="revision-reference-map">
       <div class="revision-reference-block">
         <span class="eyebrow"><Link2 :size="13"/> EVIDENCE FROM</span>
-        <template v-if="evidence"><strong>{{ evidence.source.region || 'All regions' }} · Chart {{ evidence.number }} · v{{ evidence.revision }}</strong><p>{{ formatRange(evidence.source.start, evidence.source.end) }}</p><div class="member-tags"><span v-for="member in selectedEvidence.members" :key="member">{{ humanize(member) }}</span></div></template>
+        <template v-if="selectedEvidence"><strong>{{ selectedEvidence.set_name ? `Saved set: ${selectedEvidence.set_name} · ` : '' }}{{ selectedEvidence.source.region || 'All regions' }} · Chart {{ selectedEvidence.number }} · v{{ selectedEvidence.revision }}</strong><p>{{ formatRange(selectedEvidence.source.start, selectedEvidence.source.end) }}</p><div class="member-tags"><span v-for="member in selectedEvidence.members" :key="member">{{ humanize(member) }}</span></div></template>
         <template v-else><strong>No historical evidence selected</strong><p>Open a Journey version to reference its categories.</p></template>
       </div>
       <ArrowRight :size="19" class="reference-arrow"/>
@@ -55,7 +55,7 @@ function chooseSource() {
       <div class="field-row"><label class="field"><span>From · blank keeps current</span><input type="date" v-model="form.start" aria-label="Revision start date"/></label><label class="field"><span>Until · exclusive</span><input type="date" v-model="form.end" aria-label="Revision end date"/></label></div>
       <label class="field"><span>Group by</span><select v-model="form.dimension" aria-label="Revision grouping"><option value="">Keep current</option><option value="category">Product category</option><option value="month">Purchase month</option><option value="state">Customer state</option></select></label><label class="field"><span>Order status</span><select v-model="form.status"><option value="">Keep current</option><option value="delivered">Delivered</option><option value="shipped">Shipped</option><option value="canceled">Canceled</option></select></label>
       <div class="data-note"><GitBranch :size="17"/><span>Preview calculates the proposed changes using Olist. Your current charts stay in place until you apply the revision.</span></div>
-      <button class="button primary revision-preview-button" :disabled="busy || !canPreview" @click="emit('preview', revisionPayload(form, selectedEvidence, condition))">Preview revision <ArrowRight :size="16"/></button>
+      <div class="revision-preview-footer"><span>Charts {{ state.views.filter(view => form.view_ids.includes(view.id)).map(view => view.number).join(', ') || '—' }} · {{ form.member_action === 'rerank' ? 'New ranking' : form.member_action === 'use_evidence' ? (selectedEvidence?.set_name || `Source v${selectedEvidence?.revision ?? '—'}`) : 'Keep current selection' }}</span><button class="button primary revision-preview-button" :disabled="busy || !canPreview" @click="emit('preview', revisionPayload(form, selectedEvidence, condition))">Preview revision <ArrowRight :size="16"/></button></div>
     </template>
 
     <RevisionSupport v-else :proposal="proposal" :state="state" :structured="condition !== 'direct'" :active="observationsEnabled" :busy="busy" @apply="emit('apply')" @revise="emit('revise')" @close="emit('close')" @observation="(name, details, clientMs) => emit('observation', name, details, clientMs)"/>

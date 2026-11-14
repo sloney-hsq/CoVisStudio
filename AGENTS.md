@@ -37,6 +37,9 @@ forced-tool fields. Failed tools do not automatically trigger another model resp
 
 Speech onset revokes old publication permission and stops playback. Previously
 legal commits remain legal. Receipt/outcome association is by request ID.
+Within the provider's continuing VAD group, only the first onset binds the default
+reference/evidence. Later clicks are recorded and apply to the next group; they do
+not silently rebind the current group. This grouping is not acoustic word alignment.
 Unexecuted stale calls report no commit and the actual public revision. Every
 response preparation includes runtime execution facts and recent request outcomes;
 assistant promises are never a source of chart state. No-change discussion is
@@ -62,7 +65,10 @@ does not expand the voice budget.
 Independent intent locks, terminal episode selection and SQL scores are private
 researcher sidecars and never enter model context. Score still-active cumulative
 intent, not superseded goals. Missing intent/playback stays unknown. Distinguish
-repair from exploration and intentional goal change; no event-count heuristic
+selected evidence from compiler-recorded execution provenance and independently
+coded source requirements. Equal members do not establish equal source identity;
+source identity is graded only when the participant's intent requires it.
+Distinguish repair from exploration and intentional goal change; no event-count heuristic
 grades human understanding. Preserve finished session.json and original traces
 through review, export and disconnect.
 

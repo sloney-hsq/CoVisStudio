@@ -87,6 +87,13 @@ within 480 task seconds; the longer task timer does not extend the voice budget.
 
 ## Current verification
 
+The current local provenance update records selected versus executed sources,
+retains source identity through scope-only corrections, and clears it on reranking.
+Continuous VAD fragments keep their initial reference binding. Independent intent
+coding now distinguishes exact source requirements from membership-only requests.
+These repairs have **not** been tested against a new real Qwen session. See
+[source provenance changes and review entry points](docs/PROVENANCE_REVIEW.md).
+
 A focused reuse-only check after the runtime-fact repair completed in **33.547 s**
 with **4.24/6.64 s** inputs and no retry. The current request reissued the suppressed
 tool, committed v7 and then reported completion; three final chart queries matched
@@ -95,7 +102,7 @@ remains: the model used v1 instead of selected v3, with identical category membe
 The card reflects the executed source. This is a single authored case, not proof
 of stable semantic reliability. API and the isolated test service were closed.
 
-The subsequent single-session reuse → Q1 correction → chart-2 reranking check
+An earlier single-session reuse → Q1 correction → chart-2 reranking check
 stopped after 56.360 seconds. It reproduced a false completion: an obsolete tool
 call was correctly suppressed, but the current response claimed success without
 another edit. The canvas remained at v6 and no revision card was produced; the

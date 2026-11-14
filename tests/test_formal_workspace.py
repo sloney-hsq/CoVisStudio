@@ -77,6 +77,7 @@ def test_independent_intent_handoff_from_http_to_locked_sql_and_archive(client):
     assert 'final' not in packet and 'expected_sources' not in json.dumps(packet)
     assert client.post(episode_url + '/score').status_code == 409
     coder = coding_template(packet)
+    coder['intent']['source_requirement'] = {'mode': 'none', 'candidate_id': None, 'reason': 'Authored fixture requests scope changes without a new historical source.'}
     coder.update(status='completed', reviewer_id='local-fixture-a')
     coder['intent'].update(status='resolved', target_view_ids=['v2', 'v3'], source_patch={},
         members={'mode': 'fixed', 'values': evidence['members'], 'origin': {'revision': 3, 'view_id': 'v1'}},

@@ -1,5 +1,30 @@
 # Implementation and acceptance — 2026-11-13
 
+## Source provenance and correction UI — local verification only
+
+- The shared compiler now records selected versus consumed source identity,
+  explicit overrides and member equality. Omission uses the bound selection;
+  explicit valid IDs still win. Equal members do not collapse different versions.
+- Reuse stores membership origin on each changed view. Date/region changes retain
+  it; reranking clears it only on targeted views. A rerank card identifies selected
+  historical evidence as unused rather than as the calculation source.
+- Continuing VAD fragments retain the first-onset binding. Each onset still
+  revokes old publication permission and stops playback. Later selections apply
+  to the next provider group; this is not word alignment or frozen native history.
+- Independent intent coding now states whether an exact source is required.
+  Analytical, numeric and provenance results are separate. Missing evidence stays
+  unknown; neither selection nor model output automatically becomes intended truth.
+- Fixed saved-set mapping labels, selected chart-number visibility, correction
+  action placement and summary overlap; scaled chart values and compacted plots.
+- Validation: **404 backend tests passed** in the full run; **30 targeted tests
+  passed** after the final missing-origin/unknown scoring adjustment. **52 frontend
+  tests passed**, production build passed, and the final browser run passed **23
+  checks** at 1920/2560/3840 widths. The build retains its chart-chunk size warning.
+- **No paid API call**, no new participant evidence, no change to original real
+  traces. The local browser service closed. Real Qwen source choice and spoken
+  truthfulness remain unverified for this patch. Public screenshots and source map:
+  [provenance review](docs/PROVENANCE_REVIEW.md).
+
 ## Follow-up review — local evidence and receipt corrections
 
 - Fixed absent-request scoping: manual commits cannot certify an absent request.

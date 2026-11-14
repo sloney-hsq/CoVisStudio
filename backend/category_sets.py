@@ -68,7 +68,7 @@ class CategorySets:
     def list(self):
         return deepcopy(list(self._sets.values()))
 
-    def prepare_apply(self, store, args):
+    def prepare_apply(self, store, args, selected_evidence=None):
         validate(args, _SCHEMAS["apply_category_set"])
         if args["set_id"] not in self._sets:
             raise ValueError("Unknown category set ID. List saved category sets to choose an available set.")
@@ -78,7 +78,7 @@ class CategorySets:
         prepared = prepare_candidate_apply(store, candidate, {
             "candidate_id": candidate["candidate_id"], "view_ids": args["view_ids"],
             "source_patch": args.get("source_patch", {}),
-        })
+        }, selected_evidence=selected_evidence)
         prepared["result"].update(
             tool="apply_category_set",
             summary=f"Applied category set {saved['name']} to {len(args['view_ids'])} chart(s)",
