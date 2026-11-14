@@ -79,6 +79,21 @@ are excluded from GitHub.
 
 ## Local verification
 
+### Subsequent cumulative real-flow failure
+
+One later authorized connection failed/timeout at **56.36 s**, without retries.
+Only complete **4.24/6.64 s** clips were injected with actual playback overlap;
+the planned Q1 correction and chart-2-only rerank were not reached. One new
+6.88 s TTS clip was prepared but unused, so it adds no evaluated step.
+Supplementary speech superseded the partial request before its correct reuse
+tool arrived; the native receipt correctly returned `superseded`, uncommitted.
+The continuing request contained the full intended text yet claimed the edit
+without a new tool. Actual outcome was `no_changes`: unchanged v6 and no card.
+All **15/15** SQL checks cover setup and unchanged state; there is no post-commit
+image sequence to assess. The connection and isolated 8076 service closed.
+Independent chronology and original failure: `traces/complete-flow-20261113/AUDIT.md`.
+This failure does not replace prior passes or establish participant effects.
+
 The integrated suite passed **377 backend tests** and **51 frontend tests**.
 The frontend production build also passed. Existing non-fatal Starlette test-client
 deprecation and chart bundle-size notices are retained in the local logs.

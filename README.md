@@ -87,7 +87,15 @@ within 480 task seconds; the longer task timer does not extend the voice budget.
 
 ## Current verification
 
-The latest two authored real-Qwen checks both completed:
+The subsequent single-session reuse → Q1 correction → chart-2 reranking check
+stopped after 56.360 seconds. It reproduced a false completion: an obsolete tool
+call was correctly suppressed, but the current response claimed success without
+another edit. The canvas remained at v6 and no revision card was produced; the
+Q1 and reranking inputs were not reached. No retry occurred. See
+[the delivery record](docs/REVISION_SUPPORT_DELIVERY.md). This failure is retained
+separately from the earlier focused passes below.
+
+Two earlier authored real-Qwen checks both completed:
 
 | Diagnostic | Connection including cleanup | Input clips |
 | --- | --- | --- |

@@ -1,5 +1,20 @@
 # Implementation and acceptance — 2026-11-13
 
+## Latest cumulative real-flow check — failed, retained
+
+- One authorized connection ended **failed/timeout at 56.36 s**, no retries.
+  Only complete **4.24/6.64 s** clips were sent with actual playback overlap;
+  Q1 correction and chart-2 reranking were not reached. One new 6.88 s TTS clip
+  was prepared but never sent, and is not an evaluated step.
+- Supplementary speech revoked the partial request before its correct reuse tool
+  arrived. Its receipt was `superseded`, `committed:false`. The new request had
+  the complete intended text but falsely claimed success without another tool.
+  Actual outcome: `no_changes`, unchanged **v6**, no revision card.
+- Offline SQL **15/15** verifies setup and unchanged state, not the requested edit;
+  no post-commit image sequence exists to assess. API and isolated 8076 service
+  closed. Prior successful and failed records remain separate; both papers now
+  report this failure. Independent audit: `traces/complete-flow-20261113/AUDIT.md`.
+
 ## Current delivery — correctable interpretation and active terminal intent
 
 - Revision cards now retain the exact compiled patch, fixed-versus-ranked membership,
