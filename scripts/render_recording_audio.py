@@ -101,11 +101,13 @@ def render(run):
     destination = run / 'video' / 'recording-with-audio.mp4'
     subprocess.run([ffmpeg, '-y', '-hide_banner', '-loglevel', 'error',
         '-i', str(original), '-i', str(mixed), '-map', '0:v:0', '-map', '1:a:0',
+        '-vf', "drawtext=fontfile='C\\:/Windows/Fonts/arial.ttf':text='OFFLINE RECONSTRUCTION - recorded inputs and played output samples':fontcolor=white:fontsize=h/40:box=1:boxcolor=black@0.75:boxborderw=8:x=16:y=16",
         '-c:v', 'libx264', '-preset', 'fast', '-crf', '20', '-pix_fmt', 'yuv420p',
         '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', '-shortest', str(destination)], check=True)
     audit = dict(video=str(destination), original_video=str(original), duration_seconds=duration,
         alignment='First traced screencast frame and calibrated browser clock; frame/receipt precision, not sample-exact video sync',
         audio_kind='Derived replay: complete injected input clips and only played assistant samples',
+        burned_in_label='OFFLINE RECONSTRUCTION - recorded inputs and played output samples',
         mix_gain=gain, inputs=inputs, assistant_chunks=chunks,
         assistant_played_samples=sum(clip['samples'] for clip in chunks),
         paid_api_calls=0)

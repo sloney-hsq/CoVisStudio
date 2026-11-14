@@ -1,4 +1,4 @@
-"""One four-input cumulative revision diagnostic; default is credential-free preflight."""
+"""One cumulative or reuse-only diagnostic; default is credential-free preflight."""
 import argparse
 from copy import deepcopy
 import asyncio
@@ -27,7 +27,7 @@ def save(output, report):
 
 def preflight(args):
     assert (args.frontend_dir / 'index.html').exists(), 'Build frontend first.'
-    names = ['00_explain', '01_reuse', '02_correct', '03_rerank']
+    names = ['00_explain', '01_reuse'] if args.flow == 'reuse' else ['00_explain', '01_reuse', '02_correct', '03_rerank']
     records = {}
     for name in names:
         path = args.audio_dir / f'{name}.wav'
@@ -89,6 +89,17 @@ def stage_request_id(events, start_index):
     """Follow VAD fragments belonging to this injected clip, not an obsolete prefix."""
     accepted = [e for e in events if e['name'] in ('speech_start', 'request_accepted') and e['index'] >= start_index]
     return accepted[-1]['request_id'] if accepted else None
+
+
+def expected_sources(initial, members, flow):
+    expected = {v['id']: deepcopy(v['source']) for v in initial['views']}
+    for target in ('v2', 'v3'):
+        expected[target].update(categories=members, top_n=None)
+        if flow == 'complete':
+            expected[target].update(start='2017-01-01', end='2017-04-01')
+    if flow == 'complete':
+        expected['v2'].update(categories=None, top_n=3, rank_by='orders')
+    return expected
 
 
 def finish_reason(report, events):
@@ -249,7 +260,7 @@ async def run_case(args, names, report, settings):
                             stage['own_events_at_capture'] = request_events(workspace.trace.events, stage['request_id'])
                             await page.screenshot(path=str(args.output_dir / f'stage-{index}.png'))
                         save(args.output_dir, report)
-                    if len(report['stages']) == 4 and report['stages'][-1].get('request_id'):
+                    if len(report['stages']) == len(names) and report['stages'][-1].get('request_id') and not report.get('edit_not_committed'):
                         final_id = report['stages'][-1]['request_id']
                         report['revision_request_id'] = final_id
                         await wait_until(lambda: settled_and_drained(workspace.trace.events, final_id)
@@ -293,14 +304,11 @@ async def run_case(args, names, report, settings):
             save(args.output_dir, report)
             if initial:
                 from backend.oracle import category_rows, numeric_rows_equal
-                expected = {v['id']: deepcopy(v['source']) for v in initial['views']}
                 members = [r['label'] for r in workspace.snapshots[3]['views'][0]['data']['rows']]
-                for target in ('v2', 'v3'):
-                    expected[target].update(categories=members, top_n=None, start='2017-01-01', end='2017-04-01')
-                expected['v2'].update(categories=None, top_n=3, rank_by='orders')
+                expected = expected_sources(initial, members, args.flow)
                 final = report['final_state']
                 checks = {'connection_under_60_seconds': report.get('connection_wall_seconds',61) <= 60,
-                    'four_complete_inputs': len(report.get('stages', [])) == 4 and all(s.get('input_complete') for s in report.get('stages', [])),
+                    'all_planned_inputs_complete': len(report.get('stages', [])) == len(names) and all(s.get('input_complete') for s in report.get('stages', [])),
                     'final_natural_playback_completed': report['final_natural_playback_completed'],
                     'no_browser_errors': not errors,
                     'chart1_unchanged': final['views'][0] == initial['views'][0],
@@ -350,6 +358,7 @@ async def run_case(args, names, report, settings):
 async def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--case', default='01', choices=['01'])
+    parser.add_argument('--flow', choices=['complete', 'reuse'], default='complete')
     parser.add_argument('--condition', choices=['direct', 'bound_revision'], default='bound_revision')
     parser.add_argument('--run-real', action='store_true')
     parser.add_argument('--env-file', type=Path)
@@ -359,7 +368,7 @@ async def main():
     parser.add_argument('--port', type=int, default=8072)
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=False)
-    report = {'case': args.case, 'condition': args.condition, 'status': 'preflight', 'api_attempted': False,
+    report = {'case': args.case, 'flow': args.flow, 'condition': args.condition, 'status': 'preflight', 'api_attempted': False,
               'automatic_retries': 0, 'overlap_valid': False, 'human_listening': 'pending',
               'spoken_semantic_consistency': 'pending', 'study_parity': 'not_established'}
     try:

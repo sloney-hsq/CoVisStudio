@@ -6,6 +6,12 @@ outcomes. Native superseded receipts retain their original request/call associat
 and distinguish skipped from attempted-but-uncommitted calls. Previously committed
 calls retain their true revision. This does not classify speech semantics or
 guarantee that a model follows the facts; see [runtime review](RUNTIME_TRUTH_REVIEW.md).
+Unscoped manual commits do not belong to an absent request. Superseded receipts
+derive `committed` and the optional committed `revision` by request/response/call
+identity in the ledger; `execution_attempted` records invocation, not publication.
+`evidence_revision` and the live public revision may differ after the evidence
+cutoff. Each new session records the static policy's `instructions_sha256`; exact
+dynamic outbound inputs continue to have their existing archived hashes.
 
 Current execution extension: [GOAL_EXECUTION.md](GOAL_EXECUTION.md). `revise_analysis` is the primary single-call analytical edit with flat source fields. `preview_revision` remains for explicit preview workflows but no longer advertises an `evidence` object in its model schema; manual HTTP/internal payloads still support their existing evidence references. Request-scoped execution receipts, provider settlement and awaited voice shutdown are described below.
 

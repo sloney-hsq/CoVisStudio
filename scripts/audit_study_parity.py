@@ -95,7 +95,7 @@ async def controlled(out, data_dir):
             for payload in (context, post_context):
                 execution = payload['execution_state']
                 for item in [execution, *execution['recent_request_outcomes']]:
-                    item['request_id'] = item['request_id'].replace(ws.session['id'] + ':', '<session>:')
+                    item['request_id'] = '<session>:' + item['request_id'].removeprefix(ws.session['id'] + ':')
             # A local proposal UUID is transport identity; card.condition remains visible.
             if post_context['last_proposal']:
                 post_context['last_proposal']['id'] = '<local-proposal-id>'

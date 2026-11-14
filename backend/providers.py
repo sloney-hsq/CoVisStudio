@@ -444,15 +444,13 @@ class QwenRealtime:
     async def _finish_stale_turn(self, rid, calls, message="Not executed: newer user speech superseded this response.", first_receipt=None, first_attempted=False):
         """Close native calls without executing or returning obsolete chart data."""
         for index, call in enumerate(calls):
-            if index == 0 and first_receipt is not None:
-                receipt = first_receipt
-            else:
-                context = {**(self.response_contexts.get(rid) or {}),
-                           'response_id': rid, 'call_id': call['call_id']}
-                receipt = await self.on_event({'type': 'superseded_receipt', 'context': context,
-                                              'execution_attempted': first_attempted and index == 0})
-                if receipt is None:  # Standalone transport consumers may only observe events.
-                    receipt = {'status': 'superseded', 'committed': False, 'message': message}
+            context = {**(self.response_contexts.get(rid) or {}),
+                       'response_id': rid, 'call_id': call['call_id']}
+            receipt = await self.on_event({'type': 'superseded_receipt', 'context': context,
+                                          'execution_attempted': first_attempted and index == 0})
+            if receipt is None:  # Standalone transport consumers may only observe events.
+                receipt = first_receipt if index == 0 and first_receipt is not None else {
+                    'status': 'superseded', 'committed': False, 'message': message}
             await self._send_tool_receipt(rid, call, receipt)
         self.draining.discard(rid)
         await self._dispatch()

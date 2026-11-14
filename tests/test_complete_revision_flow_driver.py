@@ -1,5 +1,5 @@
 """Offline control checks for the authored voice driver; no model connection."""
-from scripts.verify_complete_revision_flow import stage_wait_result, stage_request_id
+from scripts.verify_complete_revision_flow import stage_wait_result, stage_request_id, expected_sources
 
 
 def event(name, request_id='r1', **fields):
@@ -40,3 +40,16 @@ def test_fragment_supersession_follows_latest_request_until_terminal():
     events.extend([event('request_accepted', 'new', index=13),
                    event('request_outcome', 'new', index=14, status='no_changes')])
     assert stage_wait_result(events, stage_request_id(events, 10)) == 'not_committed'
+
+
+def test_reuse_only_keeps_dates_metrics_and_untargeted_chart():
+    initial = {'views': [{'id': v, 'source': {'metric': m, 'region': 'MG',
+        'start': '2017-01-01', 'end': '2018-01-01', 'categories': None, 'top_n': 3}}
+        for v, m in [('v1', 'orders'), ('v2', 'low_review_rate'), ('v3', 'avg_delivery_days')]]}
+    result = expected_sources(initial, ['a', 'b', 'c'], 'reuse')
+    assert result['v1'] == initial['views'][0]['source']
+    for view in initial['views'][1:]:
+        assert result[view['id']] == {**view['source'], 'categories': ['a', 'b', 'c'], 'top_n': None}
+    complete = expected_sources(initial, ['a', 'b', 'c'], 'complete')
+    assert complete['v2']['categories'] is None and complete['v2']['end'] == '2017-04-01'
+    assert complete['v3']['categories'] == ['a', 'b', 'c']

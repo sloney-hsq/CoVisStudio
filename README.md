@@ -87,6 +87,14 @@ within 480 task seconds; the longer task timer does not extend the voice budget.
 
 ## Current verification
 
+A focused reuse-only check after the runtime-fact repair completed in **33.547 s**
+with **4.24/6.64 s** inputs and no retry. The current request reissued the suppressed
+tool, committed v7 and then reported completion; three final chart queries matched
+independent SQL and the new image preceded the reply. One provenance discrepancy
+remains: the model used v1 instead of selected v3, with identical category members.
+The card reflects the executed source. This is a single authored case, not proof
+of stable semantic reliability. API and the isolated test service were closed.
+
 The subsequent single-session reuse → Q1 correction → chart-2 reranking check
 stopped after 56.360 seconds. It reproduced a false completion: an obsolete tool
 call was correctly suppressed, but the current response claimed success without

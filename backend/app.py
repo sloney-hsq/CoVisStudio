@@ -63,7 +63,7 @@ You may discuss an observation without editing. Never invent measurements, study
 execution_state is the runtime's account of actual commits, not an assistant interpretation.
 If it records no commit for a request, that request did not change the charts, regardless of prior speech.
 Cancelled, unexecuted calls changed nothing. If their work still applies, issue a new tool call under
-the current request. Do not apply a date-only correction on the assumption that an earlier promise ran:
+the current request. For any follow-up revision, do not assume that earlier promised work ran:
 read current_dashboard and the recorded outcomes, then resolve the still-requested changes.
 """
 
@@ -118,6 +118,7 @@ class Workspace:
                         'participant_id': participant_id, 'started_at': datetime.now(timezone.utc).isoformat(),
                         'models': {'text': self.settings['text_model'], 'voice': self.settings['realtime_model']},
                         'used_modes': [], 'condition': condition}
+        self.session['instructions_sha256'] = hashlib.sha256(self.instructions().encode('utf-8')).hexdigest()
         self.trace = Trace(self.settings['trace_dir'] / self.session['id'])
         self.evidence_store = EvidenceStore(self.trace)
         self.evidence_package = None
@@ -585,7 +586,7 @@ class Workspace:
         """Execution facts from public state and the existing request ledger."""
         request_id = request_id or self.trace.current.get('request_id')
         commits = [event for event in self.trace.events
-                   if event['name'] == 'tool_committed' and event.get('request_id') == request_id]
+                   if request_id is not None and event['name'] == 'tool_committed' and event.get('request_id') == request_id]
         outcomes = [event for event in self.trace.events if event['name'] == 'request_outcome']
         return {'request_id': request_id, 'public_revision': self.store.state['revision'],
                 'request_committed': bool(commits),
@@ -606,6 +607,7 @@ class Workspace:
                     playback[item['response_id']] = {key: details[key] for key in
                         ('response_id', 'played_samples', 'received_samples', 'interrupted', 'timing_basis') if key in details}
         return json.dumps({'execution_state': self.execution_state(),
+                           'evidence_revision': max(snapshots),
                            'reference': self.bound_reference, 'visible_dashboard': visible,
                            'current_dashboard': snapshots[max(snapshots)], 'evidence': self.bound_evidence,
                            'history_index': self.history_index(snapshots),
@@ -689,15 +691,20 @@ class Workspace:
         if kind == 'superseded_receipt':
             origin = event['context']
             attempted = event['execution_attempted']
-            receipt = {'status': 'superseded', 'committed': False,
+            commits = [entry for entry in self.trace.events if entry['name'] == 'tool_committed'
+                       and origin.get('call_id') is not None and entry.get('call_id') == origin['call_id']
+                       and entry.get('request_id') == origin.get('request_id')
+                       and entry.get('response_id') == origin.get('response_id')]
+            receipt = {'status': 'superseded', 'committed': bool(commits),
                        'execution_attempted': attempted,
                        'public_revision': self.store.state['revision'],
-                       'message': ('Not committed: execution was attempted before supersession. ' if attempted else
+                       'message': ('Already committed before supersession; obsolete chart data withheld.' if commits else
+                                  ('Not committed: execution was attempted before supersession. ' if attempted else
                                    'Not executed: newer user speech superseded this response. ') +
                                   'This call changed no public charts. Issue a new call under the current '
-                                  'request if this work is still required.'}
-            if not attempted:
-                receipt['executed'] = False
+                                  'request if this work is still required.')}
+            if commits:
+                receipt['revision'] = commits[-1]['revision']
             with self.trace.scope(origin):
                 self.trace.record('superseded_receipt', receipt=receipt)
             return receipt

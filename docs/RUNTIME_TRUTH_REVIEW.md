@@ -27,6 +27,20 @@ It makes no new literature or novelty claim and does not run a paid model.
 
 ## Changes
 
+Follow-up review: null request IDs no longer collect unscoped manual commits.
+Superseded receipts now derive the commit flag and committed revision by exact
+request/response/call identity from the commit ledger, including already committed
+calls. `execution_attempted` is the single attempt field; `executed` was removed.
+The current policy is hashed into each new session as `instructions_sha256`.
+The new follow-up instruction applies to any revision, rather than naming a
+date-only correction. This identifies the policy used; it does not establish
+formal preregistration or a causal model improvement.
+
+`evidence_revision` identifies the latest chart snapshot in the frozen evidence
+package. It may differ from `execution_state.public_revision` after subsequent
+manual edits. A new local test demonstrates this valid difference, so no equality
+assertion between those separate concepts was added.
+
 `Workspace.execution_state` derives the current request's actual commit revisions,
 the current public version and six recent settled request outcomes from the
 existing ledger. `context()` exposes it for every response preparation in both
@@ -37,8 +51,8 @@ is introduced.
 
 `QwenRealtime._finish_stale_turn` asks the workspace for an authoritative receipt:
 the current public revision, whether execution was attempted, and no public commit.
-Never-invoked calls additionally say `executed:false`. Computed-but-uncommitted
-work is not called unexecuted. Previously legal commits retain their committed
+Never-invoked calls say `execution_attempted:false`. Computed-but-uncommitted
+work says `execution_attempted:true`. Previously legal commits retain their committed
 receipt and revision; subsequent supersession does not undo them. The original
 request/response/call association remains intact.
 
@@ -62,6 +76,35 @@ are not reusable authorization. Earlier recorded results remain in TASKS.md.
   response; whether the model uses them correctly still needs real verification.
 - No new claim about UI legibility or participant benefit. The quoted review did
   not inspect source or screenshots; those observations remain review questions.
+
+## Exact offline comparison of the failed response
+
+The script `scripts/compare_archived_response_context.py` reads the original
+request-5 session update (event 3359) and only preceding events. It preserves
+every existing context field and computes the added execution metadata without
+opening a provider or reconstructing hidden native history. The recorded diff is
+`traces/reviewer-followup-20261113/context-diff.json`.
+
+Added values are request 5, public revision 6, no request commits, an empty list
+of recent settled outcomes, and evidence revision 6. **No existing context field
+changed, and there were no recent outcomes available at this point.** The policy
+adds five execution-fact sentences. The unchanged dashboard had already been
+provided. This intervention makes execution status explicit; it does not add
+previously missing chart evidence or establish why the model failed.
+
+Archived policy SHA-256:
+`95e27f9bd2996ce7cd6c2390f05907a27343697422fd15dbf03708dfe0b0e6b2`.
+Current shared policy SHA-256:
+`d34e9d30b4ffa12eb444deff6c1fe968edf733b70412356fef578262fc1b4e69`.
+
+The intervening real reuse trial completed in 33.547 seconds and reissued the
+cancelled call, but chose source v1 rather than selected v3 (identical members).
+It is one authored observation using the same input clips, not independent
+generalization evidence. It preceded this follow-up patch; it does not validate
+the new ledger-derived receipt or generalized policy. No further API run was made.
+
+Replay export now burns an `OFFLINE RECONSTRUCTION` label into the video. Original
+silent video and source WAVs remain unchanged.
 
 ## Verification
 

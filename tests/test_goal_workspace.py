@@ -1,6 +1,7 @@
 """Offline execution/outcome/shutdown checks; real Olist, no model connections."""
 import asyncio
 import json
+import hashlib
 from copy import deepcopy
 from pathlib import Path
 
@@ -171,7 +172,8 @@ def test_superseded_native_call_then_reissue_or_false_claim(workspace, condition
             await client._handle({'type': 'response.created', 'response': {'id': 'old'}})
             await done('old', [call])
             receipt = json.loads(next(e['item']['output'] for e in wire if e['type'] == 'conversation.item.create'))
-            assert receipt['executed'] is False and receipt['committed'] is False
+            assert receipt['execution_attempted'] is False and receipt['committed'] is False
+            assert 'executed' not in receipt
             assert receipt['public_revision'] == initial['revision']
             assert ws.store.snapshot() == initial
             assert any(e['name'] == 'superseded_receipt' for e in ws.trace.events)
@@ -214,6 +216,62 @@ def test_superseded_receipt_does_not_call_prepared_work_unexecuted(workspace):
         assert receipt['committed'] is False
         assert 'executed' not in receipt
         assert receipt['public_revision'] == ws.store.state['revision']
+    asyncio.run(run())
+
+
+def test_manual_commit_without_request_is_not_request_success(workspace):
+    async def run():
+        ws = workspace
+        ws.reset('text', None, '')
+        ws.freeze_evidence()
+        await ws.execute('set_dashboard', {'title': 'Manual edit'}, actor='user')
+        assert any(e['name'] == 'tool_committed' and e.get('request_id') is None for e in ws.trace.events)
+        state = ws.execution_state()
+        assert state['request_id'] is None
+        assert state['request_committed'] is False and state['request_commit_revisions'] == []
+        context = json.loads(ws.context())
+        assert context['evidence_revision'] == context['current_dashboard']['revision'] == 0
+        assert context['execution_state']['public_revision'] == 1
+        assert ws.export()['session']['instructions_sha256'] == hashlib.sha256(ws.instructions().encode('utf-8')).hexdigest()
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize('phase', ['never_invoked', 'prepared', 'committed'])
+def test_native_superseded_receipt_matches_exact_call_ledger(workspace, phase):
+    async def run():
+        ws = workspace
+        ws.reset('live_voice', None, '')
+        origin = {**await accepted(ws, 'old-response'), 'call_id': 'old-call'}
+        if phase == 'prepared':
+            ws.store.prepare('set_dashboard', {'title': 'Private draft'})
+        if phase == 'committed':
+            await ws.execute('set_dashboard', {'title': 'Public change'}, call_context=origin)
+        await ws.provider_event({'type': 'request_settled', 'response_id': 'old-response', 'status': 'completed'})
+        outcome = [e for e in ws.trace.events if e['name'] == 'request_outcome'][-1]
+        await ws.provider_event({'type': 'speech_start', 'item_id': 'replacement'})
+        client = QwenRealtime({}, 'live_voice', [], ws.provider_event, ws.execute_model)
+        client.response_contexts['old-response'] = origin
+        wire = []
+        class Socket:
+            async def send(self, text):
+                event = json.loads(text)
+                wire.append(event)
+                await client._handle({'type': 'conversation.item.created', 'item': event['item']})
+        client.ws = Socket()
+        # Even an incorrect transport hint must not override the public ledger.
+        await client._finish_stale_turn('old-response', [{'call_id': 'old-call'}, {'call_id': 'not-invoked'}],
+            first_attempted=phase != 'never_invoked', first_receipt={'committed': False})
+        receipts = [json.loads(e['item']['output']) for e in wire]
+        assert receipts[0]['committed'] == outcome['committed'] == (phase == 'committed')
+        assert receipts[0]['execution_attempted'] == (phase != 'never_invoked')
+        assert receipts[1]['committed'] is False  # Same request, different call.
+        assert all('executed' not in r and 'state' not in r for r in receipts)
+        if phase == 'committed':
+            assert receipts[0]['revision'] == 1
+            assert ws.store.state['title'] == 'Public change'
+        else:
+            assert 'revision' not in receipts[0]
+            assert ws.store.state['revision'] == 0
     asyncio.run(run())
 
 

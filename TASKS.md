@@ -1,5 +1,44 @@
 # Implementation and acceptance — 2026-11-13
 
+## Follow-up review — local evidence and receipt corrections
+
+- Fixed absent-request scoping: manual commits cannot certify an absent request.
+  Native stale receipts now derive publication from the exact call's ledger entry,
+  preserving already legal commits. Attempted and committed remain separate.
+- Generalized the new follow-up prompt, recorded the static policy hash in new
+  sessions and restricted parity normalization to the random session prefix.
+  Evidence-package and live public revisions are recorded separately, not asserted
+  equal across a legitimate cutoff.
+- Reconstructed the added context fields for the original failed request offline:
+  no request commit, empty recent outcomes, public/evidence v6. All existing fields
+  remain unchanged. This is explicit execution status, not missing chart evidence.
+- **56 targeted local tests passed**, covering three stale-call outcomes, B0/B2
+  parity, capture ordering, manual commits, driver and replay. No paid API call.
+  Reconstructed videos carry a burned-in label; original silent video/WAVs remain.
+
+## Real reuse check after runtime-fact repair — qualified success
+
+- One authorized Qwen Realtime connection completed in **33.547 seconds**, with
+  complete **4.24 / 6.64-second** inputs, no retry and no new TTS call. Speech began
+  during actual explanation playback. The old partial-request tool was suppressed;
+  the current request issued a new tool and committed **v6 → v7** before completion
+  speech. This case did not reproduce the prior no-commit false completion.
+- Charts 2/3 adopted the historical members while retaining MG, 2017, status and
+  their respective metrics; chart 1 stayed unchanged. All three final chart queries
+  matched independent SQL. The v7 JPEG was sent before the same request's reply.
+  The final 10.08-second output audio played completely.
+- **Remaining discrepancy:** selected evidence was chart 1 at v3, but the model
+  chose `chart:1:v1`. The two member lists are identical. The card matches the
+  actual tool and resulting charts, but not the selected source version. The
+  original driver's numerical pass is retained alongside this separate audit.
+- API closure was recorded once, the test process exited and port 8078 closed.
+  A Windows Proactor 10054 cleanup warning remains recorded. No service restart.
+- Private evidence and synchronized audiovisual replay:
+  `traces/reuse-runtime-truth-20261113/review.html`, `audit.json`, `run/report.json`,
+  `run/shutdown.json`, and the original native/audio/browser archives. Eleven local
+  recording/driver checks passed before the authorized run. One authored case is
+  not evidence of a stable model improvement or a participant benefit.
+
 ## Runtime execution facts after external review — local only
 
 - Every prepared response now includes request-scoped commit facts and recent
