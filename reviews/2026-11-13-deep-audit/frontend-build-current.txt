@@ -1,0 +1,24 @@
+
+> covis-studio-ui@0.1.0 build
+> vite build --outDir ../reviews/2026-11-13-deep-audit/frontend-build-current
+
+vite v6.4.6 building for production...
+
+(!) outDir C:\CoVisStudio\reviews\2026-11-13-deep-audit\frontend-build-current is not inside project root and will not be emptied.
+Use --emptyOutDir to override.
+
+transforming...
+✓ 2174 modules transformed.
+rendering chunks...
+computing gzip size...
+../reviews/2026-11-13-deep-audit/frontend-build-current/index.html                   0.67 kB │ gzip:   0.40 kB
+../reviews/2026-11-13-deep-audit/frontend-build-current/assets/index-5LoW31Ke.css   64.10 kB │ gzip:  14.20 kB
+../reviews/2026-11-13-deep-audit/frontend-build-current/assets/vue-D1fVMIY1.js      71.01 kB │ gzip:  28.02 kB
+../reviews/2026-11-13-deep-audit/frontend-build-current/assets/index-Bp1vI_Sb.js   156.19 kB │ gzip:  46.13 kB
+../reviews/2026-11-13-deep-audit/frontend-build-current/assets/charts-BzX_Tm2W.js  608.25 kB │ gzip: 206.72 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 6.36s

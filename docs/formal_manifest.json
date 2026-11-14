@@ -1,0 +1,3650 @@
+{
+  "protocol": "covis-formal-study-0.1",
+  "materials_protocol": "covis-formal-materials-0.1",
+  "materials": [
+    {
+      "id": "study_01_a",
+      "family_id": "01",
+      "variant_id": "a",
+      "protocol": "covis-formal-materials-0.1",
+      "split": "formal_study_candidate",
+      "title": "Choose a service investigation for MG",
+      "kind": "regional_service_review",
+      "business_goal": "The MG team needs a defensible service investigation for 2017. Earlier RJ comparisons and the current MG leaders offer different starting points. Choose the categories that best support your investigation, examine review risk and delivery time, and recommend a follow-up. You may keep, combine, replace or narrow an earlier choice as you inspect the evidence. The order-volume view remains the local context for the meeting.",
+      "description": "The MG team needs a defensible service investigation for 2017. Earlier RJ comparisons and the current MG leaders offer different starting points. Choose the categories that best support your investigation, examine review risk and delivery time, and recommend a follow-up. You may keep, combine, replace or narrow an earlier choice as you inspect the evidence. The order-volume view remains the local context for the meeting.",
+      "goal": "The MG team needs a defensible service investigation for 2017. Earlier RJ comparisons and the current MG leaders offer different starting points. Choose the categories that best support your investigation, examine review risk and delivery time, and recommend a follow-up. You may keep, combine, replace or narrow an earlier choice as you inspect the evidence. The order-volume view remains the local context for the meeting.\n\nBusiness constraints:\nUse MG delivered orders in calendar year 2017 for service views 2 and 3, retaining their measures.\nCompare the same chosen categories in both service views; leave order-volume view 1 unchanged.\n\nYour choices:\nChoose historical, current or other categories supported by the data.\nChoose explicit members or a ranking rule, and revise that choice if useful.",
+      "mandatory_outcomes": [
+        "Use MG delivered orders in calendar year 2017 for service views 2 and 3, retaining their measures.",
+        "Compare the same chosen categories in both service views; leave order-volume view 1 unchanged."
+      ],
+      "hard_constraints": [
+        {
+          "id": "view_2_scope",
+          "kind": "source_fields",
+          "view_number": 2,
+          "required": {
+            "region": "MG",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "low_review_rate"
+          }
+        },
+        {
+          "id": "view_3_scope",
+          "kind": "source_fields",
+          "view_number": 3,
+          "required": {
+            "region": "MG",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "avg_delivery_days"
+          }
+        },
+        {
+          "id": "context_unchanged",
+          "kind": "unchanged_view",
+          "view_number": 1
+        },
+        {
+          "id": "service_cohort",
+          "kind": "same_members",
+          "view_numbers": [
+            2,
+            3
+          ]
+        }
+      ],
+      "participant_choices": [
+        "Choose historical, current or other categories supported by the data.",
+        "Choose explicit members or a ranking rule, and revise that choice if useful."
+      ],
+      "initial": "Authored RJ history followed by current MG leaders; 2017 delivered orders",
+      "response_prompt": "State your recommendation and its supporting evidence. Identify how you selected the categories, which views you changed, and the region, dates and measures used. Explain any choice you revised and which conditions you kept or released; if you did not revise a choice, say so. An uncertain conclusion is acceptable when the evidence is insufficient.",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "material_review": "pending",
+      "difficulty_equivalence": "not_established"
+    },
+    {
+      "id": "study_01_b",
+      "family_id": "01",
+      "variant_id": "b",
+      "protocol": "covis-formal-materials-0.1",
+      "split": "formal_study_candidate",
+      "title": "Choose a service investigation for RJ",
+      "kind": "regional_service_review",
+      "business_goal": "The RJ team needs a defensible service investigation for 2017. Earlier MG comparisons and the current RJ leaders offer different starting points. Choose the categories that best support your investigation, examine review risk and delivery time, and recommend a follow-up. You may keep, combine, replace or narrow an earlier choice as you inspect the evidence. The order-volume view remains the local context for the meeting.",
+      "description": "The RJ team needs a defensible service investigation for 2017. Earlier MG comparisons and the current RJ leaders offer different starting points. Choose the categories that best support your investigation, examine review risk and delivery time, and recommend a follow-up. You may keep, combine, replace or narrow an earlier choice as you inspect the evidence. The order-volume view remains the local context for the meeting.",
+      "goal": "The RJ team needs a defensible service investigation for 2017. Earlier MG comparisons and the current RJ leaders offer different starting points. Choose the categories that best support your investigation, examine review risk and delivery time, and recommend a follow-up. You may keep, combine, replace or narrow an earlier choice as you inspect the evidence. The order-volume view remains the local context for the meeting.\n\nBusiness constraints:\nUse RJ delivered orders in calendar year 2017 for service views 2 and 3, retaining their measures.\nCompare the same chosen categories in both service views; leave order-volume view 1 unchanged.\n\nYour choices:\nChoose historical, current or other categories supported by the data.\nChoose explicit members or a ranking rule, and revise that choice if useful.",
+      "mandatory_outcomes": [
+        "Use RJ delivered orders in calendar year 2017 for service views 2 and 3, retaining their measures.",
+        "Compare the same chosen categories in both service views; leave order-volume view 1 unchanged."
+      ],
+      "hard_constraints": [
+        {
+          "id": "view_2_scope",
+          "kind": "source_fields",
+          "view_number": 2,
+          "required": {
+            "region": "RJ",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "low_review_rate"
+          }
+        },
+        {
+          "id": "view_3_scope",
+          "kind": "source_fields",
+          "view_number": 3,
+          "required": {
+            "region": "RJ",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "avg_delivery_days"
+          }
+        },
+        {
+          "id": "context_unchanged",
+          "kind": "unchanged_view",
+          "view_number": 1
+        },
+        {
+          "id": "service_cohort",
+          "kind": "same_members",
+          "view_numbers": [
+            2,
+            3
+          ]
+        }
+      ],
+      "participant_choices": [
+        "Choose historical, current or other categories supported by the data.",
+        "Choose explicit members or a ranking rule, and revise that choice if useful."
+      ],
+      "initial": "Authored MG history followed by current RJ leaders; 2017 delivered orders",
+      "response_prompt": "State your recommendation and its supporting evidence. Identify how you selected the categories, which views you changed, and the region, dates and measures used. Explain any choice you revised and which conditions you kept or released; if you did not revise a choice, say so. An uncertain conclusion is acceptable when the evidence is insufficient.",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "material_review": "pending",
+      "difficulty_equivalence": "not_established"
+    },
+    {
+      "id": "study_02_a",
+      "family_id": "02",
+      "variant_id": "a",
+      "protocol": "covis-formal-materials-0.1",
+      "split": "formal_study_candidate",
+      "title": "Choose local operating priorities for MG",
+      "kind": "local_priorities",
+      "business_goal": "The MG team is reconsidering a monitoring dashboard inherited from RJ. Decide which categories deserve local attention and whether a fixed selection or a dynamic ranking better serves that decision. Compare workload, review risk and delivery time, then recommend an investigation. Keeping the inherited categories is allowed if you justify it; you may instead release, narrow or replace them based on the evidence.",
+      "description": "The MG team is reconsidering a monitoring dashboard inherited from RJ. Decide which categories deserve local attention and whether a fixed selection or a dynamic ranking better serves that decision. Compare workload, review risk and delivery time, then recommend an investigation. Keeping the inherited categories is allowed if you justify it; you may instead release, narrow or replace them based on the evidence.",
+      "goal": "The MG team is reconsidering a monitoring dashboard inherited from RJ. Decide which categories deserve local attention and whether a fixed selection or a dynamic ranking better serves that decision. Compare workload, review risk and delivery time, then recommend an investigation. Keeping the inherited categories is allowed if you justify it; you may instead release, narrow or replace them based on the evidence.\n\nBusiness constraints:\nUse MG delivered orders in calendar year 2017 in all three views.\nRetain orders in view 1, low-review rate in view 2 and delivery time in view 3; compare the same categories.\n\nYour choices:\nRetain, narrow or replace the inherited categories.\nChoose a fixed cohort or the ranking measure and count; no ranking rule is prescribed.",
+      "mandatory_outcomes": [
+        "Use MG delivered orders in calendar year 2017 in all three views.",
+        "Retain orders in view 1, low-review rate in view 2 and delivery time in view 3; compare the same categories."
+      ],
+      "hard_constraints": [
+        {
+          "id": "view_2_scope",
+          "kind": "source_fields",
+          "view_number": 2,
+          "required": {
+            "region": "MG",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "low_review_rate"
+          }
+        },
+        {
+          "id": "view_3_scope",
+          "kind": "source_fields",
+          "view_number": 3,
+          "required": {
+            "region": "MG",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "avg_delivery_days"
+          }
+        },
+        {
+          "id": "view_1_scope",
+          "kind": "source_fields",
+          "view_number": 1,
+          "required": {
+            "region": "MG",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "orders"
+          }
+        },
+        {
+          "id": "comparison_cohort",
+          "kind": "same_members",
+          "view_numbers": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "participant_choices": [
+        "Retain, narrow or replace the inherited categories.",
+        "Choose a fixed cohort or the ranking measure and count; no ranking rule is prescribed."
+      ],
+      "initial": "Authored RJ history; current MG measures retain that starting cohort",
+      "response_prompt": "State your recommendation and its supporting evidence. Identify how you selected the categories, which views you changed, and the region, dates and measures used. Explain any choice you revised and which conditions you kept or released; if you did not revise a choice, say so. An uncertain conclusion is acceptable when the evidence is insufficient.",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "material_review": "pending",
+      "difficulty_equivalence": "not_established"
+    },
+    {
+      "id": "study_02_b",
+      "family_id": "02",
+      "variant_id": "b",
+      "protocol": "covis-formal-materials-0.1",
+      "split": "formal_study_candidate",
+      "title": "Choose local operating priorities for RJ",
+      "kind": "local_priorities",
+      "business_goal": "The RJ team is reconsidering a monitoring dashboard inherited from MG. Decide which categories deserve local attention and whether a fixed selection or a dynamic ranking better serves that decision. Compare workload, review risk and delivery time, then recommend an investigation. Keeping the inherited categories is allowed if you justify it; you may instead release, narrow or replace them based on the evidence.",
+      "description": "The RJ team is reconsidering a monitoring dashboard inherited from MG. Decide which categories deserve local attention and whether a fixed selection or a dynamic ranking better serves that decision. Compare workload, review risk and delivery time, then recommend an investigation. Keeping the inherited categories is allowed if you justify it; you may instead release, narrow or replace them based on the evidence.",
+      "goal": "The RJ team is reconsidering a monitoring dashboard inherited from MG. Decide which categories deserve local attention and whether a fixed selection or a dynamic ranking better serves that decision. Compare workload, review risk and delivery time, then recommend an investigation. Keeping the inherited categories is allowed if you justify it; you may instead release, narrow or replace them based on the evidence.\n\nBusiness constraints:\nUse RJ delivered orders in calendar year 2017 in all three views.\nRetain orders in view 1, low-review rate in view 2 and delivery time in view 3; compare the same categories.\n\nYour choices:\nRetain, narrow or replace the inherited categories.\nChoose a fixed cohort or the ranking measure and count; no ranking rule is prescribed.",
+      "mandatory_outcomes": [
+        "Use RJ delivered orders in calendar year 2017 in all three views.",
+        "Retain orders in view 1, low-review rate in view 2 and delivery time in view 3; compare the same categories."
+      ],
+      "hard_constraints": [
+        {
+          "id": "view_2_scope",
+          "kind": "source_fields",
+          "view_number": 2,
+          "required": {
+            "region": "RJ",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "low_review_rate"
+          }
+        },
+        {
+          "id": "view_3_scope",
+          "kind": "source_fields",
+          "view_number": 3,
+          "required": {
+            "region": "RJ",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "avg_delivery_days"
+          }
+        },
+        {
+          "id": "view_1_scope",
+          "kind": "source_fields",
+          "view_number": 1,
+          "required": {
+            "region": "RJ",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "orders"
+          }
+        },
+        {
+          "id": "comparison_cohort",
+          "kind": "same_members",
+          "view_numbers": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "participant_choices": [
+        "Retain, narrow or replace the inherited categories.",
+        "Choose a fixed cohort or the ranking measure and count; no ranking rule is prescribed."
+      ],
+      "initial": "Authored MG history; current RJ measures retain that starting cohort",
+      "response_prompt": "State your recommendation and its supporting evidence. Identify how you selected the categories, which views you changed, and the region, dates and measures used. Explain any choice you revised and which conditions you kept or released; if you did not revise a choice, say so. An uncertain conclusion is acceptable when the evidence is insufficient.",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "material_review": "pending",
+      "difficulty_equivalence": "not_established"
+    },
+    {
+      "id": "study_03_a",
+      "family_id": "03",
+      "variant_id": "a",
+      "protocol": "covis-formal-materials-0.1",
+      "split": "formal_study_candidate",
+      "title": "Investigate service changes in RJ",
+      "kind": "seasonal_comparison",
+      "business_goal": "The RJ manager wants to investigate service differences between January–March and July–September 2017. The saved and current comparisons have different leading categories. Choose a category cohort that makes your comparison useful and examine the two service measures. You may keep an earlier selection or change it while exploring. Explain the observed difference, uncertainty and a follow-up without treating association as seasonal causation.",
+      "description": "The RJ manager wants to investigate service differences between January–March and July–September 2017. The saved and current comparisons have different leading categories. Choose a category cohort that makes your comparison useful and examine the two service measures. You may keep an earlier selection or change it while exploring. Explain the observed difference, uncertainty and a follow-up without treating association as seasonal causation.",
+      "goal": "The RJ manager wants to investigate service differences between January–March and July–September 2017. The saved and current comparisons have different leading categories. Choose a category cohort that makes your comparison useful and examine the two service measures. You may keep an earlier selection or change it while exploring. Explain the observed difference, uncertainty and a follow-up without treating association as seasonal causation.\n\nBusiness constraints:\nFinal service views 2 and 3 use RJ delivered orders in July–September 2017, retaining their measures.\nUse the same chosen categories in both service views; keep third-quarter order-volume view 1 unchanged.\nAny claim about change must compare the chosen categories over both stated periods; explain unavailable evidence.\n\nYour choices:\nChoose the comparison cohort from either period or another explicit selection.\nChoose its selection rule, and revise or narrow it if the evidence calls for it.",
+      "mandatory_outcomes": [
+        "Final service views 2 and 3 use RJ delivered orders in July–September 2017, retaining their measures.",
+        "Use the same chosen categories in both service views; keep third-quarter order-volume view 1 unchanged.",
+        "Any claim about change must compare the chosen categories over both stated periods; explain unavailable evidence."
+      ],
+      "hard_constraints": [
+        {
+          "id": "view_2_scope",
+          "kind": "source_fields",
+          "view_number": 2,
+          "required": {
+            "region": "RJ",
+            "start": "2017-07-01",
+            "end": "2017-10-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "low_review_rate"
+          }
+        },
+        {
+          "id": "view_3_scope",
+          "kind": "source_fields",
+          "view_number": 3,
+          "required": {
+            "region": "RJ",
+            "start": "2017-07-01",
+            "end": "2017-10-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "avg_delivery_days"
+          }
+        },
+        {
+          "id": "context_unchanged",
+          "kind": "unchanged_view",
+          "view_number": 1
+        },
+        {
+          "id": "service_cohort",
+          "kind": "same_members",
+          "view_numbers": [
+            2,
+            3
+          ]
+        }
+      ],
+      "participant_choices": [
+        "Choose the comparison cohort from either period or another explicit selection.",
+        "Choose its selection rule, and revise or narrow it if the evidence calls for it."
+      ],
+      "initial": "Authored RJ January–March history followed by July–September leaders",
+      "response_prompt": "State your recommendation and its supporting evidence. Identify how you selected the categories, which views you changed, and the region, dates and measures used. Explain any choice you revised and which conditions you kept or released; if you did not revise a choice, say so. An uncertain conclusion is acceptable when the evidence is insufficient.",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "material_review": "pending",
+      "difficulty_equivalence": "not_established"
+    },
+    {
+      "id": "study_03_b",
+      "family_id": "03",
+      "variant_id": "b",
+      "protocol": "covis-formal-materials-0.1",
+      "split": "formal_study_candidate",
+      "title": "Investigate service changes in MG",
+      "kind": "seasonal_comparison",
+      "business_goal": "The MG manager wants to investigate service differences between January–March and July–September 2017. The saved and current comparisons have different leading categories. Choose a category cohort that makes your comparison useful and examine the two service measures. You may keep an earlier selection or change it while exploring. Explain the observed difference, uncertainty and a follow-up without treating association as seasonal causation.",
+      "description": "The MG manager wants to investigate service differences between January–March and July–September 2017. The saved and current comparisons have different leading categories. Choose a category cohort that makes your comparison useful and examine the two service measures. You may keep an earlier selection or change it while exploring. Explain the observed difference, uncertainty and a follow-up without treating association as seasonal causation.",
+      "goal": "The MG manager wants to investigate service differences between January–March and July–September 2017. The saved and current comparisons have different leading categories. Choose a category cohort that makes your comparison useful and examine the two service measures. You may keep an earlier selection or change it while exploring. Explain the observed difference, uncertainty and a follow-up without treating association as seasonal causation.\n\nBusiness constraints:\nFinal service views 2 and 3 use MG delivered orders in July–September 2017, retaining their measures.\nUse the same chosen categories in both service views; keep third-quarter order-volume view 1 unchanged.\nAny claim about change must compare the chosen categories over both stated periods; explain unavailable evidence.\n\nYour choices:\nChoose the comparison cohort from either period or another explicit selection.\nChoose its selection rule, and revise or narrow it if the evidence calls for it.",
+      "mandatory_outcomes": [
+        "Final service views 2 and 3 use MG delivered orders in July–September 2017, retaining their measures.",
+        "Use the same chosen categories in both service views; keep third-quarter order-volume view 1 unchanged.",
+        "Any claim about change must compare the chosen categories over both stated periods; explain unavailable evidence."
+      ],
+      "hard_constraints": [
+        {
+          "id": "view_2_scope",
+          "kind": "source_fields",
+          "view_number": 2,
+          "required": {
+            "region": "MG",
+            "start": "2017-07-01",
+            "end": "2017-10-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "low_review_rate"
+          }
+        },
+        {
+          "id": "view_3_scope",
+          "kind": "source_fields",
+          "view_number": 3,
+          "required": {
+            "region": "MG",
+            "start": "2017-07-01",
+            "end": "2017-10-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "avg_delivery_days"
+          }
+        },
+        {
+          "id": "context_unchanged",
+          "kind": "unchanged_view",
+          "view_number": 1
+        },
+        {
+          "id": "service_cohort",
+          "kind": "same_members",
+          "view_numbers": [
+            2,
+            3
+          ]
+        }
+      ],
+      "participant_choices": [
+        "Choose the comparison cohort from either period or another explicit selection.",
+        "Choose its selection rule, and revise or narrow it if the evidence calls for it."
+      ],
+      "initial": "Authored MG January–March history followed by July–September leaders",
+      "response_prompt": "State your recommendation and its supporting evidence. Identify how you selected the categories, which views you changed, and the region, dates and measures used. Explain any choice you revised and which conditions you kept or released; if you did not revise a choice, say so. An uncertain conclusion is acceptable when the evidence is insufficient.",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "material_review": "pending",
+      "difficulty_equivalence": "not_established"
+    },
+    {
+      "id": "study_04_a",
+      "family_id": "04",
+      "variant_id": "a",
+      "protocol": "covis-formal-materials-0.1",
+      "split": "formal_study_candidate",
+      "title": "Review financial and service priorities in RJ",
+      "kind": "financial_service_review",
+      "business_goal": "The RJ manager needs a financial perspective on the 2017 service comparison. Choose a defensible category cohort, show its item revenue alongside review risk and delivery time, and discuss whether the financial evidence changes your operating recommendation. The starting cohort is a candidate, not an agreed answer: you may retain, narrow or replace it and revise your selection rule as the discussion develops.",
+      "description": "The RJ manager needs a financial perspective on the 2017 service comparison. Choose a defensible category cohort, show its item revenue alongside review risk and delivery time, and discuss whether the financial evidence changes your operating recommendation. The starting cohort is a candidate, not an agreed answer: you may retain, narrow or replace it and revise your selection rule as the discussion develops.",
+      "goal": "The RJ manager needs a financial perspective on the 2017 service comparison. Choose a defensible category cohort, show its item revenue alongside review risk and delivery time, and discuss whether the financial evidence changes your operating recommendation. The starting cohort is a candidate, not an agreed answer: you may retain, narrow or replace it and revise your selection rule as the discussion develops.\n\nBusiness constraints:\nUse RJ delivered orders in calendar year 2017 in all three views.\nShow revenue excluding freight in view 1, retain low-review rate in view 2 and delivery time in view 3, using the same chosen categories.\nDistinguish revenue from order volume and profit when explaining the recommendation.\n\nYour choices:\nChoose whether to retain, narrow or replace the starting cohort.\nChoose fixed members or a common ranking rule for the three-view comparison.",
+      "mandatory_outcomes": [
+        "Use RJ delivered orders in calendar year 2017 in all three views.",
+        "Show revenue excluding freight in view 1, retain low-review rate in view 2 and delivery time in view 3, using the same chosen categories.",
+        "Distinguish revenue from order volume and profit when explaining the recommendation."
+      ],
+      "hard_constraints": [
+        {
+          "id": "view_2_scope",
+          "kind": "source_fields",
+          "view_number": 2,
+          "required": {
+            "region": "RJ",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "low_review_rate"
+          }
+        },
+        {
+          "id": "view_3_scope",
+          "kind": "source_fields",
+          "view_number": 3,
+          "required": {
+            "region": "RJ",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "avg_delivery_days"
+          }
+        },
+        {
+          "id": "view_1_scope",
+          "kind": "source_fields",
+          "view_number": 1,
+          "required": {
+            "region": "RJ",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "revenue"
+          }
+        },
+        {
+          "id": "comparison_cohort",
+          "kind": "same_members",
+          "view_numbers": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "participant_choices": [
+        "Choose whether to retain, narrow or replace the starting cohort.",
+        "Choose fixed members or a common ranking rule for the three-view comparison."
+      ],
+      "initial": "Authored RJ 2017 starting cohort with orders and two service measures",
+      "response_prompt": "State your recommendation and its supporting evidence. Identify how you selected the categories, which views you changed, and the region, dates and measures used. Explain any choice you revised and which conditions you kept or released; if you did not revise a choice, say so. An uncertain conclusion is acceptable when the evidence is insufficient.",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "material_review": "pending",
+      "difficulty_equivalence": "not_established"
+    },
+    {
+      "id": "study_04_b",
+      "family_id": "04",
+      "variant_id": "b",
+      "protocol": "covis-formal-materials-0.1",
+      "split": "formal_study_candidate",
+      "title": "Review financial and service priorities in MG",
+      "kind": "financial_service_review",
+      "business_goal": "The MG manager needs a financial perspective on the 2017 service comparison. Choose a defensible category cohort, show its item revenue alongside review risk and delivery time, and discuss whether the financial evidence changes your operating recommendation. The starting cohort is a candidate, not an agreed answer: you may retain, narrow or replace it and revise your selection rule as the discussion develops.",
+      "description": "The MG manager needs a financial perspective on the 2017 service comparison. Choose a defensible category cohort, show its item revenue alongside review risk and delivery time, and discuss whether the financial evidence changes your operating recommendation. The starting cohort is a candidate, not an agreed answer: you may retain, narrow or replace it and revise your selection rule as the discussion develops.",
+      "goal": "The MG manager needs a financial perspective on the 2017 service comparison. Choose a defensible category cohort, show its item revenue alongside review risk and delivery time, and discuss whether the financial evidence changes your operating recommendation. The starting cohort is a candidate, not an agreed answer: you may retain, narrow or replace it and revise your selection rule as the discussion develops.\n\nBusiness constraints:\nUse MG delivered orders in calendar year 2017 in all three views.\nShow revenue excluding freight in view 1, retain low-review rate in view 2 and delivery time in view 3, using the same chosen categories.\nDistinguish revenue from order volume and profit when explaining the recommendation.\n\nYour choices:\nChoose whether to retain, narrow or replace the starting cohort.\nChoose fixed members or a common ranking rule for the three-view comparison.",
+      "mandatory_outcomes": [
+        "Use MG delivered orders in calendar year 2017 in all three views.",
+        "Show revenue excluding freight in view 1, retain low-review rate in view 2 and delivery time in view 3, using the same chosen categories.",
+        "Distinguish revenue from order volume and profit when explaining the recommendation."
+      ],
+      "hard_constraints": [
+        {
+          "id": "view_2_scope",
+          "kind": "source_fields",
+          "view_number": 2,
+          "required": {
+            "region": "MG",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "low_review_rate"
+          }
+        },
+        {
+          "id": "view_3_scope",
+          "kind": "source_fields",
+          "view_number": 3,
+          "required": {
+            "region": "MG",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "avg_delivery_days"
+          }
+        },
+        {
+          "id": "view_1_scope",
+          "kind": "source_fields",
+          "view_number": 1,
+          "required": {
+            "region": "MG",
+            "start": "2017-01-01",
+            "end": "2018-01-01",
+            "status": "delivered",
+            "dimension": "category",
+            "metric": "revenue"
+          }
+        },
+        {
+          "id": "comparison_cohort",
+          "kind": "same_members",
+          "view_numbers": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "participant_choices": [
+        "Choose whether to retain, narrow or replace the starting cohort.",
+        "Choose fixed members or a common ranking rule for the three-view comparison."
+      ],
+      "initial": "Authored MG 2017 starting cohort with orders and two service measures",
+      "response_prompt": "State your recommendation and its supporting evidence. Identify how you selected the categories, which views you changed, and the region, dates and measures used. Explain any choice you revised and which conditions you kept or released; if you did not revise a choice, say so. An uncertain conclusion is acceptable when the evidence is insufficient.",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "material_review": "pending",
+      "difficulty_equivalence": "not_established"
+    }
+  ],
+  "materials_sha256": "70ab09ca876c695fbad2cbe4b253874cce5a70454f58c044545d5c7c3b68ab55",
+  "review_status": "pending",
+  "approved_by": null,
+  "approved_at": null,
+  "human_difficulty_equivalence": "not_established",
+  "scoring_basis": "Public hard constraints plus independently annotated participant intent; no fixed expected_sources.",
+  "allocation": {
+    "protocol": "covis-formal-study-0.1",
+    "participant_count": 30,
+    "block_size": 16,
+    "allocations": [
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 1,
+        "block": 1,
+        "order_row": 1,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 1,
+            "trial_id": "study-s001-t1",
+            "trial_index": 1,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "d4714063f111a5258998c8a40d80d10a1f2364c96f9c9d485c79372a38b614d6"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 1,
+            "trial_id": "study-s001-t2",
+            "trial_index": 2,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "25b38f9fb8f71b09923d9cabd40aee298f2324858b603c1971f81daf161a14eb"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 1,
+            "trial_id": "study-s001-t3",
+            "trial_index": 3,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "226dd89e41bb4db66088224542a8db97ac6f5d45d14b7a05385b1120fed0b9df"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 1,
+            "trial_id": "study-s001-t4",
+            "trial_index": 4,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "bbaa814e1f4903849ac123dbecad4de804943540d548613aaac22f5044e68a47"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 2,
+        "block": 1,
+        "order_row": 2,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 2,
+            "trial_id": "study-s002-t1",
+            "trial_index": 1,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "f8dacd342e1834c78fed58c84142de90c1a180845d0a4c1edc2600a2fa61ff07"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 2,
+            "trial_id": "study-s002-t2",
+            "trial_index": 2,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "fb3e15c265aa6d0c9cf31c8a5975d5fc50249264ab2465f1d5fd6865e7a2eeb8"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 2,
+            "trial_id": "study-s002-t3",
+            "trial_index": 3,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "9dbdf375f5d1b8a01f8255138437fa94a5eb3a3236f638d76aeedf02eea824f1"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 2,
+            "trial_id": "study-s002-t4",
+            "trial_index": 4,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "1bae74d339f2bce21d6c5e71ec900e8ac35e0811c9c0ab73d96994964004d9ee"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 3,
+        "block": 1,
+        "order_row": 3,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 3,
+            "trial_id": "study-s003-t1",
+            "trial_index": 1,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "a4fb963482973b20818c1c80bab437d0333ce9ad8ff0c4a184426c24f9fd7a53"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 3,
+            "trial_id": "study-s003-t2",
+            "trial_index": 2,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "f491d534778fcf27a94cac90f73014b7fad83bf348e8b07d1bf97fb35e321ffd"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 3,
+            "trial_id": "study-s003-t3",
+            "trial_index": 3,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "2848a9386b20e1a2079f4a7f3e1df161cd2fdb5fb5c0c73ef710bb056facdcc8"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 3,
+            "trial_id": "study-s003-t4",
+            "trial_index": 4,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "0e9541eca442a8a23efe8537507d11f4ac302c2c2c9e4c89aa8f0a3d8b6b7996"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 4,
+        "block": 1,
+        "order_row": 4,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 4,
+            "trial_id": "study-s004-t1",
+            "trial_index": 1,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "26e4dce49e6411bcc983bcac27293f62d51af1ebb5bcc5f8411dac080103c2be"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 4,
+            "trial_id": "study-s004-t2",
+            "trial_index": 2,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "16597a497506cac968df7b582bc50a192538e7d4a29e1861a3addf0a5368ebdd"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 4,
+            "trial_id": "study-s004-t3",
+            "trial_index": 3,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "42b4745d3a1d055fcbd5eaf9f8e27bdf14f67e20ec577e19440d7762d1ed8dfa"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 4,
+            "trial_id": "study-s004-t4",
+            "trial_index": 4,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "4b989b92b561f9b89c9f87a05136058605c51471e9f7cc5af452bb1294d9a1a2"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 5,
+        "block": 1,
+        "order_row": 1,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 5,
+            "trial_id": "study-s005-t1",
+            "trial_index": 1,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "fe0bdff9ff591925b8035d8c6c0c8bdcb69fc879103e2ee8bd1d6e6b14921db4"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 5,
+            "trial_id": "study-s005-t2",
+            "trial_index": 2,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "f3e284f566b3e76b881e4e65ea2542e6e3f18d9e7374bb2640ce8ebd74d14068"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 5,
+            "trial_id": "study-s005-t3",
+            "trial_index": 3,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "b7724eeebd38207af7307c7747980e86ca281cf443bcd749885566981caf3a3e"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 5,
+            "trial_id": "study-s005-t4",
+            "trial_index": 4,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "b907958733337a64f15ab75f0e6e6c2af4220285226b152a37a6eaacc83b5089"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 6,
+        "block": 1,
+        "order_row": 2,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 6,
+            "trial_id": "study-s006-t1",
+            "trial_index": 1,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "fee6d92e7421e684e48328af9edb8a8e92731adc886a8932f7319ecd3d06e7e6"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 6,
+            "trial_id": "study-s006-t2",
+            "trial_index": 2,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "bf9f52777280a08bd05fbed1ea54a88c6baf28add698e0fc1ae3090e1783bb3d"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 6,
+            "trial_id": "study-s006-t3",
+            "trial_index": 3,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "14bb0e2aeba2edeadec5fea05e49fbf3b80a74a42839d8e1a2dc91f5ac5b22ba"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 6,
+            "trial_id": "study-s006-t4",
+            "trial_index": 4,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "f3708049628c75c964060cb38dcc51f63d9e9dbe5444d8815e2fa1a7843f7967"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 7,
+        "block": 1,
+        "order_row": 3,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 7,
+            "trial_id": "study-s007-t1",
+            "trial_index": 1,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "8f5a2718c76c021b19687f607fdd987212fbc5a3c255a32b160e4bb13f8a3bc1"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 7,
+            "trial_id": "study-s007-t2",
+            "trial_index": 2,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "e2d739ff10ea04a23134d7795cae35c222f97fc564c04bf8e3ef60320f149dc5"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 7,
+            "trial_id": "study-s007-t3",
+            "trial_index": 3,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "202ce84d7673019ddc54b697b7fee2bb54e0a57143c46c3c81fd0526e07a5625"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 7,
+            "trial_id": "study-s007-t4",
+            "trial_index": 4,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "c533c0d4fef1f63f81197196904be624bc80758a66c14137e86116ae860f15df"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 8,
+        "block": 1,
+        "order_row": 4,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 8,
+            "trial_id": "study-s008-t1",
+            "trial_index": 1,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "8cf1b6581e6deaf65ecd6ecc74a7f13c1bb9ff860fb81f4b6492d122cbdd3e66"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 8,
+            "trial_id": "study-s008-t2",
+            "trial_index": 2,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "3b3ae25d1fc433364f3a92065323323247efca6ce7239dacdebac7cf5b9159ee"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 8,
+            "trial_id": "study-s008-t3",
+            "trial_index": 3,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "9ba65a38e699b11805b328ce14f45947a2dd148694896fc8e02b73070eef37c6"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 8,
+            "trial_id": "study-s008-t4",
+            "trial_index": 4,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "0255a428e0e8d84cc2316a7313f3852898744750a165b06a560be85e73ebc015"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 9,
+        "block": 1,
+        "order_row": 1,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 9,
+            "trial_id": "study-s009-t1",
+            "trial_index": 1,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "588467c4794fb59df01833992a9684114120ea7c8224f0d38b049e778826764c"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 9,
+            "trial_id": "study-s009-t2",
+            "trial_index": 2,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "83428e968df3b60d199899aa765f1be3bd7adaa1d14e9d38275c2dc94a82285f"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 9,
+            "trial_id": "study-s009-t3",
+            "trial_index": 3,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "9e2dc86cc4f8a0368456b65401b99d51a369aff18c9fbe220168f19ca04eea77"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 9,
+            "trial_id": "study-s009-t4",
+            "trial_index": 4,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "71f7d1ecee8bb03838bed3e3f96c0dfb09b1d941b63985d6190aadde30cb813d"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 10,
+        "block": 1,
+        "order_row": 2,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 10,
+            "trial_id": "study-s010-t1",
+            "trial_index": 1,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "e4fb5f05f9267d7de081caef0dde7a3c8ba043e3973546a883331999ea71e208"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 10,
+            "trial_id": "study-s010-t2",
+            "trial_index": 2,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "dd5162c4c0aa0b27f669d3aff8b5a9bd4d360be5642901c09c39239046f59d72"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 10,
+            "trial_id": "study-s010-t3",
+            "trial_index": 3,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "1a46d94233fb1ade279f0372cf06d733719f0e807c08f2753ff8324faec2eb15"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 10,
+            "trial_id": "study-s010-t4",
+            "trial_index": 4,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "faff83eaca8f2c81133e87f744f80707781a60ce351b0db1ef20fcb7a207b6b6"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 11,
+        "block": 1,
+        "order_row": 3,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 11,
+            "trial_id": "study-s011-t1",
+            "trial_index": 1,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "3abd26532dea57e8460aa2b49d9aa13a6df13cceb97b4dc62b80781924a6dd5b"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 11,
+            "trial_id": "study-s011-t2",
+            "trial_index": 2,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "8d2e68ddf4d60f0f8a915a47c0867580703fb337de2da3d0c8a9a6d29fc80f48"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 11,
+            "trial_id": "study-s011-t3",
+            "trial_index": 3,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "622f5e397ea039b8e4b3335c34d76fe6b109d1952ac0fa1ffb4c5bc7087000ec"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 11,
+            "trial_id": "study-s011-t4",
+            "trial_index": 4,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "0d45f1d70e863d3b10917197328b0571b0182fc07acf37144634fe36642483e0"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 12,
+        "block": 1,
+        "order_row": 4,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 12,
+            "trial_id": "study-s012-t1",
+            "trial_index": 1,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "4e73ee015b6d3906a1da945a8159314df0368beb7e6f0c4cd3da015608317ee2"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 12,
+            "trial_id": "study-s012-t2",
+            "trial_index": 2,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "bfe4b565a67b001bb4c845312e1c0f745283b39142408447d9a27c9e7ee0146d"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 12,
+            "trial_id": "study-s012-t3",
+            "trial_index": 3,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "0423a1873a2e22636cd5b56addef5f797aa69098569fd303795386c6db8829fc"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 12,
+            "trial_id": "study-s012-t4",
+            "trial_index": 4,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "6dafd445ad2b95fae4104998497b8e862a10a1badb3b6fd10688f15184434e6a"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 13,
+        "block": 1,
+        "order_row": 1,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 13,
+            "trial_id": "study-s013-t1",
+            "trial_index": 1,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "c7136827b1f0e8bfed1640e1d63ed6f0ad205b77603ef1b8607187c2fee37997"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 13,
+            "trial_id": "study-s013-t2",
+            "trial_index": 2,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "55905b2f0de95a12d1963a884901088ff6965cafe6f2394bdf8fffa098f69cdc"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 13,
+            "trial_id": "study-s013-t3",
+            "trial_index": 3,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "a21b4ad63b56130c548db06a14efd1f360af90e192bdad66d95bfb438afe647e"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 13,
+            "trial_id": "study-s013-t4",
+            "trial_index": 4,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "80daeccedc6273b7f033445a558348f9424ff3669ff3567d90ecce230ac40c34"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 14,
+        "block": 1,
+        "order_row": 2,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 14,
+            "trial_id": "study-s014-t1",
+            "trial_index": 1,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "2bc68bd2b38b6e24809fe5673840d9239f047c9db935b7cf2568ecc64c6c7c31"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 14,
+            "trial_id": "study-s014-t2",
+            "trial_index": 2,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "2982c9119bb05e97f34097bc6165c579f125fb4269d29db376b90020d9d68eef"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 14,
+            "trial_id": "study-s014-t3",
+            "trial_index": 3,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "4a0e4b9e2812f3da1b6ff7a4b8c87e81db7afba03517e0d0642b789050ef634f"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 14,
+            "trial_id": "study-s014-t4",
+            "trial_index": 4,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "24e101d4a5e7f7c7d7cc0f2e46effbe9b04546e3267160c611d29ee54acb3d07"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 15,
+        "block": 1,
+        "order_row": 3,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 15,
+            "trial_id": "study-s015-t1",
+            "trial_index": 1,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "7a7bed1fc2acd9a6f7a4b2e80f15399c63d4815a47b4d2752531ab83ec7f3097"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 15,
+            "trial_id": "study-s015-t2",
+            "trial_index": 2,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "706f23e799e3b9b3da03129de7a19d18f38d6391b123c4b41d56fabaa60ae2f4"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 15,
+            "trial_id": "study-s015-t3",
+            "trial_index": 3,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "37c121b39e60ecb1ea598dc01e70f04d7c7378522a20eeb5998c76ccb2ee52f4"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 15,
+            "trial_id": "study-s015-t4",
+            "trial_index": 4,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "f8a9c8b05e5dcf5c00087d4ccb950600b573554656b7dcc285a16f72a25de413"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 16,
+        "block": 1,
+        "order_row": 4,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 16,
+            "trial_id": "study-s016-t1",
+            "trial_index": 1,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "0681932bc4360b7c3c40e16797cf29e6a4e8b8f2d34572f700d95724faa2c4e5"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 16,
+            "trial_id": "study-s016-t2",
+            "trial_index": 2,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "3d6c3fe9ee37f17305242ca525d14f138a3f221c82f76764569a0c8ff0802e81"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 16,
+            "trial_id": "study-s016-t3",
+            "trial_index": 3,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "422e3c76f2a3a15bb03d260a1d463bea9cf84bd6d761c2ddbb10b2bf9559e1cc"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 16,
+            "trial_id": "study-s016-t4",
+            "trial_index": 4,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "05641d7ab15d65163579b8eeeba8ef4e0356a9a698cecc57095a55a91cbe0396"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 17,
+        "block": 2,
+        "order_row": 1,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 17,
+            "trial_id": "study-s017-t1",
+            "trial_index": 1,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "a7b75691a9979feeec6ed1be391e99ae6bcd7c04fe0bf5a3783523ea3d8c7246"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 17,
+            "trial_id": "study-s017-t2",
+            "trial_index": 2,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "bef23b78f37055424da613f09e03cbee66bd40bfc2134ea4d112086f9e7d79d1"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 17,
+            "trial_id": "study-s017-t3",
+            "trial_index": 3,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "53bd235e323d039b8b5ed16dc28c6df6ed1dc502348ff05089d409f1cd03b73d"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 17,
+            "trial_id": "study-s017-t4",
+            "trial_index": 4,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "1a7e4184096c2a388fea983255c0935a0f9194b94e6b6dd01c9fe4963448d95c"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 18,
+        "block": 2,
+        "order_row": 2,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 18,
+            "trial_id": "study-s018-t1",
+            "trial_index": 1,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "f0dfc1df3457685fdead708c6e11b62d9a85ad1ae9bf7f7cf8acd4651246bc8f"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 18,
+            "trial_id": "study-s018-t2",
+            "trial_index": 2,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "296a4db317d43f6076d8cb6bf4b1d00dc21d78c6efff240a0e527bf86383fe8d"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 18,
+            "trial_id": "study-s018-t3",
+            "trial_index": 3,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "7221e3d1251d419c1bbc4f527571b93920f994aa72556e11d6d3ce3b42532522"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 18,
+            "trial_id": "study-s018-t4",
+            "trial_index": 4,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "25b318d459e3d4cc46c4a72afe0d06462ec41204f9292df3dda0282b397886b1"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 19,
+        "block": 2,
+        "order_row": 3,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 19,
+            "trial_id": "study-s019-t1",
+            "trial_index": 1,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "e204483a053e890bee55c0ee13b627eb42bc854533e03d7cc4451a6983b15a03"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 19,
+            "trial_id": "study-s019-t2",
+            "trial_index": 2,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "dfb956be85b6f4cbb9646db8818010c711334afc51f93c93ab3d7fb733573d08"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 19,
+            "trial_id": "study-s019-t3",
+            "trial_index": 3,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "2eb8eea97830b37a8adbcf1a585c1f24f311c0960bfbd80510177b87bf78a121"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 19,
+            "trial_id": "study-s019-t4",
+            "trial_index": 4,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "2b00166d142a43c99786e408584e16dc9afe532c5adbeb6e6f5214ece3ace816"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 20,
+        "block": 2,
+        "order_row": 4,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 20,
+            "trial_id": "study-s020-t1",
+            "trial_index": 1,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "847f9a0b696f4927d7e2d4f26d8f278e4da83363aadb72a4549313843b74a27b"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 20,
+            "trial_id": "study-s020-t2",
+            "trial_index": 2,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "5e9dcb4f026044e56261690b6c9539e7bc3b62dc441640fe4986339525978d18"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 20,
+            "trial_id": "study-s020-t3",
+            "trial_index": 3,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "af2aa22265858097508be300ba6aed27859e400b6d28bc64666988119b947f59"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 20,
+            "trial_id": "study-s020-t4",
+            "trial_index": 4,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "1769c2e318836f5156c0fe1a7ee6103825c1cff75e6d5d2db4a34d8dcc62ee5a"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 21,
+        "block": 2,
+        "order_row": 1,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 21,
+            "trial_id": "study-s021-t1",
+            "trial_index": 1,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "f7dba340c02e200c73e472e5e3afae8b8c282b06a66a0947782ac8e6935f2a89"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 21,
+            "trial_id": "study-s021-t2",
+            "trial_index": 2,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "c98b9517838499376336315501668b78036d7c65774433bddd0542966120e5d6"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 21,
+            "trial_id": "study-s021-t3",
+            "trial_index": 3,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "34161f7b2998ce88c6ea9fd906a65a72ac6bdbd6a957a9449f00edc86256515c"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 21,
+            "trial_id": "study-s021-t4",
+            "trial_index": 4,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "3802bc925b4415687f900e981efdad840335e7e538f6193f3dbdf159cb1bd233"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 22,
+        "block": 2,
+        "order_row": 2,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 22,
+            "trial_id": "study-s022-t1",
+            "trial_index": 1,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "77a3b43cdb3226d842c26ae429e55814812960e98585049a6c715d3acc1c5e22"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 22,
+            "trial_id": "study-s022-t2",
+            "trial_index": 2,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "a47cdebebd182087e9a66aa3ecd07b1111b9ed8a4b1e12ba01100def1a1c2bdd"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 22,
+            "trial_id": "study-s022-t3",
+            "trial_index": 3,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "ed7c5df7ef9283db5c95cce573692e35fd41febabed81c1f58a3f5a749b31501"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 22,
+            "trial_id": "study-s022-t4",
+            "trial_index": 4,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "a0e77f297297ce52f472b9ae94b4686748836685353805cb4acbf4d4f488a569"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 23,
+        "block": 2,
+        "order_row": 3,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 23,
+            "trial_id": "study-s023-t1",
+            "trial_index": 1,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "24d0a674f7a2d7f8c8b963d559a54a0417e9db9215060671ceb9ba9a105a1956"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 23,
+            "trial_id": "study-s023-t2",
+            "trial_index": 2,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "b8f0aca7629efd5ba284f45023205bf7a2f153340743cafbf3c1f94961a82e25"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 23,
+            "trial_id": "study-s023-t3",
+            "trial_index": 3,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "6c552c680d3977b14b7fb7e34c80bb8e3d71dfdc0359d555b49504578cb3b561"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 23,
+            "trial_id": "study-s023-t4",
+            "trial_index": 4,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "7c4a79c25eec253988a45f16ed7d8fe8812b29502a9d4edca7758b5536058eb1"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 24,
+        "block": 2,
+        "order_row": 4,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "ABAB",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 24,
+            "trial_id": "study-s024-t1",
+            "trial_index": 1,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "d6256dbfbeb0600fee7f7483f88ffe84c08c15ccb7f74fe5399cf9543ee7ba25"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 24,
+            "trial_id": "study-s024-t2",
+            "trial_index": 2,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "9a1be973733afeb2d852848f2b1af57264199fb9f63e399e51574ee693a3109d"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 24,
+            "trial_id": "study-s024-t3",
+            "trial_index": 3,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "c63b3934a58df94f53f2ab0cfcd50f180946b87d74890912dc07f1e0e9298554"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 24,
+            "trial_id": "study-s024-t4",
+            "trial_index": 4,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "76bf0d265f25524da0b30f75528fd0da554571206c119cfdf628c0e87b482382"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 25,
+        "block": 2,
+        "order_row": 1,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 25,
+            "trial_id": "study-s025-t1",
+            "trial_index": 1,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "e020cbaefc68f678144d30a5422b57111affea8d0c948c3c67f5b50b5106f6f9"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 25,
+            "trial_id": "study-s025-t2",
+            "trial_index": 2,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "41d8c57520a4699ecd72687e1f2f73fc0c93e77222d48b8927a14321dc3d59fe"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 25,
+            "trial_id": "study-s025-t3",
+            "trial_index": 3,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "fe8ef3efb8f47e574f0ba8c46a2fe12068ad16db113c5a8f3a53b55c35a1dd4e"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 25,
+            "trial_id": "study-s025-t4",
+            "trial_index": 4,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "30bdbcdcd3c8a712297d262be4d93236c99e2f58c75b5e78164b443b88f19ecc"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 26,
+        "block": 2,
+        "order_row": 2,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 26,
+            "trial_id": "study-s026-t1",
+            "trial_index": 1,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "77fec701bc6928e89cc7838fe2d6f388b375b1ca3155ed03e768fbf086012e93"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 26,
+            "trial_id": "study-s026-t2",
+            "trial_index": 2,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "03ead8aececd8450fe6def3e99693b7119385b001ce9a6f629a4753ede04a246"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 26,
+            "trial_id": "study-s026-t3",
+            "trial_index": 3,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "33c527aa9fd8cb9c6d9514eefdcecc347fd2fc6261ac80cad020f5954804e303"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 26,
+            "trial_id": "study-s026-t4",
+            "trial_index": 4,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "73a90e6d150b94cd1e2356e1b2e3767020a543b1de9e6ad60f3d45c03f3a426d"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 27,
+        "block": 2,
+        "order_row": 3,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 27,
+            "trial_id": "study-s027-t1",
+            "trial_index": 1,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "0864ca57bdef3594518e2433c16adff749179425e7ea4fb9d9b1b5db72145e90"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 27,
+            "trial_id": "study-s027-t2",
+            "trial_index": 2,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "ee9593faf6d910c36874ea5fd5d89247d4bbec13e79c195331ef45891edff1bb"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 27,
+            "trial_id": "study-s027-t3",
+            "trial_index": 3,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "7918f3b1338f02f5fb4e747addd7b795cd16d10b89bbaec2f4f99fbb79f6168c"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 27,
+            "trial_id": "study-s027-t4",
+            "trial_index": 4,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "508c0a29141eef493e423266c7165b6acf7475b91455522237baf57188ade000"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 28,
+        "block": 2,
+        "order_row": 4,
+        "condition_order": [
+          "direct",
+          "bound_revision"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 28,
+            "trial_id": "study-s028-t1",
+            "trial_index": 1,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "9c21621f6385743266828a786662e6c46f60e73bce76ded4062167dfb26f948e"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 28,
+            "trial_id": "study-s028-t2",
+            "trial_index": 2,
+            "family_id": "01",
+            "variant_id": "a",
+            "task_id": "study_01_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "443738cdcebda342e92c97e4c0cc2c0424316d1b74233897c4ebc9ae75b0b95c",
+            "assignment_sha256": "ce2b7cc4c4abc98f8a0297328acab440ed61713b7355a4c4314d896e1697bfcb"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 28,
+            "trial_id": "study-s028-t3",
+            "trial_index": 3,
+            "family_id": "03",
+            "variant_id": "b",
+            "task_id": "study_03_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cf25f1f97dd6ca416090303681e0103c45a2e0a2e9147e58a7045e78432a4324",
+            "assignment_sha256": "b5c77b849c800fae6fbe6f118937cec8f329ad089f2cb63f1515ea6c2f7126b2"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 28,
+            "trial_id": "study-s028-t4",
+            "trial_index": 4,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "38d3d36fc27505a95c8770666d61ad726f56a2bf61d4a3ef7eda31b69bd1f70d"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 29,
+        "block": 2,
+        "order_row": 1,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 29,
+            "trial_id": "study-s029-t1",
+            "trial_index": 1,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "2b255809bfc4fab6934e5c53f32503edb3263da76456ba8c556f53fdda92328a"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 29,
+            "trial_id": "study-s029-t2",
+            "trial_index": 2,
+            "family_id": "02",
+            "variant_id": "a",
+            "task_id": "study_02_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "a33fc62d45a8fc69e9021b26c97b601c22480c9d2bd496f80bae92cf81a855e3",
+            "assignment_sha256": "5b9a73dca5ca1eb37e00d4899a3115bd2f5d3e9b27607e0e58d54967ecbd7547"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 29,
+            "trial_id": "study-s029-t3",
+            "trial_index": 3,
+            "family_id": "04",
+            "variant_id": "b",
+            "task_id": "study_04_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "3367aea7728b08c6a3e076643a45daca260d40352c223de060095825f945c20e",
+            "assignment_sha256": "4115b2fc286c4d813d080a8d5f904236553c8d059053f806cc2bc371129fe5ce"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 29,
+            "trial_id": "study-s029-t4",
+            "trial_index": 4,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "ab777118f6e3d9a2c7e80aa767e29b71603bc3e9abb1ce3b563f9b77bef1410d"
+          }
+        ]
+      },
+      {
+        "protocol": "covis-formal-study-0.1",
+        "participant_slot": 30,
+        "block": 2,
+        "order_row": 2,
+        "condition_order": [
+          "bound_revision",
+          "direct"
+        ],
+        "variant_pattern": "BABA",
+        "trials": [
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 30,
+            "trial_id": "study-s030-t1",
+            "trial_index": 1,
+            "family_id": "02",
+            "variant_id": "b",
+            "task_id": "study_02_b",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "cc59cd05ea8ac95be1fa2299ea9112119b5b6e9990e4892f9265646263b54297",
+            "assignment_sha256": "79839cc72166b8a58a9725b421767026f9b1076ea0194e583d1de489d694bf79"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 30,
+            "trial_id": "study-s030-t2",
+            "trial_index": 2,
+            "family_id": "03",
+            "variant_id": "a",
+            "task_id": "study_03_a",
+            "condition": "bound_revision",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "b8dc95b66d9ee4c7b8332771c6e343d0af4e611f6a15bffc8c76a70732f6a51e",
+            "assignment_sha256": "f2228330b9025b1d9d210eae834ce0d0420f2373910d4801e680a530b4900d56"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 30,
+            "trial_id": "study-s030-t3",
+            "trial_index": 3,
+            "family_id": "01",
+            "variant_id": "b",
+            "task_id": "study_01_b",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "10996757823ded6106f4e5681cc10a4dac72a5a49cba73dd98063b63e81c88fc",
+            "assignment_sha256": "e892bd73b9c3519cd41a5a4b4429a11b60c4b09b3bbc0e133491c6f3cffdd6e1"
+          },
+          {
+            "protocol": "covis-formal-study-0.1",
+            "materials_protocol": "covis-formal-materials-0.1",
+            "participant_slot": 30,
+            "trial_id": "study-s030-t4",
+            "trial_index": 4,
+            "family_id": "04",
+            "variant_id": "a",
+            "task_id": "study_04_a",
+            "condition": "direct",
+            "time_limit_seconds": 480,
+            "mode": "live_voice",
+            "voice_budget_seconds": 60,
+            "voice_windows_per_trial": 1,
+            "condition_locked": true,
+            "material_sha256": "43091046272468f823770e66898fb0170ff08a33baefa97431a1b3b9a8b0489b",
+            "assignment_sha256": "50e161b86c05744bfde8694b47ce68b683218382cdcc5a2cde021f92ca98402e"
+          }
+        ]
+      }
+    ],
+    "balance": {
+      "cells": [
+        {
+          "family_id": "01",
+          "trial_index": 1,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 1,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 1,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 1,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 2,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 2,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 2,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 1
+        },
+        {
+          "family_id": "01",
+          "trial_index": 2,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 3,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 3,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 3,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 3,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 4,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 1
+        },
+        {
+          "family_id": "01",
+          "trial_index": 4,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 4,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "01",
+          "trial_index": 4,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 1,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 1,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 1,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 1,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 2,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 2,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 2,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 2,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 3,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 3,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 1
+        },
+        {
+          "family_id": "02",
+          "trial_index": 3,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 3,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 4,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 1
+        },
+        {
+          "family_id": "02",
+          "trial_index": 4,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 4,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "02",
+          "trial_index": 4,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 1,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 1,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 1,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 1,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 1
+        },
+        {
+          "family_id": "03",
+          "trial_index": 2,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 2,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 2,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 2,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 3,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 3,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 1
+        },
+        {
+          "family_id": "03",
+          "trial_index": 3,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 3,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 4,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 4,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 4,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "03",
+          "trial_index": 4,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 1,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 1,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 1,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 1,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 1
+        },
+        {
+          "family_id": "04",
+          "trial_index": 2,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 2,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 2,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 1
+        },
+        {
+          "family_id": "04",
+          "trial_index": 2,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 3,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 3,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 3,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 3,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 4,
+          "condition": "direct",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 4,
+          "condition": "direct",
+          "variant_id": "b",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 4,
+          "condition": "bound_revision",
+          "variant_id": "a",
+          "count": 2
+        },
+        {
+          "family_id": "04",
+          "trial_index": 4,
+          "condition": "bound_revision",
+          "variant_id": "b",
+          "count": 2
+        }
+      ],
+      "exact_full_balance": false,
+      "cell_min": 1,
+      "cell_max": 2,
+      "complete_blocks": 1,
+      "partial_block_slots": 14,
+      "condition_counts": {
+        "direct": 60,
+        "bound_revision": 60
+      },
+      "meaning": "Joint family × position × condition × variant balance holds for complete 16-slot blocks. A partial block is reported as allocated, not called perfectly balanced."
+    },
+    "assignment_sha256": "a3190d9f1d20b18f2ca15f9d7dd6544396e1cd0aaf202efe9ced9b86ea9807ef"
+  },
+  "conditions": [
+    "direct",
+    "bound_revision"
+  ],
+  "mode": "live_voice",
+  "time_limit_seconds": 480,
+  "voice_window": {
+    "maximum_seconds": 60,
+    "maximum_connections": 1,
+    "placement": "After Begin and initial inspection, before Finish; participant starts explicitly.",
+    "remaining_task_time": "Offline inspection, manual chart operations and the written response; no second model window.",
+    "interruption_required": false
+  },
+  "shared_capabilities": {
+    "voice_model": "qwen3.8-omni-flash-realtime",
+    "saved_sets": [
+      "save_category_set",
+      "list_category_sets",
+      "apply_category_set"
+    ],
+    "execution": "Shared evidence-candidate resolution and revision compiler.",
+    "history": "Retained native history with exact outgoing archives; no claim of frozen native context."
+  },
+  "treatment": "Visible, correctable evidence origin, current edit scope, and retained/released conditions.",
+  "primary_attempt_rule": "First actually begun participant attempt per registered assigned trial; keep repeats and failures.",
+  "collection_status": "pending_human_review",
+  "required_reviews": {
+    "materials_and_difficulty": "pending",
+    "voice_window_feasibility_and_listening": "pending",
+    "intent_and_understanding_rubrics": "pending",
+    "meaningful_effect_and_precision_thresholds": "pending",
+    "consent_and_analysis_plan": "pending"
+  },
+  "manifest_sha256": "a1704a120e93156ed5fe4fe7d1530b8012c264f869153c5f80540c871970aaac"
+}

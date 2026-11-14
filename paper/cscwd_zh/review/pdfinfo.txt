@@ -1,0 +1,17 @@
+Creator:         LaTeX with hyperref
+Producer:        xdvipdfmx (20250205)
+CreationDate:    Fri Nov 13 15:54:58 2026 国际日期变更线标准时间
+Custom Metadata: no
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           6
+Encrypted:       no
+Page size:       612 x 792 pts (letter)
+Page rot:        0
+File size:       580876 bytes
+Optimized:       no
+PDF version:     1.5

@@ -1,0 +1,213 @@
+{
+  "scope": "Local source start bracketed by archived browser playback receipts; not acoustic measurement, not a reclassification of original API results.",
+  "trials": [
+    {
+      "trial": "01-bound_revision",
+      "source_input_start_client_ms": 16325.700000047684,
+      "last_prior_observation": {
+        "name": "playback_start",
+        "client_ms": 16291.100000143051,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 0,
+        "queued_samples": 7680,
+        "interrupted": null,
+        "audio_context_time": 13.264
+      },
+      "first_later_progress": {
+        "name": "playback_progress",
+        "client_ms": 16341.200000047684,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 1200,
+        "queued_samples": 6480,
+        "interrupted": null,
+        "audio_context_time": 13.314
+      },
+      "original_overlap_valid": true,
+      "original_result_unchanged": true
+    },
+    {
+      "trial": "01-direct",
+      "source_input_start_client_ms": 16276.099999904633,
+      "last_prior_observation": {
+        "name": "playback_start",
+        "client_ms": 16241.599999904633,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 0,
+        "queued_samples": 7680,
+        "interrupted": null,
+        "audio_context_time": 13.173333333333334
+      },
+      "first_later_progress": {
+        "name": "playback_progress",
+        "client_ms": 16291.399999856949,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 1200,
+        "queued_samples": 6480,
+        "interrupted": null,
+        "audio_context_time": 13.223333333333334
+      },
+      "original_overlap_valid": true,
+      "original_result_unchanged": true
+    },
+    {
+      "trial": "02-bound_revision",
+      "source_input_start_client_ms": 10276.399999856949,
+      "last_prior_observation": {
+        "name": "playback_start",
+        "client_ms": 10241.799999952316,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 0,
+        "queued_samples": 7680,
+        "interrupted": null,
+        "audio_context_time": 7.290666666666667
+      },
+      "first_later_progress": {
+        "name": "playback_progress",
+        "client_ms": 10282.5,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 1200,
+        "queued_samples": 6480,
+        "interrupted": null,
+        "audio_context_time": 7.3406666666666665
+      },
+      "original_overlap_valid": true,
+      "original_result_unchanged": true
+    },
+    {
+      "trial": "02-direct",
+      "source_input_start_client_ms": 10625.899999856949,
+      "last_prior_observation": {
+        "name": "playback_progress",
+        "client_ms": 10624.5,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 1200,
+        "queued_samples": 6480,
+        "interrupted": null,
+        "audio_context_time": 7.543333333333333
+      },
+      "first_later_progress": {
+        "name": "playback_progress",
+        "client_ms": 10662.899999856949,
+        "queue_empty": false,
+        "pending_chunks": 2,
+        "played_samples": 2400,
+        "queued_samples": 12960,
+        "interrupted": null,
+        "audio_context_time": 7.593333333333333
+      },
+      "original_overlap_valid": true,
+      "original_result_unchanged": true
+    },
+    {
+      "trial": "03-bound_revision",
+      "source_input_start_client_ms": 12398.700000047684,
+      "last_prior_observation": {
+        "name": "playback_start",
+        "client_ms": 12378,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 0,
+        "queued_samples": 7680,
+        "interrupted": null,
+        "audio_context_time": 7.392
+      },
+      "first_later_progress": {
+        "name": "playback_progress",
+        "client_ms": 12430.599999904633,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 1200,
+        "queued_samples": 6480,
+        "interrupted": null,
+        "audio_context_time": 7.442
+      },
+      "original_overlap_valid": true,
+      "original_result_unchanged": true
+    },
+    {
+      "trial": "03-direct",
+      "source_input_start_client_ms": 10123.5,
+      "last_prior_observation": {
+        "name": "playback_start",
+        "client_ms": 10092.200000047684,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 0,
+        "queued_samples": 7680,
+        "interrupted": null,
+        "audio_context_time": 7.232
+      },
+      "first_later_progress": {
+        "name": "playback_progress",
+        "client_ms": 10142.099999904633,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 1200,
+        "queued_samples": 6480,
+        "interrupted": null,
+        "audio_context_time": 7.282
+      },
+      "original_overlap_valid": true,
+      "original_result_unchanged": true
+    },
+    {
+      "trial": "04-bound_revision",
+      "source_input_start_client_ms": 10264.799999952316,
+      "last_prior_observation": {
+        "name": "playback_start",
+        "client_ms": 10236.799999952316,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 0,
+        "queued_samples": 7680,
+        "interrupted": null,
+        "audio_context_time": 7.184
+      },
+      "first_later_progress": {
+        "name": "playback_progress",
+        "client_ms": 10286.699999809265,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 1200,
+        "queued_samples": 6480,
+        "interrupted": null,
+        "audio_context_time": 7.234
+      },
+      "original_overlap_valid": true,
+      "original_result_unchanged": true
+    },
+    {
+      "trial": "04-direct",
+      "source_input_start_client_ms": 9578.200000047684,
+      "last_prior_observation": {
+        "name": "playback_start",
+        "client_ms": 9540,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 0,
+        "queued_samples": 7680,
+        "interrupted": null,
+        "audio_context_time": 6.773333333333333
+      },
+      "first_later_progress": {
+        "name": "playback_progress",
+        "client_ms": 9590.899999856949,
+        "queue_empty": false,
+        "pending_chunks": 1,
+        "played_samples": 1200,
+        "queued_samples": 6480,
+        "interrupted": null,
+        "audio_context_time": 6.823333333333333
+      },
+      "original_overlap_valid": true,
+      "original_result_unchanged": true
+    }
+  ]
+}

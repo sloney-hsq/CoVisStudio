@@ -1,0 +1,488 @@
+{
+  "protocol": "covis-revision-0.1",
+  "frozen_on": "2026-11-13",
+  "visibility": "evaluator-private; do not inject into model context",
+  "model_trials": "not run",
+  "human_review": "pending",
+  "cases": [
+    {
+      "id": "rev_dev_01",
+      "title": "Carry earlier categories into a new region",
+      "instruction": "Keep the three categories from the first SP chart. Analyze them in the current MG region in all three views. Keep the current dates and delivered-order scope.",
+      "family": "historical_objects",
+      "split": "development",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "region": "MG"
+        }
+      ],
+      "targets": [
+        1,
+        2,
+        3
+      ],
+      "action": "use_evidence",
+      "patch": {},
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_dev_02",
+      "title": "Change the measure, retain the evidence",
+      "instruction": "In chart 2, use the categories from the first SP chart and show revenue in the current MG region. Leave charts 1 and 3 unchanged.",
+      "family": "metric_revision",
+      "split": "development",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "region": "MG"
+        }
+      ],
+      "targets": [
+        2
+      ],
+      "action": "use_evidence",
+      "patch": {
+        "metric": "revenue"
+      },
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_dev_03",
+      "title": "Release the fixed comparison set",
+      "instruction": "Stop keeping the original categories. Re-select the three categories with most orders in the current MG region for all views. Keep dates and measures.",
+      "family": "release_constraint",
+      "split": "development",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "region": "MG",
+          "cohort": "previous"
+        }
+      ],
+      "targets": [
+        1,
+        2,
+        3
+      ],
+      "action": "rerank",
+      "patch": {
+        "top_n": 3,
+        "rank_by": "orders"
+      },
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_dev_04",
+      "title": "Revise one view only",
+      "instruction": "Use the first SP chart's categories in chart 2 only. Keep its current MG data scope and leave the other views untouched.",
+      "family": "local_scope",
+      "split": "development",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "region": "MG"
+        }
+      ],
+      "targets": [
+        2
+      ],
+      "action": "use_evidence",
+      "patch": {},
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_dev_05",
+      "title": "Resolve an unspecified historical reference",
+      "instruction": "Keep those three categories and leave MG unchanged. Resolve which visible version is intended before changing all three views.",
+      "family": "reference_clarification",
+      "split": "development",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "region": "MG"
+        }
+      ],
+      "targets": [
+        1,
+        2,
+        3
+      ],
+      "action": "use_evidence",
+      "patch": {},
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": {
+        "phase": 0,
+        "answer": "The three from the first SP version."
+      }
+    },
+    {
+      "id": "rev_dev_06",
+      "title": "Stable evidence, shorter time range",
+      "instruction": "Use January through March 2017 in all three views. Keep the current SP categories and measures.",
+      "family": "stable_control",
+      "split": "development",
+      "phases": [
+        {
+          "region": "SP"
+        }
+      ],
+      "targets": [
+        1,
+        2,
+        3
+      ],
+      "action": "keep_current",
+      "patch": {
+        "start": "2017-01-01",
+        "end": "2017-04-01"
+      },
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_hold_01",
+      "title": "Earlier quarter, current quarter data",
+      "instruction": "Compare the categories selected in the first-quarter SP version using the current second-quarter SP data in all three views.",
+      "family": "historical_objects",
+      "split": "heldout",
+      "phases": [
+        {
+          "region": "SP",
+          "end": "2017-04-01"
+        },
+        {
+          "region": "SP",
+          "start": "2017-04-01",
+          "end": "2017-07-01"
+        }
+      ],
+      "targets": [
+        1,
+        2,
+        3
+      ],
+      "action": "use_evidence",
+      "patch": {},
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_hold_02",
+      "title": "Reuse a subset of an earlier comparison",
+      "instruction": "From the first SP five-category chart, keep its first and third categories. Use those two in the current MG analysis across all three views.",
+      "family": "historical_objects",
+      "split": "heldout",
+      "phases": [
+        {
+          "region": "SP",
+          "top_n": 5
+        },
+        {
+          "region": "MG"
+        }
+      ],
+      "targets": [
+        1,
+        2,
+        3
+      ],
+      "action": "use_evidence",
+      "patch": {},
+      "evidence_phase": 0,
+      "evidence_indices": [
+        0,
+        2
+      ],
+      "resolution": null
+    },
+    {
+      "id": "rev_hold_03",
+      "title": "Reuse a differently ranked historical set",
+      "instruction": "Use the categories from the first SP revenue-ranked version for all current MG views. Keep the current measures, dates and order status.",
+      "family": "historical_objects",
+      "split": "heldout",
+      "phases": [
+        {
+          "region": "SP",
+          "rank_by": "revenue"
+        },
+        {
+          "region": "MG"
+        }
+      ],
+      "targets": [
+        1,
+        2,
+        3
+      ],
+      "action": "use_evidence",
+      "patch": {},
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_hold_04",
+      "title": "Reference the middle version",
+      "instruction": "Use the four categories from the middle PR version, not the first SP or latest MG version. Keep the current MG scope for all views.",
+      "family": "historical_objects",
+      "split": "heldout",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "region": "PR",
+          "top_n": 4
+        },
+        {
+          "region": "MG"
+        }
+      ],
+      "targets": [
+        1,
+        2,
+        3
+      ],
+      "action": "use_evidence",
+      "patch": {},
+      "evidence_phase": 1,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_hold_05",
+      "title": "Keep old objects and revise the current period",
+      "instruction": "Retain the first SP chart's categories, keep MG, and use July through September 2017 in all views.",
+      "family": "historical_objects",
+      "split": "heldout",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "region": "MG"
+        }
+      ],
+      "targets": [
+        1,
+        2,
+        3
+      ],
+      "action": "use_evidence",
+      "patch": {
+        "start": "2017-07-01",
+        "end": "2017-10-01"
+      },
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_hold_06",
+      "title": "Change one measure on historical objects",
+      "instruction": "Change chart 3 to low-review rate for the first SP version's categories. Keep its current MG scope; leave the other two views untouched.",
+      "family": "metric_revision",
+      "split": "heldout",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "region": "MG"
+        }
+      ],
+      "targets": [
+        3
+      ],
+      "action": "use_evidence",
+      "patch": {
+        "metric": "low_review_rate"
+      },
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_hold_07",
+      "title": "Explicitly change the selection rule",
+      "instruction": "Release the fixed categories and select the three leading MG categories by revenue in all three views. Preserve the displayed measures and dates.",
+      "family": "release_constraint",
+      "split": "heldout",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "region": "MG",
+          "cohort": "previous"
+        }
+      ],
+      "targets": [
+        1,
+        2,
+        3
+      ],
+      "action": "rerank",
+      "patch": {
+        "top_n": 3,
+        "rank_by": "revenue"
+      },
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_hold_08",
+      "title": "Expand the selection after releasing it",
+      "instruction": "Do not keep the fixed three. Select the five MG categories with most orders in all views, keeping the current measures and dates.",
+      "family": "release_constraint",
+      "split": "heldout",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "region": "MG",
+          "cohort": "previous"
+        }
+      ],
+      "targets": [
+        1,
+        2,
+        3
+      ],
+      "action": "rerank",
+      "patch": {
+        "top_n": 5,
+        "rank_by": "orders"
+      },
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_hold_09",
+      "title": "Preserve one view as a reference",
+      "instruction": "Leave chart 1 as it is. In charts 2 and 3, compare the first SP version's categories using the current MG scope.",
+      "family": "local_scope",
+      "split": "heldout",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "region": "MG"
+        }
+      ],
+      "targets": [
+        2,
+        3
+      ],
+      "action": "use_evidence",
+      "patch": {},
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_hold_10",
+      "title": "Keep each view's own regional scope",
+      "instruction": "Use the first SP version's categories in chart 2, keeping chart 2 in RJ. Do not change chart 1 in MG or chart 3 in PR.",
+      "family": "local_scope",
+      "split": "heldout",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "regions": [
+            "MG",
+            "RJ",
+            "PR"
+          ]
+        }
+      ],
+      "targets": [
+        2
+      ],
+      "action": "use_evidence",
+      "patch": {},
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    },
+    {
+      "id": "rev_hold_11",
+      "title": "Clarify a reference without assuming the older set",
+      "instruction": "Use those three categories and change chart 2 to revenue. Resolve the intended version, keep MG, and leave charts 1 and 3 alone.",
+      "family": "reference_clarification",
+      "split": "heldout",
+      "phases": [
+        {
+          "region": "SP"
+        },
+        {
+          "region": "MG"
+        }
+      ],
+      "targets": [
+        2
+      ],
+      "action": "use_evidence",
+      "patch": {
+        "metric": "revenue"
+      },
+      "evidence_phase": 1,
+      "evidence_indices": null,
+      "resolution": {
+        "phase": 1,
+        "answer": "The three in the current MG version."
+      }
+    },
+    {
+      "id": "rev_hold_12",
+      "title": "Stable evidence, explicit measure change",
+      "instruction": "Change chart 1 from orders to revenue. Keep the same SP categories and all other conditions and views.",
+      "family": "stable_control",
+      "split": "heldout",
+      "phases": [
+        {
+          "region": "SP"
+        }
+      ],
+      "targets": [
+        1
+      ],
+      "action": "keep_current",
+      "patch": {
+        "metric": "revenue"
+      },
+      "evidence_phase": 0,
+      "evidence_indices": null,
+      "resolution": null
+    }
+  ]
+}

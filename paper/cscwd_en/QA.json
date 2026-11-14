@@ -1,0 +1,64 @@
+{
+  "pages": 6,
+  "page_sizes_pt": [
+    [
+      612.0,
+      792.0
+    ],
+    [
+      612.0,
+      792.0
+    ],
+    [
+      612.0,
+      792.0
+    ],
+    [
+      612.0,
+      792.0
+    ],
+    [
+      612.0,
+      792.0
+    ],
+    [
+      612.0,
+      792.0
+    ]
+  ],
+  "body_pt": 10,
+  "cited_references": 11,
+  "overfull_boxes": 0,
+  "undefined_references_or_citations": false,
+  "font_warnings": false,
+  "figures": {
+    "fig01_revision_timeline.pdf": {
+      "sha256": "ecb631d9da50695abe5c49b422b58a3d16d3f75ac252bbca71dc7e570c8c46db",
+      "matches_other_language": true
+    },
+    "fig01_revision_timeline.png": {
+      "sha256": "d265ddf3bb1103b8da788fb26061980479ba2d6f46219c8b4114193e71fc5dd6",
+      "matches_other_language": true
+    },
+    "fig02_revision_architecture.pdf": {
+      "sha256": "345ded8f1b0781189d6fdc640a361425203afc12adec26bd8075657a9b81ce3f",
+      "matches_other_language": true
+    },
+    "fig02_revision_architecture.png": {
+      "sha256": "688270f2cd41d7d520944882b9ad1deb5aaf7fafeb377c92ea782f00acec8b82",
+      "matches_other_language": true
+    },
+    "fig03_actual_workspace.pdf": {
+      "sha256": "fc88d048ee9c6a3201179d55e403b913d0211142a0bd230400f474bb0fd8f040",
+      "matches_other_language": true
+    },
+    "fig03_actual_workspace.png": {
+      "sha256": "d814d9cbcfcd7239f1a0644384906e1ba80f9715b1e3b3729120615c84a553ad",
+      "matches_other_language": true
+    }
+  },
+  "visual_review": "All six latest rendered pages inspected; no clipping, overlap, or missing figure/reference text.",
+  "evidence_version": "rerank-repair-20261113; old versions remain separate",
+  "new_api_calls_by_paper_task": 0,
+  "render_source": "C:\\CoVisStudio\\paper\\cscwd_en\\main.pdf"
+}

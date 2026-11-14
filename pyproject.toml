@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "covis-studio"
+version = "0.1.0"
+description = "A collaborative Olist dashboard workspace and study apparatus"
+requires-python = ">=3.11"
+dependencies = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1", "duckdb>=1.4,<2", "httpx>=0.27,<1", "websockets>=14,<17", "python-dotenv>=1,<2", "jsonschema>=4,<5"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "playwright>=1.57,<2", "Pillow>=10"]
+
+[tool.setuptools.packages.find]
+include = ["backend*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

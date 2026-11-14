@@ -1,0 +1,24 @@
+name                                 type              encoding         emb sub uni object ID
+------------------------------------ ----------------- ---------------- --- --- --- ---------
+WAIKHW+TeXGyreTermes-Regular-Identity-H CID Type 0C       Identity-H       yes yes yes      4  0
+MHYJHB+TeXGyreTermes-BoldItalic-Identity-H CID Type 0C       Identity-H       yes yes yes      6  0
+TUQUCL+TeXGyreTermes-Bold-Identity-H CID Type 0C       Identity-H       yes yes yes      8  0
+IGJFCZ+TeXGyreTermes-Italic-Identity-H CID Type 0C       Identity-H       yes yes yes     13  0
+PHVKKI+CMMI10                        Type 1C           Builtin          yes yes yes     27  0
+VYCCKR+CMMI7                         Type 1C           Builtin          yes yes yes     28  0
+FVQAII+CMR10                         Type 1C           Builtin          yes yes yes     29  0
+CFDDXN+CMSY7                         Type 1C           Builtin          yes yes yes     30  0
+CQCJGW+CMSY10                        Type 1C           Builtin          yes yes yes     31  0
+MRGTNE+LMMono10-Regular-Identity-H   CID Type 0C       Identity-H       yes yes yes     32  0
+GZBCGN+DejaVuSans-Bold               CID TrueType      Identity-H       yes yes yes     41  0
+HHOYUP+DejaVuSans-Bold               CID TrueType      Identity-H       yes yes yes     48  0
+FIJPBQ+DejaVuSans-Oblique            CID TrueType      Identity-H       yes yes yes     55  0
+BHPATT+DejaVuSans                    CID TrueType      Identity-H       yes yes yes     62  0
+DWCUHC+DejaVuSans-Bold               CID TrueType      Identity-H       yes yes yes     75  0
+CUTSZT+DejaVuSans-Oblique            CID TrueType      Identity-H       yes yes yes     82  0
+BDBALX+DejaVuSans                    CID TrueType      Identity-H       yes yes yes     89  0
+CPUQYB+DejaVuSans                    CID TrueType      Identity-H       yes yes yes     96  0
+DRCSMV+DejaVuSans-Bold               CID TrueType      Identity-H       yes yes yes    117  0
+CGWZGG+DejaVuSans                    CID TrueType      Identity-H       yes yes yes    124  0
+GLVCWC+DejaVuSans                    CID TrueType      Identity-H       yes yes yes    131  0
+UZITTR+CMR7                          Type 1C           Builtin          yes yes yes    152  0

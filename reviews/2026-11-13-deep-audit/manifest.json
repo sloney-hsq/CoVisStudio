@@ -1,0 +1,456 @@
+{
+  "scope": "Read-only source and research audit; no paid API calls; 50 independent subagents in batches of at most 3",
+  "agents": [
+    {
+      "id": "A01",
+      "task": "research_question",
+      "topic": "Research question, method and claim consistency",
+      "files": "docs/UNIFIED_RESEARCH_PROTOCOL.md; docs/RESEARCH_PLAN.md; docs/STUDY_PROTOCOL.md; README.md",
+      "status": "completed",
+      "agent": "/root/audit01_research_question",
+      "report": "A01.md"
+    },
+    {
+      "id": "A02",
+      "task": "condition_parity",
+      "topic": "Actual direct versus bound_revision parity",
+      "files": "backend/app.py; backend/revisions.py; backend/evidence_candidates.py; docs/STUDY_PARITY_AUDIT.md",
+      "status": "completed",
+      "agent": "/root/audit02_condition_parity",
+      "report": "A02.md"
+    },
+    {
+      "id": "A03",
+      "task": "realtime_flow",
+      "topic": "Realtime response and tool continuation lifecycle",
+      "files": "backend/providers.py; tests/test_providers.py; tests/test_realtime_observed_order.py",
+      "status": "completed",
+      "agent": "/root/audit03_realtime_flow",
+      "report": "A03.md"
+    },
+    {
+      "id": "A04",
+      "task": "evidence_cutoff",
+      "topic": "Immutable evidence cutoff and capture versus availability",
+      "files": "backend/evidence.py; backend/app.py; tests/test_evidence_workspace.py",
+      "status": "completed",
+      "agent": "/root/audit04_evidence_cutoff",
+      "report": "A04.md"
+    },
+    {
+      "id": "A05",
+      "task": "audio_receipts",
+      "topic": "Playback sample receipts, stop and generation",
+      "files": "frontend/src/audio.js; frontend/public/playback-worklet.js; frontend/tests/audio.test.js",
+      "status": "completed",
+      "agent": "/root/audit05_audio_receipts",
+      "report": "A05.md"
+    },
+    {
+      "id": "A06",
+      "task": "data_grain",
+      "topic": "Olist joins, order grain and review deduplication",
+      "files": "backend/data.py; backend/oracle.py; tests/test_data_tools.py",
+      "status": "completed",
+      "agent": "/root/audit06_data_grain",
+      "report": "A06.md"
+    },
+    {
+      "id": "A07",
+      "task": "intent_revocation",
+      "topic": "Speech onset revocation and accepted intent semantics",
+      "files": "backend/app.py; backend/providers.py; tests/test_workspace.py",
+      "status": "completed",
+      "agent": "/root/audit07_intent_revocation",
+      "report": "A07.md"
+    },
+    {
+      "id": "A08",
+      "task": "commit_atomicity",
+      "topic": "Private candidates, atomic commits and stale versions",
+      "files": "backend/charts.py; backend/app.py; tests/test_revisions.py",
+      "status": "completed",
+      "agent": "/root/audit08_commit_atomicity",
+      "report": "A08.md"
+    },
+    {
+      "id": "A09",
+      "task": "tool_flat_schema",
+      "topic": "Flat revise_analysis usability and schema consistency",
+      "files": "backend/revisions.py; backend/charts.py; docs/GOAL_EXECUTION.md; tests/test_flat_revision.py",
+      "status": "completed",
+      "agent": "/root/audit09_tool_flat_schema",
+      "report": "A09.md"
+    },
+    {
+      "id": "A10",
+      "task": "candidate_resolution",
+      "topic": "Evidence candidates and shared member compiler",
+      "files": "backend/evidence_candidates.py; backend/revisions.py; tests/test_evidence.py",
+      "status": "completed",
+      "agent": "/root/audit10_candidate_resolution",
+      "report": "A10.md"
+    },
+    {
+      "id": "A11",
+      "task": "saved_sets",
+      "topic": "Save, list and reuse exact category sets",
+      "files": "backend/category_sets.py; frontend/src/components/SavedSetsPanel.vue; tests/test_category_sets.py",
+      "status": "completed",
+      "agent": "/root/audit11_saved_sets",
+      "report": "A11.md"
+    },
+    {
+      "id": "A12",
+      "task": "metrics_semantics",
+      "topic": "Risk rate denominators, delivery and revenue metric semantics",
+      "files": "backend/data.py; backend/oracle.py; docs/CONTRACT.md",
+      "status": "completed",
+      "agent": "/root/audit12_metrics_semantics",
+      "report": "A12.md"
+    },
+    {
+      "id": "A13",
+      "task": "scope_preservation",
+      "topic": "Region, date and status preservation in partial edits",
+      "files": "backend/charts.py; backend/revisions.py; tests/test_flat_revision.py",
+      "status": "completed",
+      "agent": "/root/audit13_scope_preservation",
+      "report": "A13.md"
+    },
+    {
+      "id": "A14",
+      "task": "ranking_semantics",
+      "topic": "Top N versus fixed members, ranking and order",
+      "files": "backend/data.py; backend/charts.py; frontend/src/chart.js",
+      "status": "completed",
+      "agent": "/root/audit14_ranking_semantics",
+      "report": "A14.md"
+    },
+    {
+      "id": "A15",
+      "task": "clock_calibration",
+      "topic": "Client/server time calibration and uncertainty",
+      "files": "backend/trace.py; frontend/src/clockSync.js; tests/test_telemetry.py; frontend/tests/clockSync.test.js",
+      "status": "completed",
+      "agent": "/root/audit15_clock_calibration",
+      "report": "A15.md"
+    },
+    {
+      "id": "A16",
+      "task": "event_association",
+      "topic": "Request/response/tool identifiers and event provenance",
+      "files": "backend/trace.py; backend/app.py; backend/providers.py",
+      "status": "completed",
+      "agent": "/root/audit16_event_association",
+      "report": "A16.md"
+    },
+    {
+      "id": "A17",
+      "task": "model_input_archive",
+      "topic": "Actual provider inputs, hashes and native history limits",
+      "files": "backend/providers.py; backend/evidence.py; backend/trace.py; docs/JARVIS_ADAPTATION.md",
+      "status": "completed",
+      "agent": "/root/audit17_model_input_archive",
+      "report": "A17.md"
+    },
+    {
+      "id": "A18",
+      "task": "delivery_scoring",
+      "topic": "Separate computation, commit, render and audio delivery scoring",
+      "files": "backend/delivery.py; scripts/audit_delivery.py; tests/test_delivery.py",
+      "status": "completed",
+      "agent": "/root/audit18_delivery_scoring",
+      "report": "A18.md"
+    },
+    {
+      "id": "A19",
+      "task": "episode_scoring",
+      "topic": "Latest user intent versus original-task scoring",
+      "files": "backend/study.py; backend/experiment.py; docs/INTENT_REVIEW_WORKFLOW.md",
+      "status": "completed",
+      "agent": "/root/audit19_episode_scoring",
+      "report": "A19.md"
+    },
+    {
+      "id": "A20",
+      "task": "oracle_independence",
+      "topic": "SQL oracle independence, tolerance and leakage",
+      "files": "backend/oracle.py; backend/study.py; scripts/audit_delivery.py",
+      "status": "completed",
+      "agent": "/root/audit20_oracle_independence",
+      "report": "A20.md"
+    },
+    {
+      "id": "A21",
+      "task": "assignment_balance",
+      "topic": "Assignment counterbalancing, repetitions and sampling unit",
+      "files": "backend/experiment.py; docs/experiment_manifest.json; docs/EXPERIMENT_PROTOCOL.md; tests/test_experiment.py",
+      "status": "completed",
+      "agent": "/root/audit21_assignment_balance",
+      "report": "A21.md"
+    },
+    {
+      "id": "A22",
+      "task": "task_match",
+      "topic": "Four business families and actual matching of variants",
+      "files": "backend/business_tasks.py; docs/MATCHED_TASKS.md; docs/BUSINESS_TASKS.md",
+      "status": "completed",
+      "agent": "/root/audit22_task_match",
+      "report": "A22.md"
+    },
+    {
+      "id": "A23",
+      "task": "task_ecology",
+      "topic": "Business realism, participant choice and demand characteristics",
+      "files": "docs/UNIFIED_RESEARCH_PROTOCOL.md; docs/BUSINESS_TASKS.md; backend/business_tasks.py",
+      "status": "completed",
+      "agent": "/root/audit23_task_ecology",
+      "report": "A23.md"
+    },
+    {
+      "id": "A24",
+      "task": "statistics_plan",
+      "topic": "Estimands, unit, denominators, missing data and inferential plan",
+      "files": "docs/UNIFIED_RESEARCH_PROTOCOL.md; docs/EXPERIMENT_PROTOCOL.md; backend/experiment.py",
+      "status": "completed",
+      "agent": "/root/audit24_statistics_plan",
+      "report": "A24.md"
+    },
+    {
+      "id": "A25",
+      "task": "human_review",
+      "topic": "Human intent/listening coding, blinding and pending states",
+      "files": "scripts/prepare_intent_review.py; backend/review_packets.py; docs/INTENT_REVIEW_WORKFLOW.md; tests/test_intent_review_blinding.py",
+      "status": "completed",
+      "agent": "/root/audit25_human_review",
+      "report": "A25.md"
+    },
+    {
+      "id": "A26",
+      "task": "archive_integrity",
+      "topic": "Original evidence preservation, repeat attempts and export integrity",
+      "files": "backend/review_packets.py; backend/experiment.py; scripts/export_experiment_report.py",
+      "status": "completed",
+      "agent": "/root/audit26_archive_integrity",
+      "report": "A26.md"
+    },
+    {
+      "id": "A27",
+      "task": "real_results",
+      "topic": "Latest eight-case real API findings versus raw outcomes",
+      "files": "docs/REAL_API_FINDINGS.md; scripts/summarize_real_study.py; traces/real-study-20261113-224313/RESULTS.md",
+      "status": "completed",
+      "agent": "/root/audit27_real_results",
+      "report": "A27.md"
+    },
+    {
+      "id": "A28",
+      "task": "real_driver",
+      "topic": "Real-test driver measurement, failure handling and caps",
+      "files": "scripts/verify_real_study_matrix.py; scripts/api_trial_specs.py; tests/test_real_study_matrix_measurement.py",
+      "status": "completed",
+      "agent": "/root/audit28_real_driver",
+      "report": "A28.md"
+    },
+    {
+      "id": "A29",
+      "task": "failure_history",
+      "topic": "Two earlier failed real calls and whether fixes address them",
+      "files": "docs/GOAL_EXECUTION.md; traces/real-two-cases/20261113-213538/RESULTS.md; backend/providers.py",
+      "status": "completed",
+      "agent": "/root/audit29_failure_history",
+      "report": "A29.md"
+    },
+    {
+      "id": "A30",
+      "task": "local_fixture_validity",
+      "topic": "What authored provider/browser fixtures actually prove",
+      "files": "scripts/verify_playback_revision.py; scripts/verify_assigned_voice.py; scripts/verify_goal_revision.py",
+      "status": "completed",
+      "agent": "/root/audit30_local_fixture_validity",
+      "report": "A30.md"
+    },
+    {
+      "id": "A31",
+      "task": "frontend_selection",
+      "topic": "Chart ID/number selection, image/reference binding",
+      "files": "frontend/src/App.vue; frontend/src/visualContext.js; frontend/src/components/ChartCard.vue",
+      "status": "completed",
+      "agent": "/root/audit31_frontend_selection",
+      "report": "A31.md"
+    },
+    {
+      "id": "A32",
+      "task": "frontend_render",
+      "topic": "ECharts render completion and stale acknowledgements",
+      "files": "frontend/src/components/ChartCard.vue; frontend/src/App.vue; frontend/src/chart.js",
+      "status": "completed",
+      "agent": "/root/audit32_frontend_render",
+      "report": "A32.md"
+    },
+    {
+      "id": "A33",
+      "task": "frontend_exposure",
+      "topic": "Chart/card visibility and exposure correctness",
+      "files": "frontend/src/chartVisibility.js; frontend/src/revisionVisibility.js; frontend/src/components/RevisionObservation.vue",
+      "status": "completed",
+      "agent": "/root/audit33_frontend_exposure",
+      "report": "A33.md"
+    },
+    {
+      "id": "A34",
+      "task": "frontend_revision_card",
+      "topic": "Candidate card states, corrections and confirmations",
+      "files": "frontend/src/components/RevisionPanel.vue; frontend/src/revision.js; frontend/src/App.vue",
+      "status": "completed",
+      "agent": "/root/audit34_frontend_revision_card",
+      "report": "A34.md"
+    },
+    {
+      "id": "A35",
+      "task": "frontend_outcomes",
+      "topic": "Per-request UI tool outcomes versus verbal claims",
+      "files": "frontend/src/toolFeedback.js; frontend/src/components/ToolFeedback.vue; frontend/src/App.vue; tests/test_goal_workspace.py",
+      "status": "completed",
+      "agent": "/root/audit35_frontend_outcomes",
+      "report": "A35.md"
+    },
+    {
+      "id": "A36",
+      "task": "frontend_layout",
+      "topic": "4K scaled English participant layout and clarity, static review",
+      "files": "frontend/src/style.css; frontend/src/App.vue; frontend/src/experiment.css; frontend/src/review.css",
+      "status": "completed",
+      "agent": "/root/audit36_frontend_layout",
+      "report": "A36.md"
+    },
+    {
+      "id": "A37",
+      "task": "frontend_study_flow",
+      "topic": "Participant/researcher separation and phase/timer behavior",
+      "files": "frontend/src/experiment.js; frontend/src/components/ExperimentPanel.vue; frontend/src/App.vue; backend/app.py",
+      "status": "completed",
+      "agent": "/root/audit37_frontend_study_flow",
+      "report": "A37.md"
+    },
+    {
+      "id": "A38",
+      "task": "input_audio",
+      "topic": "Microphone capture, PTT caps, silence and voice lifecycle",
+      "files": "frontend/src/audio.js; frontend/public/mic-worklet.js; backend/app.py; tests/test_live_alignment.py",
+      "status": "completed",
+      "agent": "/root/audit38_input_audio",
+      "report": "A38.md"
+    },
+    {
+      "id": "A39",
+      "task": "resource_shutdown",
+      "topic": "Provider/socket/task cleanup and connection duration accounting",
+      "files": "backend/app.py; backend/providers.py; scripts/verify_two_real_cases.py",
+      "status": "completed",
+      "agent": "/root/audit39_resource_shutdown",
+      "report": "A39.md"
+    },
+    {
+      "id": "A40",
+      "task": "text_voice_parity",
+      "topic": "Text versus live voice current-state and tool correctness",
+      "files": "backend/providers.py; backend/app.py; docs/PROVIDERS.md",
+      "status": "completed",
+      "agent": "/root/audit40_text_voice_parity",
+      "report": "A40.md"
+    },
+    {
+      "id": "A41",
+      "task": "prompt_contract",
+      "topic": "System prompts versus actual tool and evidence contracts",
+      "files": "backend/app.py; backend/revisions.py; backend/evidence_candidates.py; docs/GOAL_EXECUTION.md",
+      "status": "completed",
+      "agent": "/root/audit41_prompt_contract",
+      "report": "A41.md"
+    },
+    {
+      "id": "A42",
+      "task": "tool_surface",
+      "topic": "Tool coverage and interaction burden for normal analytical revisions",
+      "files": "backend/charts.py; backend/revisions.py; backend/category_sets.py; docs/CONTRACT.md",
+      "status": "completed",
+      "agent": "/root/audit42_tool_surface",
+      "report": "A42.md"
+    },
+    {
+      "id": "A43",
+      "task": "documentation_drift",
+      "topic": "Contradictions among README/TASKS/AGENTS and current protocol",
+      "files": "AGENTS.md; README.md; TASKS.md; docs/CONTRACT.md; docs/UNIFIED_RESEARCH_PROTOCOL.md",
+      "status": "completed",
+      "agent": "/root/audit43_documentation_drift",
+      "report": "A43.md"
+    },
+    {
+      "id": "A44",
+      "task": "packaging_startup",
+      "topic": "Dependencies, canonical launch, build and reproduction instructions",
+      "files": "pyproject.toml; frontend/package.json; backend/__main__.py; start.ps1; scripts/serve_studio.py; README.md",
+      "status": "completed",
+      "agent": "/root/audit44_packaging_startup",
+      "report": "A44.md"
+    },
+    {
+      "id": "A45",
+      "task": "datatone_position",
+      "topic": "Verify DataTone overlap and defensible novelty using primary sources",
+      "files": "docs/RESEARCH_PLAN.md; docs/UNIFIED_RESEARCH_PROTOCOL.md; primary DataTone paper",
+      "status": "completed",
+      "agent": "/root/audit45_datatone_position",
+      "report": "A45.md"
+    },
+    {
+      "id": "A46",
+      "task": "cleo_voca_position",
+      "topic": "Verify CLEO and VoCa overlap using primary papers",
+      "files": "docs/RESEARCH_PLAN.md; docs/UNIFIED_RESEARCH_PROTOCOL.md; primary CLEO and VoCa papers",
+      "status": "completed",
+      "agent": "/root/audit46_cleo_voca_position",
+      "report": "A46.md"
+    },
+    {
+      "id": "A47",
+      "task": "jarvis_position",
+      "topic": "Compare actual Jarvis adaptation and contribution inheritance",
+      "files": "docs/JARVIS_ADAPTATION.md; C:/Jarvis/jarvis/omni/timeline.py; C:/Jarvis/jarvis/resources/frontend/audio-worklet.js; backend/evidence.py",
+      "status": "completed",
+      "agent": "/root/audit47_jarvis_position",
+      "report": "A47.md"
+    },
+    {
+      "id": "A48",
+      "task": "chart_bench_position",
+      "topic": "ChartEditBench and Speech-to-Visualization overlap using primary papers",
+      "files": "docs/RESEARCH_PLAN.md; docs/UNIFIED_RESEARCH_PROTOCOL.md; primary relevant papers",
+      "status": "completed",
+      "agent": "/root/audit48_chart_bench_position",
+      "report": "A48.md"
+    },
+    {
+      "id": "A49",
+      "task": "full_duplex_position",
+      "topic": "FDB-v3 and DuplexAgent-RSI novelty and evaluation scope",
+      "files": "docs/UNIFIED_RESEARCH_PROTOCOL.md; docs/REAL_API_FINDINGS.md; primary relevant papers",
+      "status": "completed",
+      "agent": "/root/audit49_full_duplex_position",
+      "report": "A49.md"
+    },
+    {
+      "id": "A50",
+      "task": "minimal_delivery",
+      "topic": "Independent final research/engineering readiness and minimal next milestone",
+      "files": "docs/UNIFIED_RESEARCH_PROTOCOL.md; docs/REAL_API_FINDINGS.md; docs/GOAL_EXECUTION.md; docs/ACCEPTANCE.md",
+      "status": "completed",
+      "agent": "/root/audit50_minimal_delivery",
+      "report": "A50.md"
+    }
+  ],
+  "completed_agents": 50
+}

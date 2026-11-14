@@ -1,0 +1,33 @@
+[
+  {
+    "tail_first": false,
+    "accepted": [
+      {
+        "type": "user_transcript",
+        "text": "Keep other conditions.",
+        "item_id": "second",
+        "item_ids": [
+          "second"
+        ]
+      }
+    ],
+    "errors": [
+      {
+        "type": "error",
+        "message": "Qwen could not transcribe this utterance. No response was requested."
+      }
+    ],
+    "response_create_count": 1
+  },
+  {
+    "tail_first": true,
+    "accepted": [],
+    "errors": [
+      {
+        "type": "error",
+        "message": "Qwen could not transcribe this utterance. No response was requested."
+      }
+    ],
+    "response_create_count": 0
+  }
+]

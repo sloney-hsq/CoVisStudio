@@ -1,0 +1,52 @@
+
+> covis-studio-ui@0.1.0 test
+> node --test tests/*.test.js --run
+
+✔ PCM transport preserves signed 16-bit samples (5.1877ms)
+✔ WAV replay retains complete chunks and correct sample rate (1.0365ms)
+✔ worklet receipts count actual source cursor at 24000 Hz (5.4324ms)
+✔ worklet receipts count actual source cursor at 48000 Hz (6.6428ms)
+✔ end before ready waits for worklet drain and preserves received WAV (85.2474ms)
+✔ stop accounting waits for clear acknowledgement and credits no queued PCM (27.3089ms)
+✔ stop during ready prevents late scheduling and records zero (11.236ms)
+✔ late receipts from a different generation cannot change playback (1.5057ms)
+✔ stream end after worklet drain publishes once (1.393ms)
+✔ paused microphone samples are excluded from the next submitted segment (1.7278ms)
+✔ push-to-talk stops at exactly ten seconds of captured PCM (89.1644ms)
+✔ rates use percentages and preserve actual review denominators in tooltips (2.513ms)
+✔ display sorting does not mutate source query rows (0.2841ms)
+✔ all supported renderers preserve data identities (1.8479ms)
+✔ visible date range respects exclusive end and does not imply extra month (47.8678ms)
+✔ finished offscreen plots are not exposed; any positive intersection can start exposure (2.5913ms)
+✔ a new render closes the previous identity and only its current finished callback reopens (0.3718ms)
+✔ hidden pages split intervals and exclude background time (0.2785ms)
+✔ coverage and disconnection disable intervals; unmount closes once and removes observers (1.595ms)
+✔ separate component surfaces get independent identities for the same chart (1.8235ms)
+✔ one calibration sends three timestamp exchanges without model messages (4.0338ms)
+✔ a task change cannot accept an old session clock response (0.3962ms)
+✔ closing the socket stops periodic sampling and ignores an outstanding pong (0.2339ms)
+✔ preparation has no elapsed task time; a running task counts from its explicit begin timestamp (2.2317ms)
+✔ the assigned sequence ends after four tasks rather than silently restarting (0.3086ms)
+✔ review span choices exclude preparation and post-task review (3.3801ms)
+✔ historical event inspection never uses a later canvas (0.5152ms)
+✔ a publication precedes node creation but already exposes the new committed revision (0.4757ms)
+✔ referencing a historical cohort never copies its region, dates or metric into the current patch (1.5424ms)
+✔ an explicit local metric revision preserves all unspecified source fields (0.1993ms)
+✔ unbound preview uses only the members explicitly selected in the form (0.1634ms)
+✔ reranking explicitly releases fixed members without restoring historical filters (0.1834ms)
+✔ a mounted but offscreen card is not exposure; a partial intersection starts one interval (2.3775ms)
+✔ tab hiding closes the interval, return starts a new ID, and unmount closes it (0.4594ms)
+✔ a drawer covering the summary prevents exposure and splits visible intervals (0.2962ms)
+✔ only a real committed receipt is presented as a chart update (1.8616ms)
+✔ request receipts preserve the earlier result without assigning it to a new request (0.349ms)
+✔ request receipt UI is scoped to conversation messages, never saved recordings (6.6653ms)
+✔ visual status distinguishes local capture, queued image and actual delivery (1.8328ms)
+✔ a late receipt cannot label a different chart selection or category highlight as sent (0.3319ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 342.4222

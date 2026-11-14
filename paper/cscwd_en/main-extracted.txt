@@ -1,0 +1,620 @@
+CoVisStudio: Separating Evidence from Edit Scope
+in Full-Duplex Collaborative Visual Analysis
+Anonymous review draft
+Abstract—When people revise analytical dashboards with an
+AI assistant, reusing previously discussed objects need not mean
+restoring their historical filters. Full-duplex interaction allows
+revisions during explanation and execution, while generated
+speech, delivered speech, and the visible canvas can differ.
+We present CoVisStudio, which represents a revision through
+object provenance, current targets and changes, and retained
+or released conditions. A correctable revision card exposes this
+interpretation over execution capabilities shared with a strong
+direct-editing baseline. The system separately records commits,
+rendering, visibility, and output-sample playback. A local browser
+workflow passed 24 mechanism checks. An earlier eight-run real-
+model diagnostic produced four correct final states, whereas its
+original driver marked three passes. Two subsequent focused
+real-model checks separately exposed a repeated integer-string
+rejection and a successful historical-member transfer with 14.8
+seconds of naturally completed output. Inspection also found
+an outdated image in a post-commit follow-up; its repair has
+only local verification. We specify a prospective two-condition,
+full-duplex study of correctness, understanding, and repair cost.
+The evidence supports implementation feasibility and identifies
+reliability gaps; it does not establish user benefit or full-duplex
+superiority.
+Index Terms—human–AI collaboration, full-duplex speech,
+visual analytics, intent revision, shared evidence
+I. INTRODUCTION
+Creating a dashboard is rarely a single translation of a
+complete specification. People inspect charts, select com-
+parison objects, change measures, and narrow the scope as
+their questions develop. With an AI assistant, collaborators
+must continually establish what they are discussing, what has
+changed, and what remains valid. This is coordination around
+a shared analytical artifact, beyond converting language into
+chart commands.
+Consider three charts showing order volume, low-review
+rate, and delivery time. A user first examines three priority
+categories in the Brazilian state of RJ, then moves to MG.
+During the assistant’s explanation, the user asks: “Use those
+three categories you just discussed for the two service charts;
+keep the current region and dates.” Correct execution must
+recover the historical members, target the specified current
+views, and retain MG. Restoring the earlier query or selecting
+MG’s current top three may yield numerically correct charts
+that answer a different question.
+Full-duplex speech provides an entry point for timely re-
+vision, but does not ensure shared understanding. Generated
+words may not have played; a committed chart may not have
+rendered; a reference to an explanation may concern an earlier
+set rather than the latest one. The final chart and a complete
+chat transcript alone cannot establish the evidence available
+when a revision arose.
+Prior work supports ambiguity management, speech–canvas
+collaboration, and intervention during execution [1]–[3]. Nei-
+ther interruption nor combining speech with images is our
+contribution. We ask: In collaboration that permits revision
+during delivery, can explicitly separating referenced evidence
+from the current edit scope help collaborators execute and un-
+derstand changes, and at what interaction cost? Both planned
+conditions use full-duplex interaction; we do not compare it
+with sequential interaction.
+We contribute an implemented revision representation sep-
+arating historical object identity from current filters, measures,
+and targets, with a correctable shared card. We also connect
+inputs, execution, and delivery in a verification workflow,
+report technical successes and preserved failures, and specify
+a comparison that retains the baseline’s exact-member reuse
+capabilities. User benefit remains the hypothesis this protocol
+will test.
+II. RELATED WORK
+A. Natural-Language Analysis and Ambiguity
+DataTone exposes ambiguity and partial query constraints,
+letting users correct interpretations [1]. Our emphasis is a
+particular revision ambiguity: historical members can remain
+relevant while their old calculation scope should not return. We
+separate object provenance from application scope and record
+relevant delivered speech and visible versions. This is a change
+of focus, not evidence that a newer speech interface surpasses
+ambiguity widgets.
+Speech-to-Visualization investigates generating visualiza-
+tion queries from spoken questions and database informa-
+tion [4]. ChartEditBench evaluates grounded, multi-turn edit-
+ing of existing charts and code [5]. These provide direct
+foundations for speech-driven creation and chart editing. We
+examine whether historical-evidence reuse preserves the re-
+quested objects and current conditions, rather than adding chart
+types.
+B. Speech and Shared-Canvas Collaboration
+CommSketch combines sketching and narration to commu-
+nicate design intent [6]. CLEO tracks user actions in a shared
+design canvas and selectively revises plans during concurrent
+human–agent work [2]. VoCa studies speech–canvas coordina-
+tion, feedback, and user control [3]. Shared visual work and
+mid-execution revision therefore have clear precedents.
+
+Analytical dashboards offer independently checkable mem-
+bers, filters, measures, and untouched views. This makes it
+possible to examine the case where historical objects remain
+referable without restoring their scope. That setting alone is
+insuﬀicient novelty: a fair comparison must determine whether
+explicit support improves revision and understanding.
+C. Full-Duplex Execution and Common Ground
+Full-Duplex-Bench-v3 evaluates tool use under realistic
+disfluency [7]; DuplexAgent-RSI addresses coordination of
+realtime speech with background execution, including delivery
+of invalidated results [8]. We use interruption and commit
+management as engineering foundations rather than claiming
+a new coordination algorithm. Grounding requires collabo-
+rators to provide and check evidence of understanding [9].
+Accordingly, a correct internal member selection and a user’s
+knowledge of that selection are separate outcomes.
+III. REVISION REPRESENTATION AND METHOD
+A. Referenced Evidence and Current State
+A revision episode comprises a user utterance and subse-
+quent clarification, execution, and repair. It need not equal
+one provider response: a request can generate tools, follow-up
+speech, and several delivery events. Let Ci denote the current
+query configuration of view i, including region, dates, order
+status, measure, and membership rule. Historical evidence
+e contains its source version and member set M(e). We
+represent a revision as
+R = (O, T, ∆, P, L),
+(1)
+where O is object provenance, T the current target views, ∆
+the explicit changes, P retained conditions, and L explicitly
+released conditions. The interface organizes these into three
+parts: object evidence; targets and changes; retained and
+released conditions. They derive from expressed requests and
+available evidence, not evaluator answers.
+In the opening example, M(e) supplies the categories,
+views 2 and 3 are targets, and MG, current dates, delivered
+status, and each measure are retained. View 1 is unchanged.
+“Release those categories and find MG’s top three again”
+instead removes fixed membership and establishes an explicit
+ranking. Keeping a fixed set differs from preserving a dynamic
+ranking rule.
+B. Execution Rules and Correctable Support
+The system lists existing historical charts and saved sets,
+from which the model can select a candidate identifier. Users
+can also select evidence directly. Both paths share member
+resolution; historical reuse copies object identity, not the old
+region, dates, or measure. For target views,
+C′
+i = patch(Ci, ∆i, M(O)),
+i ∈T,
+(2)
+and C′
+i = Ci for i /∈T. Reranking requires a measure and
+count and releases fixed membership. These rules enforce
+a stated interpretation; they cannot replace understanding an
+ambiguous utterance.
+An explicit request can compute and commit through one
+flat-argument revise_analysis call: targets, membership
+action, candidate identifier, and changed query fields. B0 and
+B2 share the compiler, candidate tools, and revision structure.
+B2 exposes a summary and expandable card; B0 retains direct
+execution feedback. Thus the treatment is a package of visible,
+correctable revision support, not a different binding algorithm
+or exclusive access to exact members.
+Cards do not impose confirmation on every operation.
+An unresolved choice pauses publication for clarification; a
+clear request can apply immediately, leaving its card available
+for inspection and correction through a new request. Such
+a card may therefore appear after commitment. Generation,
+viewport exposure, opening, and successful user confirmation
+are separately recorded. None alone proves agreement or
+understanding.
+C. The Role of Full-Duplex Interaction
+Revision can arrive while an explanation is partially deliv-
+ered, a tool remains unfinished, or a chart has just changed
+(Fig. 1). The challenge includes semantic reference errors
+even when the selected operation executes correctly, beyond
+preventing stale results from overwriting newer ones.
+On a speech-start event, the system revokes old work’s
+future publication permission and stops old playback before
+requesting remote cancellation. Earlier lawful commits remain.
+Guarantees begin with local event handling, not physical
+speech onset; delivered audio cannot be recalled. An explicitly
+named RJ set may be resolved without playback position,
+whereas “the group you just mentioned” may depend on
+delivered explanation. Human coding must establish that de-
+pendence. Different candidate sets yielding different charts
+does not itself show that full-duplex evidence is necessary.
+IV. SYSTEM AND EVIDENCE RECORDS
+A. Interface, Data, and Tools
+CoVisStudio uses an English Vue/ECharts three-chart inter-
+face and a FastAPI backend managing sessions, tools, and pub-
+lic chart state. Voice uses Qwen3.8-Omni-Flash-Realtime [10]
+and connects only after an explicit start. Charts, conversation,
+saved sets, historical inspection, and revision cards form the
+workspace. The card displays actual changed and retained
+condition values, rather than field names alone.
+Queries use real Olist data [11]. Order volume, low-review
+rate, and delivery time retain their implemented definitions.
+Low-review rate uses valid reviewed orders as the denomina-
+tor; delivery time uses eligible delivered records. An order can
+contribute to several category groups, so category counts are
+not simply summed as a unique-order total.
+Tools compute private candidates. Publication jointly checks
+current request permission and matching chart version. Both
+conditions share reads, saved-set tools, data computation, and
+commit rules. Spoken success cannot publish state. Request-
+scoped receipts distinguish committed, displayed, and no chart
+changes; an earlier success cannot certify a later request.
+
+(a) Different evidence streams at the same revision moment
+Schematic sequence (not measured time)
+Earlier evidence
+Current analysis
+Speech onset
+Chart evidence
+Selected history: SA
+Visible now: MG + dates + set SB
+Generated speech
+Explanation about SA
+Further explanation received
+Browser playback
+Played portion refers to SA
+Unplayed
+“Use the group just discussed; edit charts 2/3; keep MG and dates.”
+User revision
+(b) Correct binding
+Members ←SA   |   Targets: 2 / 3   |   Scope: current MG + dates
+Chart 1 remains unchanged. Reusing historical members does not restore the historical canvas.
+Fig. 1. Conceptual full-duplex revision. Historical members remain evidence while the current calculation scope stays in MG. Generated follow-up speech is
+not necessarily delivered speech. Sequence and set symbols are illustrative, not measured timing or results.
+Shared full-duplex workspace
+Proposed study contract; no measured outcomes
+Available evidence
+History / exact saved sets
+Current charts / playback receipts
+User revision
+Speech + selected references
+Current request / chart identities
+B0 / B2: shared contract
+Same model, tools and evidence
+Same clarification / release policy
+B2: inspectable revision card
+B0: direct presentation, same execution
+1  Evidence / origin
+Historical source + version
+Exact members (e.g., SA)
+2  Targets / changes
+Current chart IDs (e.g., 2/3)
+Only requested field changes
+3  Retain / release
+Keep: MG, dates, measures
+Release: old member rule
+Shared execution: direct and bound use the same compiler
+Resolve exact members  →  private candidate  →  real Olist SQL  →  request / version check  →  atomic commit
+Separate evidence
+Commit
+Render
+Visibility
+Playback
+Event ledger links request, chart version and response; delivery does not establish human understanding.
+Fig. 2. Shared execution and separate verification. B0 and B2 share evidence reads, member resolution, tools, and publication rules; B2 exposes the correctable
+revision structure. Commit, rendering, visibility, and playback are distinct observations. Application evidence packages do not freeze native provider history.
+B. Evidence Cutoffs and Actual Delivery
+Request, response, tool, and chart-version identifiers as-
+sociate events. Browser/server timestamp exchanges estimate
+clock offset and uncertainty while preserving raw domains.
+Each application evidence item has a capture time tc, server-
+availability time ta, provenance, and content digest. At inter-
+pretation cutoff d, eligibility requires
+tc + u ≤d
+∧
+ta ≤d,
+(3)
+where u is capture-time uncertainty. An earlier-captured
+screenshot that has not arrived is not yet available input;
+indeterminate relationships remain unknown.
+AudioWorklet source cursors distinguish received, output,
+and interrupted unplayed samples, reporting progress about
+every 1,200 source samples at 24 kHz. A complete received
+WAV does not prove complete playback, and software output
+does not establish acoustic listening or word comprehension.
+Charts separately record publication, completed rendering, and
+viewport exposure.
+Application packages archive versions and digests alongside
+exact outbound model inputs. Existing content in the native
+Qwen session is not isolated, so application-level cutoff selec-
+tion cannot establish a frozen total model context. Aligning
+words to sample positions remains a separate annotation task.
+V. PRELIMINARY TECHNICAL EVALUATION
+We report preserved records from November 13, 2026,
+separating local scripted execution, real-model diagnostics,
+and a future participant study. Different versions and authored
+requests are not pooled into an effectiveness estimate.
+A. Two Earlier Real-Model Failures
+Two earlier cases used the real browser, Olist, and Qwen
+Realtime with synthesized authored inputs (6.64, 8.56, and
+6.32 seconds across source segments). In the first, transcription
+and image upload succeeded, but the model supplied a nested
+evidence object as a JSON string. Tools rejected it; the former
+error-continuation path produced 24 failed attempts within one
+
+TABLE I
+EARLIER EIGHT-RUN DIAGNOSTIC: FINAL ANALYTICAL OUTCOMES
+Authored family
+Direct path
+Bound path
+Historical members, then
+quarter
+Correct;
+shutdown
+watchdog
+Promise without
+edit
+Release
+fixed
+set
+and
+rerank
+Integer-string
+rejection
+Integer-string
+rejection
+Historical member transfer
+Correct
+Cancelled-tool
+continuation
+error
+Keep
+members,
+replace
+measure
+Correct
+Correct
+connection and no commit. No reconnection does not mean no
+repeated tool attempt.
+The second case committed a half-year update to two service
+charts. A first-quarter request overlapped playback; old audio
+stopped and transcription was correct, but the model promised
+the change without a tool call. Half-year charts remained.
+Independent SQL agreed with all six final charts across
+both cases, although neither full analytical goal succeeded.
+Numerical correctness, plausible narration, and requested-goal
+correctness are distinct.
+B. A Local Integrated Workflow
+Flat arguments, single-call revision, termination after failed
+receipts, and request-scoped outcomes addressed these ob-
+served failures. A scripted local provider and test audio exer-
+cised the real browser, worklets, Olist tools, and rendering. The
+workflow reused historical members for a half-year update,
+requested the first quarter during playback, then injected an
+unexecuted promise. Versions were 6 →7 →8 →8. The
+second commit changed only dates in views 2 and 3, retaining
+MG, members, status, and measures; view 1 stayed unchanged.
+The last promise displayed No chart changes (Fig. 3).
+All 24 assertions passed, covering execution, interruption,
+independent SQL, untouched views, images, matching ren-
+dered versions, and closure. These are assertions within one
+workflow, not 24 independent tasks. They demonstrate an
+executable chain, not real-model semantic reliability.
+C. An Earlier Eight-Run Real-Model Diagnostic
+Four authored request families were each run once through
+direct and bound_revision, using real browser/Olist exe-
+cution. Complete source utterances lasted 4.24–8.56 seconds;
+connections stayed below 60 seconds without automatic re-
+tries. Revision input overlapped actual playback. Historical-
+reference tasks preselected evidence, testing member transfer
+and scope retention rather than resolving reference from heard
+words.
+Four final states satisfied the authored goals, with commits,
+matching renders, and natural final playback endings (Table I).
+The raw driver marked three passes: one correct direct run
+finished playback at 54.634 seconds but crossed a 55-second
+watchdog during shutdown and closed at 55.752 seconds. Its
+original failure is retained rather than rewritten.
+Other failures were a quarter-change promise without execu-
+tion, string-valued top_n in both reranking paths, and a native
+error when continuing a cancelled tool turn. A completed
+finish label did not certify analytical success. Some early tran-
+scripts were also absent from normalized application records
+after epoch advancement while native history retained more
+context. This apparatus was not a frozen B0/B2 comparison.
+D. Two Subsequent Focused Real-Model Checks
+After
+local
+transcript-association
+and
+native-sequence
+changes, two additional authorized checks revisited reranking
+and historical transfer. They remain separate from the earlier
+eight because versions and focused purposes differ. Each
+connection stayed below 60 seconds; complete existing source
+audio was reused without truncation, new TTS, or automatic
+retry.
+The reranking check (02-direct) lasted 19.890 seconds and
+failed. Its complete 8.08-second revision was transcribed with
+“Release fixed categories” becoming “These fixed categories.”
+The model again supplied top_n:"3"; validation rejected it
+and no new version followed revision 6. Thus local protocol
+repairs did not resolve argument-type reliability.
+The historical-transfer check (03-bound) lasted 33.750
+seconds
+and
+passed
+its
+analytical
+goal.
+One
+native
+revise_analysis
+call
+with
+use_evidence
+targeted
+views 2 and 3; internal preparation and application produced
+one revision-7 commit. View 1, RJ, third-quarter dates,
+and the target measures were preserved. The final response
+output all 355,200 received samples at 24 kHz, totaling 14.8
+seconds, without interruption. Independent SQL matched all
+three charts in each focused check; that did not make the
+failed reranking goal correct.
+Both checks combined continuing VAD fragments: first
+transcripts arrived 97.912 and 55.335 ms after a second onset,
+respectively. The failed reranking check output only 63,360
+of 261,120 received samples before stopping. They exercised
+ordinary cancellation, not the specific late-created stale-tool se-
+quence; acceptance of that sequence remains untested. Archive
+inspection also found the successful transfer’s post-commit
+follow-up still sent a revision-6 image despite a revision-7
+capture. A subsequent local repair waits for matching rendered
+context before continuation. It has no paid retest; analytical
+success does not certify up-to-date visual feedback or human
+listening.
+VI. PROSPECTIVE TWO-CONDITION USER STUDY
+A. Conditions and Business Tasks
+The planned study retains only B0 and B2 in the same full-
+duplex environment. B0 has complete history reads, saved sets,
+and exact-member reuse. B2 adds explicit object provenance,
+targets/changes, and retained/released conditions. Both receive
+the same model, tools, image policy, interruption behavior,
+clarification policy, and budget. Ordinary receipts are shared
+
+Actual workspace: local scripted validation
+(a) Same canvas, revision 8: chart 1 unchanged; service charts 2/3 remain Jan–Mar
+(b) Historical evidence remains separate from the current canvas
+(c) Latest reply outcome
+Crops from one real browser screenshot; no data or UI contents replaced.
+Scripted speech/tool decisions + real Olist execution; no participant or real-model success claim.
+Fig. 3. Actual local scripted browser validation, cropped from one screenshot. View 1 retains annual orders, views 2 and 3 show the first quarter, and historical
+RJ member evidence appears separately. A subsequent second-quarter request receives no tool call, leaving first-quarter charts and a No chart changes receipt.
+This is neither a real-model success screenshot nor participant evidence.
+and explicit requests need no extra confirmation. The compari-
+son estimates the visible-support package, not an isolated card
+component or a privileged binding algorithm.
+Controlled local checks support shared compilation and
+aligned analytical instructions. Native-history equivalence and
+the formal collection configuration still need freezing. Neither
+condition may receive evaluator member answers or additional
+data access.
+Four business families cover regional service assessment,
+local-priority reselection, seasonal comparison, and measure
+replacement. Briefs specify business goals and conditions to
+preserve, without prescribing a unique business recommenda-
+tion. Participants may retain, replace, or release membership.
+Fixed-answer diagnostic scripts are not natural-use tasks.
+Each participant will complete four tasks, two per condi-
+tion and one per family, with parallel versions and crossed
+condition/task orders. The proposed target of 30 participants
+is neither recruitment evidence nor a power guarantee; 30
+allocation slots are not a complete balanced block. Each
+task permits 480 seconds with one equally limited voice
+interval of at most 60 seconds, excluding preparation and
+later comprehension questions. This is not eight minutes of
+continuous voice. Participants need not interrupt at scripted
+moments.
+B. Independent Intent Coding and Measures
+Two coders will independently specify objects, targets,
+changes, retention, and release from utterances, explicit se-
+lections, and evidence available then. Model proposals and
+final outcomes are hidden until intent is locked; necessary
+prior explanation and the contemporaneous canvas remain
+accessible. Agreement, disagreements, and unknown intent
+will be reported. Independent SQL computes reference results
+after intent coding; evaluator material never enters model
+input.
+Primary measures are final revision correctness and under-
+standing. Correctness requires the last explicit intent, valid
+retained conditions, and independently verified data; an incom-
+plete task with known intent may be incorrect. Comprehension
+questions address object provenance, affected views, and cal-
+culation scope, each scored 0/1 by frozen rules and averaged.
+Missing or indeterminate answers remain unknown rather than
+inferred from card opening.
+Secondary measures include human-confirmed misunder-
+standing repairs, repair duration, and total task time. Ex-
+ploration, deliberate goal changes, and intermediate incom-
+pleteness are not automatically errors. Explanation–commit
+consistency is coded separately from playback completion.
+Card exposure and confirmation are process observations.
+C. Analysis and Decision Scope
+All assigned tasks enter the primary analysis, including no-
+interruption, failed, timed-out, and unknown-intent tasks. The
+first formally begun attempt is primary; repeats remain sep-
+arate, without best/latest-attempt substitution. Existing latest-
+attempt exports cannot directly implement this rule. Four tasks
+from one person are not four independent participants.
+We will report known successes, failures, unknowns, and
+effect bounds, with 95% intervals from 10,000 participant-
+cluster bootstrap samples. With no unknowns, each person’s
+
+mean for the two tasks per condition yields a paired difference;
+two-sided paired t tests use Holm correction across the two
+primary outcomes at familywise α = 0.05. With unknowns,
+complete-case tests are sensitivity descriptions only. Family,
+version, and order adjustments use participant fixed effects
+with participant-level resampling, without selecting models for
+significance.
+For nc assigned tasks, sc known successes, and uc un-
+knowns in condition c, success is bounded by
+[Lc, Uc] = [sc/nc, (sc + uc)/nc].
+(4)
+The difference lies in [L2 −U0, U2 −L0]. Unknown compre-
+hension items receive analogous 0–1 sensitivity bounds. Un-
+knowns are neither silently deleted nor automatically failures.
+Timing retains failures and timeouts, reporting correct com-
+pletion separately from observed duration; tasks not reaching
+correctness are censored at termination. Sample size, equal
+voice budget, materials, and coding rules will be frozen after
+an outcome-blind feasibility assessment.
+VII. DISCUSSION AND LIMITATIONS
+Separating object provenance from current edit scope pro-
+vides a concrete shared interpretation to inspect and correct.
+Its value must be assessed through correctness, understanding,
+and cost together. Better understanding alone would support
+an understanding claim; improved correctness with longer
+task time would imply a tradeoff. Wide uncertainty or a
+nonsignificant result would not establish equivalence.
+Both conditions permit interruption, so the study cannot
+establish superiority over text or sequential speech. Full-
+duplex is the setting in which partially delivered explanation
+and unfinished execution may coexist. If natural tasks rarely
+contain references dependent on delivered speech, conclusions
+should concern multi-turn analytical revision rather than a
+full-duplex-specific benefit. DataTone’s ambiguity feedback,
+CLEO’s concurrent intervention, and VoCa’s speech–canvas
+coordination remain direct precedents; a new model, dataset,
+or timestamp alone does not establish an advance.
+The system currently revokes work on every detected utter-
+ance and does not distinguish backchannels. Native history is
+not isolated, and sample cursors are not automatically aligned
+to words. Real diagnostics are authored, sparse, version-
+dependent, and often use preselected evidence; they do not
+estimate population success or collaboration benefit. Human
+listening, semantic consistency, repair coding, and participant
+outcomes remain pending. Visual exposure is not reading,
+just as received output is not comprehension. Private records
+preserve inputs, versions, receipts, media, and failures; cre-
+dentials, raw data, and personal records are not automatically
+publishable artifacts.
+VIII. CONCLUSION
+CoVisStudio separates historical object evidence from cur-
+rent analytical scope and exposes a correctable revision struc-
+ture over shared tools and compilation. It distinguishes com-
+mitment, display, playback, and semantic correctness. Local
+execution and real-model diagnostics demonstrate feasible
+paths while exposing unexecuted promises, argument rejection,
+cancellation errors, and outdated follow-up images. The latest
+focused checks separately contain one repeated type failure
+and one successful transfer with naturally completed output;
+the image-order repair has only local validation. A prospective
+strong-baseline comparison will test whether visible support
+improves revision and understanding at acceptable repair cost.
+User effectiveness and full-duplex superiority are not yet
+established.
+REFERENCES
+[1] T. Gao, M. Dontcheva, E. Adar, Z. Liu, and K. Karahalios, “DataTone:
+Managing ambiguity in natural language interfaces for data visualiza-
+tion,” in Proceedings of the 28th Annual ACM Symposium on User
+Interface Software and Technology, 2015, pp. 489–500.
+[2] K. Son, H. Lee, D. Choi, Y. Kim, T. S. Kim, Y. Lee, J. J. Y. Chung,
+H. Jung, and J. Kim, ““When to Hand Off, When to Work Together”:
+Understanding concurrent human-agent interaction in shared co-creative
+workspaces,” arXiv:2603.02050v5, 2026.
+[3] Y. Ge, R. Yuan, Y. Qi, W. He, J. Mo, Y. Chen, W. Zuo, X. Sun, W. Guo,
+and Q. Wang, “VoCa: Designing speech-canvas interaction for voice-
+based conversational agents,” arXiv:2610.04706v1, 2026.
+[4] H. Zhang, X. Zhang, J. Zhou, K. Wu, Y. Song, and R. C.-W.
+Wong, “Speech-to-visualization: Toward end-to-end speech-driven data
+visualization generation from natural language questions,” in Machine
+Learning and Knowledge Discovery in Databases, 2025, pp. 437–453.
+[5] M. N. Kapadnis, L. Baghel, A. Naik, and C. Rosé, “ChartEditBench:
+Evaluating grounded multi-turn chart editing in multimodal language
+models,” arXiv:2602.15758v1, 2026.
+[6] W. Shi, D. Lim, G. Quek, and K. T. W. Choo, “CommSketch:
+How speaking while sketching steers human–ai design ideation,”
+arXiv:2609.37813v1, 2026.
+[7] G.-T. Lin, C. Chen, Z. Chen, and H.-y. Lee, “Full-Duplex-Bench-v3:
+Benchmarking tool use for full-duplex voice agents under real-world
+disfluency,” arXiv:2604.04847v1, 2026.
+[8] Y. Shen, Y. Wang, K. Feng, Q. Ni, J. Li, M. Hsu, J. Zhang, D. Chen,
+Y. Bian, and Z. Wu, “DuplexAgent-RSI: Recursive harness improvement
+for full-duplex voice agent collaboration,” arXiv:2610.11299v1, 2026.
+[9] H. H. Clark and S. E. Brennan, “Grounding in communication,” in
+Perspectives on Socially Shared Cognition, L. B. Resnick, J. M. Levine,
+and S. D. Teasley, Eds.
+American Psychological Association, 1991,
+pp. 127–149.
+[10] Alibaba Cloud, “Realtime api client events (Qwen-Omni-Realtime),”
+Alibaba
+Cloud
+Model
+Studio
+documentation,
+accessed
+2026-
+11-13.
+[Online].
+Available:
+https://www.alibabacloud.com/help/en/
+model-studio/client-events
+[11] Olist, “Brazilian e-commerce public dataset by olist,” Kaggle dataset,
+accessed 2026-11-13. [Online]. Available: https://www.kaggle.com/
+datasets/olistbr/brazilian-ecommerce

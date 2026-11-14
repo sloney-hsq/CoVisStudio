@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-13",
+  "artifact": "Chinese review manuscript, bilingual synchronized update",
+  "pages": 6,
+  "class": "IEEEtran conference 10pt two columns letter",
+  "figures": 3,
+  "cited_references": 11,
+  "all_fonts_embedded": true,
+  "overfull_boxes": 0,
+  "missing_glyphs": 0,
+  "visual_review": "Agent individually inspected all six rendered pages; root cross-checked pages 4 and 6",
+  "paid_model_requests_this_update": {
+    "realtime_connections": 2,
+    "new_tts_syntheses": 0,
+    "automatic_retries": 0
+  },
+  "latest_real_outcomes": {
+    "02-direct": "failed: top_n string",
+    "03-bound_revision": "passed: current-scope historical-set reuse"
+  },
+  "previous_eight_diagnostics_reported_separately": true,
+  "post_test_capture_fix_paid_retested": false,
+  "human_study": "not conducted",
+  "pdf_sha256": "1d05ff33c8cd4272c199f8e5e5caf8b8de089f28733377e0ff5e583ef1f16d9c"
+}

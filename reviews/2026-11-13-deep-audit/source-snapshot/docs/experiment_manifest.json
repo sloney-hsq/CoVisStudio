@@ -1,0 +1,193 @@
+{
+  "protocol": "covis-experiment-0.1",
+  "materials_protocol": "covis-matched-0.1",
+  "planned_slots": 30,
+  "tasks": [
+    {
+      "id": "exp_01_a",
+      "title": "Assess RJ priority categories in MG",
+      "kind": "regional_service_review",
+      "business_goal": "Headquarters identified its three priority categories by delivered-order volume in RJ in 2017. The MG team needs to assess service quality for those same categories before supporting the rollout. The current dashboard instead describes MG's own leading categories. Recommend one service issue to investigate in MG, or explain why the evidence does not justify a clear priority.",
+      "mandatory_outcomes": [
+        "Use the categories from the earliest complete RJ comparison for the current low-review-rate and delivery-time views.",
+        "Calculate both service measures using MG delivered orders in calendar year 2017; keep their existing measures.",
+        "Keep the current MG order-volume view unchanged as the local business context.",
+        "Explain your recommendation with evidence, including the limits of comparing review rates and mean delivery time."
+      ],
+      "initial": "Historical RJ priorities; current MG leaders; 2017 delivered orders",
+      "response_prompt": "What should the MG team investigate, and why? State where the category set came from and where and when the service measures were calculated.",
+      "description": "Headquarters identified its three priority categories by delivered-order volume in RJ in 2017. The MG team needs to assess service quality for those same categories before supporting the rollout. The current dashboard instead describes MG's own leading categories. Recommend one service issue to investigate in MG, or explain why the evidence does not justify a clear priority.",
+      "goal": "Headquarters identified its three priority categories by delivered-order volume in RJ in 2017. The MG team needs to assess service quality for those same categories before supporting the rollout. The current dashboard instead describes MG's own leading categories. Recommend one service issue to investigate in MG, or explain why the evidence does not justify a clear priority.\n\nRequired outcomes:\nUse the categories from the earliest complete RJ comparison for the current low-review-rate and delivery-time views.\nCalculate both service measures using MG delivered orders in calendar year 2017; keep their existing measures.\nKeep the current MG order-volume view unchanged as the local business context.\nExplain your recommendation with evidence, including the limits of comparing review rates and mean delivery time.",
+      "split": "matched_participant_material",
+      "protocol": "covis-matched-0.1",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "family_id": "01",
+      "variant_id": "a"
+    },
+    {
+      "id": "exp_01_b",
+      "title": "Assess MG priority categories in RJ",
+      "kind": "regional_service_review",
+      "business_goal": "Headquarters identified its three priority categories by delivered-order volume in MG in 2017. The RJ team needs to assess service quality for those same categories before supporting the rollout. The current dashboard instead describes RJ's own leading categories. Recommend one service issue to investigate in RJ, or explain why the evidence does not justify a clear priority.",
+      "mandatory_outcomes": [
+        "Use the categories from the earliest complete MG comparison for the current low-review-rate and delivery-time views.",
+        "Calculate both service measures using RJ delivered orders in calendar year 2017; keep their existing measures.",
+        "Keep the current RJ order-volume view unchanged as the local business context.",
+        "Explain your recommendation with evidence, including the limits of comparing review rates and mean delivery time."
+      ],
+      "initial": "Historical MG priorities; current RJ leaders; 2017 delivered orders",
+      "response_prompt": "What should the RJ team investigate, and why? State where the category set came from and where and when the service measures were calculated.",
+      "description": "Headquarters identified its three priority categories by delivered-order volume in MG in 2017. The RJ team needs to assess service quality for those same categories before supporting the rollout. The current dashboard instead describes RJ's own leading categories. Recommend one service issue to investigate in RJ, or explain why the evidence does not justify a clear priority.",
+      "goal": "Headquarters identified its three priority categories by delivered-order volume in MG in 2017. The RJ team needs to assess service quality for those same categories before supporting the rollout. The current dashboard instead describes RJ's own leading categories. Recommend one service issue to investigate in RJ, or explain why the evidence does not justify a clear priority.\n\nRequired outcomes:\nUse the categories from the earliest complete MG comparison for the current low-review-rate and delivery-time views.\nCalculate both service measures using RJ delivered orders in calendar year 2017; keep their existing measures.\nKeep the current RJ order-volume view unchanged as the local business context.\nExplain your recommendation with evidence, including the limits of comparing review rates and mean delivery time.",
+      "split": "matched_participant_material",
+      "protocol": "covis-matched-0.1",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "family_id": "01",
+      "variant_id": "b"
+    },
+    {
+      "id": "exp_02_a",
+      "title": "Set MG local operating priorities",
+      "kind": "release_and_rerank",
+      "business_goal": "The dashboard currently monitors MG using a fixed set of headquarters' RJ priority categories. The next planning meeting is about MG's own workload, so the comparison should now follow MG's three highest-volume categories rather than the inherited set. Recommend where the local team should investigate service performance among those categories.",
+      "mandatory_outcomes": [
+        "Release the fixed RJ category set in all three current views and use a dynamic top-three ranking by MG delivered-order volume.",
+        "Use the same MG 2017 ranking rule for volume, low-review rate and delivery time, preserving each measure and the delivered-order scope.",
+        "Explain how the local planning objective changes the appropriate category selection and support a recommendation with the resulting evidence."
+      ],
+      "initial": "Historical RJ priorities; current MG measures still using that fixed RJ set",
+      "response_prompt": "What local service priority would you recommend, and why? Explain why the old set was released, how the new categories were selected, and the region and period behind the values.",
+      "description": "The dashboard currently monitors MG using a fixed set of headquarters' RJ priority categories. The next planning meeting is about MG's own workload, so the comparison should now follow MG's three highest-volume categories rather than the inherited set. Recommend where the local team should investigate service performance among those categories.",
+      "goal": "The dashboard currently monitors MG using a fixed set of headquarters' RJ priority categories. The next planning meeting is about MG's own workload, so the comparison should now follow MG's three highest-volume categories rather than the inherited set. Recommend where the local team should investigate service performance among those categories.\n\nRequired outcomes:\nRelease the fixed RJ category set in all three current views and use a dynamic top-three ranking by MG delivered-order volume.\nUse the same MG 2017 ranking rule for volume, low-review rate and delivery time, preserving each measure and the delivered-order scope.\nExplain how the local planning objective changes the appropriate category selection and support a recommendation with the resulting evidence.",
+      "split": "matched_participant_material",
+      "protocol": "covis-matched-0.1",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "family_id": "02",
+      "variant_id": "a"
+    },
+    {
+      "id": "exp_02_b",
+      "title": "Set RJ local operating priorities",
+      "kind": "release_and_rerank",
+      "business_goal": "The dashboard currently monitors RJ using a fixed set of headquarters' MG priority categories. The next planning meeting is about RJ's own workload, so the comparison should now follow RJ's three highest-volume categories rather than the inherited set. Recommend where the local team should investigate service performance among those categories.",
+      "mandatory_outcomes": [
+        "Release the fixed MG category set in all three current views and use a dynamic top-three ranking by RJ delivered-order volume.",
+        "Use the same RJ 2017 ranking rule for volume, low-review rate and delivery time, preserving each measure and the delivered-order scope.",
+        "Explain how the local planning objective changes the appropriate category selection and support a recommendation with the resulting evidence."
+      ],
+      "initial": "Historical MG priorities; current RJ measures still using that fixed MG set",
+      "response_prompt": "What local service priority would you recommend, and why? Explain why the old set was released, how the new categories were selected, and the region and period behind the values.",
+      "description": "The dashboard currently monitors RJ using a fixed set of headquarters' MG priority categories. The next planning meeting is about RJ's own workload, so the comparison should now follow RJ's three highest-volume categories rather than the inherited set. Recommend where the local team should investigate service performance among those categories.",
+      "goal": "The dashboard currently monitors RJ using a fixed set of headquarters' MG priority categories. The next planning meeting is about RJ's own workload, so the comparison should now follow RJ's three highest-volume categories rather than the inherited set. Recommend where the local team should investigate service performance among those categories.\n\nRequired outcomes:\nRelease the fixed MG category set in all three current views and use a dynamic top-three ranking by RJ delivered-order volume.\nUse the same RJ 2017 ranking rule for volume, low-review rate and delivery time, preserving each measure and the delivered-order scope.\nExplain how the local planning objective changes the appropriate category selection and support a recommendation with the resulting evidence.",
+      "split": "matched_participant_material",
+      "protocol": "covis-matched-0.1",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "family_id": "02",
+      "variant_id": "b"
+    },
+    {
+      "id": "exp_03_a",
+      "title": "Compare service for a stable seasonal cohort",
+      "kind": "seasonal_same_cohort",
+      "business_goal": "An RJ service manager wants to know whether the categories leading order volume in January–March 2017 show different service outcomes in July–September. The current dashboard follows the third quarter's leaders, which may mix changing category selection with changing service performance. Use a stable first-quarter cohort to support a seasonal service observation and identify a useful follow-up.",
+      "mandatory_outcomes": [
+        "Use the earliest complete January–March RJ comparison as the category cohort for the current low-review-rate and delivery-time views.",
+        "Calculate those two current views for RJ delivered orders in July–September 2017, keeping the service measures.",
+        "Keep the third-quarter order-volume view unchanged; compare current service results with the saved first-quarter service evidence.",
+        "Describe an observed change or lack of clear change and a follow-up question; do not treat a quarter-to-quarter association as a proven seasonal cause."
+      ],
+      "initial": "Historical January–March RJ leaders; current July–September RJ leaders",
+      "response_prompt": "What service change is supported for the same categories, and what would you investigate next? Identify the category-selection period and both measurement periods.",
+      "description": "An RJ service manager wants to know whether the categories leading order volume in January–March 2017 show different service outcomes in July–September. The current dashboard follows the third quarter's leaders, which may mix changing category selection with changing service performance. Use a stable first-quarter cohort to support a seasonal service observation and identify a useful follow-up.",
+      "goal": "An RJ service manager wants to know whether the categories leading order volume in January–March 2017 show different service outcomes in July–September. The current dashboard follows the third quarter's leaders, which may mix changing category selection with changing service performance. Use a stable first-quarter cohort to support a seasonal service observation and identify a useful follow-up.\n\nRequired outcomes:\nUse the earliest complete January–March RJ comparison as the category cohort for the current low-review-rate and delivery-time views.\nCalculate those two current views for RJ delivered orders in July–September 2017, keeping the service measures.\nKeep the third-quarter order-volume view unchanged; compare current service results with the saved first-quarter service evidence.\nDescribe an observed change or lack of clear change and a follow-up question; do not treat a quarter-to-quarter association as a proven seasonal cause.",
+      "split": "matched_participant_material",
+      "protocol": "covis-matched-0.1",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "family_id": "03",
+      "variant_id": "a"
+    },
+    {
+      "id": "exp_03_b",
+      "title": "Compare service for a stable seasonal cohort",
+      "kind": "seasonal_same_cohort",
+      "business_goal": "An MG service manager wants to know whether the categories leading order volume in January–March 2017 show different service outcomes in July–September. The current dashboard follows the third quarter's leaders, which may mix changing category selection with changing service performance. Use a stable first-quarter cohort to support a seasonal service observation and identify a useful follow-up.",
+      "mandatory_outcomes": [
+        "Use the earliest complete January–March MG comparison as the category cohort for the current low-review-rate and delivery-time views.",
+        "Calculate those two current views for MG delivered orders in July–September 2017, keeping the service measures.",
+        "Keep the third-quarter order-volume view unchanged; compare current service results with the saved first-quarter service evidence.",
+        "Describe an observed change or lack of clear change and a follow-up question; do not treat a quarter-to-quarter association as a proven seasonal cause."
+      ],
+      "initial": "Historical January–March MG leaders; current July–September MG leaders",
+      "response_prompt": "What service change is supported for the same categories, and what would you investigate next? Identify the category-selection period and both measurement periods.",
+      "description": "An MG service manager wants to know whether the categories leading order volume in January–March 2017 show different service outcomes in July–September. The current dashboard follows the third quarter's leaders, which may mix changing category selection with changing service performance. Use a stable first-quarter cohort to support a seasonal service observation and identify a useful follow-up.",
+      "goal": "An MG service manager wants to know whether the categories leading order volume in January–March 2017 show different service outcomes in July–September. The current dashboard follows the third quarter's leaders, which may mix changing category selection with changing service performance. Use a stable first-quarter cohort to support a seasonal service observation and identify a useful follow-up.\n\nRequired outcomes:\nUse the earliest complete January–March MG comparison as the category cohort for the current low-review-rate and delivery-time views.\nCalculate those two current views for MG delivered orders in July–September 2017, keeping the service measures.\nKeep the third-quarter order-volume view unchanged; compare current service results with the saved first-quarter service evidence.\nDescribe an observed change or lack of clear change and a follow-up question; do not treat a quarter-to-quarter association as a proven seasonal cause.",
+      "split": "matched_participant_material",
+      "protocol": "covis-matched-0.1",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "family_id": "03",
+      "variant_id": "b"
+    },
+    {
+      "id": "exp_04_a",
+      "title": "Add the revenue perspective without changing the cohort",
+      "kind": "stable_local_metric",
+      "business_goal": "An RJ manager already has an agreed 2017 category cohort and service comparison. For the budget discussion, they need the financial scale of those same categories instead of their order counts. Show revenue in the volume view while retaining the service evidence, then discuss whether revenue changes your operating priority.",
+      "mandatory_outcomes": [
+        "Change only the order-volume view to item revenue excluding freight, using its current fixed categories.",
+        "Keep RJ, calendar year 2017 and delivered orders; leave the low-review-rate and delivery-time views unchanged.",
+        "Support your business conclusion using revenue and service evidence; distinguish revenue from profit and from order volume."
+      ],
+      "initial": "One agreed RJ 2017 cohort; order volume, low-review rate and delivery time",
+      "response_prompt": "Does the revenue perspective change your operating priority, and why? Identify the category origin and the region, dates and metric used in the revised view.",
+      "description": "An RJ manager already has an agreed 2017 category cohort and service comparison. For the budget discussion, they need the financial scale of those same categories instead of their order counts. Show revenue in the volume view while retaining the service evidence, then discuss whether revenue changes your operating priority.",
+      "goal": "An RJ manager already has an agreed 2017 category cohort and service comparison. For the budget discussion, they need the financial scale of those same categories instead of their order counts. Show revenue in the volume view while retaining the service evidence, then discuss whether revenue changes your operating priority.\n\nRequired outcomes:\nChange only the order-volume view to item revenue excluding freight, using its current fixed categories.\nKeep RJ, calendar year 2017 and delivered orders; leave the low-review-rate and delivery-time views unchanged.\nSupport your business conclusion using revenue and service evidence; distinguish revenue from profit and from order volume.",
+      "split": "matched_participant_material",
+      "protocol": "covis-matched-0.1",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "family_id": "04",
+      "variant_id": "a"
+    },
+    {
+      "id": "exp_04_b",
+      "title": "Add the revenue perspective without changing the cohort",
+      "kind": "stable_local_metric",
+      "business_goal": "An MG manager already has an agreed 2017 category cohort and service comparison. For the budget discussion, they need the financial scale of those same categories instead of their order counts. Show revenue in the volume view while retaining the service evidence, then discuss whether revenue changes your operating priority.",
+      "mandatory_outcomes": [
+        "Change only the order-volume view to item revenue excluding freight, using its current fixed categories.",
+        "Keep MG, calendar year 2017 and delivered orders; leave the low-review-rate and delivery-time views unchanged.",
+        "Support your business conclusion using revenue and service evidence; distinguish revenue from profit and from order volume."
+      ],
+      "initial": "One agreed MG 2017 cohort; order volume, low-review rate and delivery time",
+      "response_prompt": "Does the revenue perspective change your operating priority, and why? Identify the category origin and the region, dates and metric used in the revised view.",
+      "description": "An MG manager already has an agreed 2017 category cohort and service comparison. For the budget discussion, they need the financial scale of those same categories instead of their order counts. Show revenue in the volume view while retaining the service evidence, then discuss whether revenue changes your operating priority.",
+      "goal": "An MG manager already has an agreed 2017 category cohort and service comparison. For the budget discussion, they need the financial scale of those same categories instead of their order counts. Show revenue in the volume view while retaining the service evidence, then discuss whether revenue changes your operating priority.\n\nRequired outcomes:\nChange only the order-volume view to item revenue excluding freight, using its current fixed categories.\nKeep MG, calendar year 2017 and delivered orders; leave the low-review-rate and delivery-time views unchanged.\nSupport your business conclusion using revenue and service evidence; distinguish revenue from profit and from order volume.",
+      "split": "matched_participant_material",
+      "protocol": "covis-matched-0.1",
+      "duration_minutes": 8,
+      "voice_budget_seconds": 60,
+      "interpretation_review": "pending",
+      "family_id": "04",
+      "variant_id": "b"
+    }
+  ],
+  "assignment_sha256": "e68738de6862aaf89c0c0c34fe3095052637adb00d482c3a5c2788fe25c71527",
+  "human_difficulty_calibration": "pending",
+  "human_review": "pending",
+  "real_model_validation": "not_run",
+  "voice_connection_budget_seconds": 60,
+  "task_limit_seconds": 480
+}

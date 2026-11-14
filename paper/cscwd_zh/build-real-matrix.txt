@@ -1,0 +1,393 @@
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex)
+ restricted \write18 enabled.
+entering extended mode
+(./main.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+(f:/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty
+(f:/texlive/2025/texmf-dist/tex/latex/lm/t1lmr.fd)) (./IEEEtran.cls
+Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
+-- See the "IEEEtran_HOWTO" manual for usage information.
+-- http://www.michaelshell.org/tex/ieeetran/
+(f:/texlive/2025/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+-- Using 8.5in x 11in (letter) paper.
+-- Using DVI output.
+-- This is a 10 point document.
+) (f:/texlive/2025/texmf-dist/tex/latex/ctex/ctex.sty
+(f:/texlive/2025/texmf-dist/tex/latex/l3kernel/expl3.sty
+(f:/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-xetex.def))
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/ctexhook.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/ctexpatch.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/base/fix-cm.sty
+(f:/texlive/2025/texmf-dist/tex/latex/base/ts1enc.def))
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/config/ctexopts.cfg)
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/engine/ctex-engine-xetex.def
+(f:/texlive/2025/texmf-dist/tex/xelatex/xecjk/xeCJK.sty
+(f:/texlive/2025/texmf-dist/tex/latex/l3packages/xtemplate/xtemplate.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec.sty
+(f:/texlive/2025/texmf-dist/tex/latex/l3packages/xparse/xparse.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
+(f:/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
+(f:/texlive/2025/texmf-dist/tex/xelatex/xecjk/xeCJK.cfg)))
+(f:/texlive/2025/texmf-dist/tex/latex/zhnumber/zhnumber.sty
+(f:/texlive/2025/texmf-dist/tex/latex/zhnumber/zhnumber-utf8.cfg))
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/scheme/ctex-scheme-plain.def))
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/config/ctex.cfg)
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amstext.sty
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(f:/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+(f:/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
+(f:/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg)
+(f:/texlive/2025/texmf-dist/tex/latex/graphics-def/xetex.def)))
+(f:/texlive/2025/texmf-dist/tex/latex/booktabs/booktabs.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/tools/tabularx.sty
+(f:/texlive/2025/texmf-dist/tex/latex/tools/array.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/preprint/balance.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/cite/cite.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
+(f:/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(f:/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(f:/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+(f:/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
+(f:/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+(f:/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty)))
+(f:/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(f:/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def)
+(f:/texlive/2025/texmf-dist/tex/latex/url/url.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
+(f:/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/base/atbegshi-ltx.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/hxetex.def
+(f:/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(f:/texlive/2025/texmf-dist/tex/latex/base/atveryend-ltx.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty)))
+(./main.aux)
+-- Lines per column: 56 (exact).
+(./main.out) (./main.out)
+
+[1] (f:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(f:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd)
+
+[2]
+Underfull \vbox (badness 10000) has occurred while \output is active
+
+Underfull \hbox (badness 10000) in paragraph at lines 179--180
+[]\TU/FandolSong-Regular(0)/m/sc/10 我 们 冻 结 四 类 编 写 请 求，|  在 运 行 时 \TU/LatinMod
+ernMono(0)/m/n/10 direct \TU/FandolSong-Regular(0)/m/sc/10 与
+
+Underfull \vbox (badness 10000) has occurred while \output is active
+[3]
+Underfull \hbox (badness 1424) in paragraph at lines 194--194
+[]|\TU/FandolSong-Regular(0)/m/n/9 历 史 集 合 及 季 度
+
+Underfull \hbox (badness 1424) in paragraph at lines 194--194
+[]|\TU/FandolSong-Regular(0)/m/n/9 解 除 固 定 并 本 地
+
+
+[4]
+
+[5] (./main.bbl
+Underfull \hbox (badness 1466) in paragraph at lines 53--55
+\TU/TeXGyreTermes(0)/m/n/8 How speaking while sketching steers human–ai design 
+ideation,”
+)
+
+** Conference Paper **
+Before submitting the final camera ready copy, remember to:
+
+ 1. Manually equalize the lengths of two columns on the last page
+ of your paper;
+
+ 2. Ensure that any PostScript and/or PDF output post-processing
+ uses only Type 1 fonts and that every step in the generation
+ process uses the appropriate paper size.
+
+
+
+[6] (./main.aux) )
+(see the transcript file for additional information)
+Output written on main.pdf (6 pages).
+Transcript written on main.log.
+This is BibTeX, Version 0.99d (TeX Live 2025)
+The top-level auxiliary file: main.aux
+The style file: IEEEtran.bst
+Database file #1: references.bib
+-- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+
+Done.
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex)
+ restricted \write18 enabled.
+entering extended mode
+(./main.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+(f:/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty
+(f:/texlive/2025/texmf-dist/tex/latex/lm/t1lmr.fd)) (./IEEEtran.cls
+Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
+-- See the "IEEEtran_HOWTO" manual for usage information.
+-- http://www.michaelshell.org/tex/ieeetran/
+(f:/texlive/2025/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+-- Using 8.5in x 11in (letter) paper.
+-- Using DVI output.
+-- This is a 10 point document.
+) (f:/texlive/2025/texmf-dist/tex/latex/ctex/ctex.sty
+(f:/texlive/2025/texmf-dist/tex/latex/l3kernel/expl3.sty
+(f:/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-xetex.def))
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/ctexhook.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/ctexpatch.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/base/fix-cm.sty
+(f:/texlive/2025/texmf-dist/tex/latex/base/ts1enc.def))
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/config/ctexopts.cfg)
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/engine/ctex-engine-xetex.def
+(f:/texlive/2025/texmf-dist/tex/xelatex/xecjk/xeCJK.sty
+(f:/texlive/2025/texmf-dist/tex/latex/l3packages/xtemplate/xtemplate.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec.sty
+(f:/texlive/2025/texmf-dist/tex/latex/l3packages/xparse/xparse.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
+(f:/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
+(f:/texlive/2025/texmf-dist/tex/xelatex/xecjk/xeCJK.cfg)))
+(f:/texlive/2025/texmf-dist/tex/latex/zhnumber/zhnumber.sty
+(f:/texlive/2025/texmf-dist/tex/latex/zhnumber/zhnumber-utf8.cfg))
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/scheme/ctex-scheme-plain.def))
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/config/ctex.cfg)
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amstext.sty
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(f:/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+(f:/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
+(f:/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg)
+(f:/texlive/2025/texmf-dist/tex/latex/graphics-def/xetex.def)))
+(f:/texlive/2025/texmf-dist/tex/latex/booktabs/booktabs.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/tools/tabularx.sty
+(f:/texlive/2025/texmf-dist/tex/latex/tools/array.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/preprint/balance.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/cite/cite.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
+(f:/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(f:/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(f:/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+(f:/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
+(f:/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+(f:/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty)))
+(f:/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(f:/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def)
+(f:/texlive/2025/texmf-dist/tex/latex/url/url.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
+(f:/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/base/atbegshi-ltx.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/hxetex.def
+(f:/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(f:/texlive/2025/texmf-dist/tex/latex/base/atveryend-ltx.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty)))
+(./main.aux)
+-- Lines per column: 56 (exact).
+(./main.out) (./main.out)
+
+[1] (f:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(f:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd)
+
+[2]
+Underfull \vbox (badness 10000) has occurred while \output is active
+
+Underfull \hbox (badness 10000) in paragraph at lines 179--180
+[]\TU/FandolSong-Regular(0)/m/sc/10 我 们 冻 结 四 类 编 写 请 求，|  在 运 行 时 \TU/LatinMod
+ernMono(0)/m/n/10 direct \TU/FandolSong-Regular(0)/m/sc/10 与
+
+Underfull \vbox (badness 10000) has occurred while \output is active
+[3]
+Underfull \hbox (badness 1424) in paragraph at lines 194--194
+[]|\TU/FandolSong-Regular(0)/m/n/9 历 史 集 合 及 季 度
+
+Underfull \hbox (badness 1424) in paragraph at lines 194--194
+[]|\TU/FandolSong-Regular(0)/m/n/9 解 除 固 定 并 本 地
+
+
+[4]
+
+[5] (./main.bbl
+Underfull \hbox (badness 1466) in paragraph at lines 53--55
+\TU/TeXGyreTermes(0)/m/n/8 How speaking while sketching steers human–ai design 
+ideation,”
+)
+
+** Conference Paper **
+Before submitting the final camera ready copy, remember to:
+
+ 1. Manually equalize the lengths of two columns on the last page
+ of your paper;
+
+ 2. Ensure that any PostScript and/or PDF output post-processing
+ uses only Type 1 fonts and that every step in the generation
+ process uses the appropriate paper size.
+
+
+
+[6] (./main.aux) )
+(see the transcript file for additional information)
+Output written on main.pdf (6 pages).
+Transcript written on main.log.
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex)
+ restricted \write18 enabled.
+entering extended mode
+(./main.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+(f:/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty
+(f:/texlive/2025/texmf-dist/tex/latex/lm/t1lmr.fd)) (./IEEEtran.cls
+Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
+-- See the "IEEEtran_HOWTO" manual for usage information.
+-- http://www.michaelshell.org/tex/ieeetran/
+(f:/texlive/2025/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+-- Using 8.5in x 11in (letter) paper.
+-- Using DVI output.
+-- This is a 10 point document.
+) (f:/texlive/2025/texmf-dist/tex/latex/ctex/ctex.sty
+(f:/texlive/2025/texmf-dist/tex/latex/l3kernel/expl3.sty
+(f:/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-xetex.def))
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/ctexhook.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/ctexpatch.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/base/fix-cm.sty
+(f:/texlive/2025/texmf-dist/tex/latex/base/ts1enc.def))
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/config/ctexopts.cfg)
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/engine/ctex-engine-xetex.def
+(f:/texlive/2025/texmf-dist/tex/xelatex/xecjk/xeCJK.sty
+(f:/texlive/2025/texmf-dist/tex/latex/l3packages/xtemplate/xtemplate.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec.sty
+(f:/texlive/2025/texmf-dist/tex/latex/l3packages/xparse/xparse.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
+(f:/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/fontspec/fontspec.cfg)))
+(f:/texlive/2025/texmf-dist/tex/xelatex/xecjk/xeCJK.cfg)))
+(f:/texlive/2025/texmf-dist/tex/latex/zhnumber/zhnumber.sty
+(f:/texlive/2025/texmf-dist/tex/latex/zhnumber/zhnumber-utf8.cfg))
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/scheme/ctex-scheme-plain.def))
+(f:/texlive/2025/texmf-dist/tex/latex/ctex/config/ctex.cfg)
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amstext.sty
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(f:/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+(f:/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
+(f:/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg)
+(f:/texlive/2025/texmf-dist/tex/latex/graphics-def/xetex.def)))
+(f:/texlive/2025/texmf-dist/tex/latex/booktabs/booktabs.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/tools/tabularx.sty
+(f:/texlive/2025/texmf-dist/tex/latex/tools/array.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/preprint/balance.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/cite/cite.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
+(f:/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(f:/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(f:/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+(f:/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
+(f:/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+(f:/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty)))
+(f:/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(f:/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def)
+(f:/texlive/2025/texmf-dist/tex/latex/url/url.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
+(f:/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/base/atbegshi-ltx.sty))
+(f:/texlive/2025/texmf-dist/tex/latex/hyperref/hxetex.def
+(f:/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(f:/texlive/2025/texmf-dist/tex/latex/base/atveryend-ltx.sty)
+(f:/texlive/2025/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty)))
+(./main.aux)
+-- Lines per column: 56 (exact).
+(./main.out) (./main.out)
+
+[1] (f:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(f:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd)
+
+[2]
+Underfull \vbox (badness 10000) has occurred while \output is active
+
+Underfull \hbox (badness 10000) in paragraph at lines 179--180
+[]\TU/FandolSong-Regular(0)/m/sc/10 我 们 冻 结 四 类 编 写 请 求，|  在 运 行 时 \TU/LatinMod
+ernMono(0)/m/n/10 direct \TU/FandolSong-Regular(0)/m/sc/10 与
+
+Underfull \vbox (badness 10000) has occurred while \output is active
+[3]
+Underfull \hbox (badness 1424) in paragraph at lines 194--194
+[]|\TU/FandolSong-Regular(0)/m/n/9 历 史 集 合 及 季 度
+
+Underfull \hbox (badness 1424) in paragraph at lines 194--194
+[]|\TU/FandolSong-Regular(0)/m/n/9 解 除 固 定 并 本 地
+
+
+[4]
+
+[5] (./main.bbl
+Underfull \hbox (badness 1466) in paragraph at lines 53--55
+\TU/TeXGyreTermes(0)/m/n/8 How speaking while sketching steers human–ai design 
+ideation,”
+)
+
+** Conference Paper **
+Before submitting the final camera ready copy, remember to:
+
+ 1. Manually equalize the lengths of two columns on the last page
+ of your paper;
+
+ 2. Ensure that any PostScript and/or PDF output post-processing
+ uses only Type 1 fonts and that every step in the generation
+ process uses the appropriate paper size.
+
+
+
+[6] (./main.aux) )
+(see the transcript file for additional information)
+Output written on main.pdf (6 pages).
+Transcript written on main.log.
