@@ -39,26 +39,27 @@ from .review_packets import build_review_packet, save_review_draft, read_trial_a
 INSTRUCTIONS = """You are CoVis, an analytical collaborator. Speak and write concise English.
 Use the provided tools to make real chart edits. A spoken promise is not execution.
 Create a new chart with create_chart, including the first chart on an empty canvas.
-To change an existing chart's query, call revise_analysis before speaking: name the current view_ids,
+To change an existing chart's query, call revise_analysis: name the current view_ids,
 member_action, and only the flat fields the user changed. That call computes and commits the edit.
-For a date-only correction, use member_action="keep_current" and change only the requested date fields.
-Dates are start-inclusive and end-exclusive. Derive the year and exact target IDs from the current analysis and user selection.
-For historical reuse, follow revise_analysis's candidate_id selection rule. Never serialize evidence into a string.
-If a choice is unresolved, set needs_confirmation=true and question; do not invent an answer.
-Read saved charts before making numerical claims. Only claim an edit after its committed receipt.
-Keep every source condition not explicitly changed. Fixed category IDs and dynamic top-N are different:
-'keep these categories' means the exact visible IDs, not a new ranking. Rates are within-group rates;
-never sum or renormalize review rates or delivery means. Exclude freight from revenue.
-Historical evidence supplies category identities; calculate their values under the current target chart's
-region, dates, order conditions and metric unless the user explicitly changes those fields.
-A later explicit request to re-rank or release fixed categories replaces the earlier membership choice.
-Preserve still-valid conditions and untargeted charts; different charts may intentionally compare different categories.
-Reference context records the chart version and selection associated with the request; it does not prove attention.
-The current public state may be newer. Do not equate a generated explanation with words already played.
-Use the explicit reference when the user says 'these' or 'this chart'. Ask one short question if scope is ambiguous.
-The same tools are available in every interaction mode. Do not automatically synchronize other charts;
-apply shared edits only when requested. Reply briefly and distinguish changed, unchanged and unexecuted work.
+Read saved charts before making numerical claims. Derive the year and exact target IDs from the
+current analysis and user selection. Never serialize evidence into a string.
 You may discuss an observation without editing. Never invent measurements, study scores or user intentions.
+Reference context records the chart version and selection associated with the request; it does not
+prove attention. The current public state may be newer.
+1. Resolve which categories the user means from the user's own words and list_evidence_candidates;
+the selected chart, the visible reference and the image are cues about what the user may mean, not
+proof of what they intend.
+2. If the words could mean the selected chart, a group in your last response, or a historical
+candidate, and playback_observations show that response was interrupted, ask one short question
+naming those candidates instead of choosing.
+3. Historical evidence supplies category identities only: compute them under the current region,
+dates, order conditions and metric unless the user changes those, and treat a fixed category set
+and a dynamic ranking as different things.
+4. Leave every view the user did not name unchanged, and let different views keep different categories.
+5. State that a chart changed only after a committed receipt for the current request, and say which
+views changed, which stayed unchanged, and which work did not run.
+6. Your generated text is not proof that it was played or heard, so do not rely on the user having
+heard anything beyond what playback_observations show was played.
 execution_state is the runtime's account of actual commits, not an assistant interpretation.
 If it records no commit for a request, that request did not change the charts, regardless of prior speech.
 Cancelled, unexecuted calls changed nothing. If their work still applies, issue a new tool call under
@@ -69,7 +70,6 @@ read current_dashboard and the recorded outcomes, then resolve the still-request
 CONDITION_OPTIONS = [
     {'id': 'direct', 'label': 'Direct editing', 'description': 'Complete evidence and shared chart tools; the model resolves references.'},
     {'id': 'bound_revision', 'label': 'Evidence-linked revision', 'description': 'Use a historical object set in the current analysis with an explicit revision card.'},
-    {'id': 'unbound_preview', 'label': 'Preview without binding', 'description': 'The same revision card; categories must be explicitly supplied rather than bound from evidence.'},
 ]
 HISTORY_TOOL = {'type': 'function', 'function': {
     'name': 'read_history',
@@ -226,20 +226,13 @@ class Workspace:
                   'Never select an evidence version using an evaluator answer. '
                   'A revision preview has not changed any chart. A proposal awaiting clarification requires a user answer; do not apply it yourself. '
                   'A new utterance supersedes the previous proposal. When the user answers a clarification, use the last_proposal card as conversation context and call revise_analysis with the resolved change; do not reuse the old proposal ID.\n')
-        if self.session['condition'] in ('direct', 'bound_revision'):
-            return common + ('Use revise_analysis for explicit changes to existing chart queries; it computes and commits in one call. '
-                             'member_action=use_evidence binds members from the selected historical candidate, keeping current scope except for explicit flat fields. '
-                             'Use apply_evidence_candidate or apply_category_set for deterministic object reuse on explicit current views. '
-                             'For a new ranking, use member_action="rerank", top_n="3" and rank_by="orders" when the user asks for three by orders; the model tool contract requires top_n as a positive decimal string, or null to clear ranking. '
-                             'preview_revision is available when the user asks for a preview, followed by apply_revision for explicit approval. '
-                             'Use needs_confirmation only for a genuine unresolved choice and ask the concrete question. '
-                             'Direct presentation-only edits can use edit_charts.')
-        return common + ('This is the historical preview-without-binding diagnostic. '
-                         'In direct editing, save_category_set then apply_category_set provides deterministic reuse of historical members without a preview. '
-                         'Supply exact categories and top_n=null to retain a historical set. '
-                         'The application does not copy members from evidence in this condition. '
-                         'Use edit_charts directly in direct editing, or preview_revision then apply_revision in preview-without-binding. '
-                         'You may ask a short clarification when the user has not determined a choice.')
+        return common + ('Use revise_analysis for explicit changes to existing chart queries; it computes and commits in one call. '
+                         'member_action=use_evidence binds members from the selected historical candidate, keeping current scope except for explicit flat fields. '
+                         'Use apply_evidence_candidate or apply_category_set for deterministic object reuse on explicit current views. '
+                         'For a new ranking, use member_action="rerank", top_n="3" and rank_by="orders" when the user asks for three by orders; the model tool contract requires top_n as a positive decimal string, or null to clear ranking. '
+                         'preview_revision is available when the user asks for a preview, followed by apply_revision for explicit approval. '
+                         'Use needs_confirmation only for a genuine unresolved choice and ask the concrete question. '
+                         'Direct presentation-only edits can use edit_charts.')
 
     def history_index(self, snapshots=None):
         return [{'revision': revision, 'views': [

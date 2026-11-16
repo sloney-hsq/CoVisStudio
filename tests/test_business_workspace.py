@@ -23,7 +23,7 @@ def start(client, condition='direct'):
                        'task_id': 'biz_01_sp_priorities_mg'}).json()
 
 
-@pytest.mark.parametrize('condition', ['direct', 'bound_revision', 'unbound_preview'])
+@pytest.mark.parametrize('condition', ['direct', 'bound_revision'])
 def test_named_set_baseline_reuses_history_without_changing_scope(client, condition):
     initial = start(client, condition)
     saved = client.post('/api/category-sets', json={'name': 'SP priorities', 'revision': 3, 'view_id': 'v1'}).json()

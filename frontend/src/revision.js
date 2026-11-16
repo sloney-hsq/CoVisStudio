@@ -9,10 +9,6 @@ export function revisionPayload(form, evidence, condition) {
     source_patch.top_n = Number(form.top_n)
     source_patch.rank_by = form.rank_by
   }
-  if (form.member_action === 'use_evidence' && condition === 'unbound_preview') {
-    source_patch.categories = [...form.categories]
-    source_patch.top_n = null
-  }
   const origin = form.member_action === 'use_evidence' && form.candidate_id
     ? { candidate_id: form.candidate_id }
     : { evidence: evidence ? { revision: evidence.revision, view_id: evidence.view_id, members: [...evidence.members] } : null }

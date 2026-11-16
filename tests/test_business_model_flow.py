@@ -88,7 +88,7 @@ class CategorySetTextPeer:
         return ("data: " + json.dumps(chunk) + "\n\ndata: [DONE]\n\n").encode()
 
 
-@pytest.mark.parametrize("condition", ["direct", "bound_revision", "unbound_preview"])
+@pytest.mark.parametrize("condition", ["direct", "bound_revision"])
 def test_saved_sets_through_local_text_provider_in_every_condition(condition):
     scripted = CategorySetTextPeer()
 

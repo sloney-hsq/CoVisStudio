@@ -122,21 +122,6 @@ def test_keep_current_does_not_freeze_a_ranking(real_data):
     assert source["rank_by"] == "orders"
 
 
-@pytest.mark.parametrize("condition", ["unbound_preview"])
-def test_unbound_conditions_never_repair_the_patch_from_evidence(real_data, condition):
-    store, snapshots, historical = regional_workspace(real_data)
-    before = store.snapshot()
-    result = prepare_revision(store, snapshots, payload(historical), condition)
-    assert result["card"]["binding_applied"] is False
-    assert result["card"]["evidence"]["members"] == historical["views"][0]["data"]["selection"]["members"]
-    assert result["prepared"]["candidate"] == before
-    assert all(change["changed_fields"] == [] for change in result["card"]["changes"])
-
-    members = historical["views"][0]["data"]["selection"]["members"]
-    explicit = prepare_revision(store, snapshots, payload(historical, source_patch={"categories": members, "top_n": None}), condition)
-    assert explicit["prepared"]["candidate"]["views"][0]["source"]["categories"] == members
-
-
 def test_confirmation_is_preview_and_stale_candidate_is_not_rebased(real_data):
     store, snapshots, historical = regional_workspace(real_data)
     result = prepare_revision(store, snapshots, payload(historical, needs_confirmation=True, question="Use the SP categories in MG?"))

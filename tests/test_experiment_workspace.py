@@ -23,7 +23,7 @@ def client(tmp_path_factory):
 
 def prepare(client, slot=1, trial_index=1, participant='local-check'):
     response = client.post('/api/experiment/start', json={'slot': slot, 'trial_index': trial_index,
-        'participant_id': participant, 'evidence_kind': 'local_authored', 'condition': 'unbound_preview'})
+        'participant_id': participant, 'evidence_kind': 'local_authored', 'condition': 'direct'})
     assert response.status_code == 200, response.text
     return response.json()
 

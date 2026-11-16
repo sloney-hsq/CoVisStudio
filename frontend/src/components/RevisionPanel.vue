@@ -16,7 +16,7 @@ const currentRegions = computed(() => {
   const targets = props.proposal ? props.proposal.card.view_ids : form.view_ids
   return [...new Set(props.state.views.filter(view => targets.includes(view.id)).map(view => view.source.region || 'All regions'))].join(' / ')
 })
-const canPreview = computed(() => form.view_ids.length && (form.member_action !== 'use_evidence' || selectedEvidence.value && (props.condition !== 'unbound_preview' || form.categories.length)))
+const canPreview = computed(() => form.view_ids.length && (form.member_action !== 'use_evidence' || selectedEvidence.value))
 function toggleTarget(id) { form.view_ids = form.view_ids.includes(id) ? form.view_ids.filter(value => value !== id) : [...form.view_ids, id] }
 function chooseSource() {
   form.member_action = 'use_evidence'
@@ -48,7 +48,6 @@ function chooseSource() {
         <label :class="{ unavailable: !selectedEvidence }"><input type="radio" v-model="form.member_action" value="use_evidence" :disabled="!selectedEvidence"/><span><strong>Use the referenced categories</strong><small>Take the objects from the earlier chart, not its filters.</small></span></label>
         <label><input type="radio" v-model="form.member_action" value="rerank"/><span><strong>Choose a new ranking</strong><small>Release the fixed set and calculate a new selection.</small></span></label>
       </div>
-      <label v-if="condition === 'unbound_preview' && form.member_action === 'use_evidence'" class="field explicit-members"><span>Categories to apply</span><select multiple v-model="form.categories" aria-label="Explicit categories to apply"><option v-for="member in selectedEvidence.members" :key="member" :value="member">{{ humanize(member) }}</option></select><small>Select the exact categories to apply. Use Ctrl / Command for multiple selections.</small></label>
       <div v-if="form.member_action === 'rerank'" class="field-row"><label class="field"><span>Number of groups</span><input type="number" min="1" max="30" v-model.number="form.top_n"/></label><label class="field"><span>Rank by</span><select v-model="form.rank_by"><option v-for="(label, id) in metricNames" :key="id" :value="id">{{ label }}</option></select></label></div>
       <div class="section-label">Changes to current conditions</div>
       <div class="field-row"><label class="field"><span>Region</span><select v-model="form.region" aria-label="Revision region"><option value="">Keep current</option><option value="__all__">All regions</option><option v-for="region in catalog.states" :key="region" :value="region">{{ region }}</option></select></label><label class="field"><span>Measure</span><select v-model="form.metric" aria-label="Revision measure"><option value="">Keep current</option><option v-for="(label, id) in metricNames" :key="id" :value="id">{{ label }}</option></select></label></div>

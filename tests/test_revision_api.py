@@ -65,14 +65,13 @@ def test_history_selection_and_preview_do_not_restore_or_commit(client):
     assert any(event['name'] == 'request_accepted' for event in exported['events'])
 
 
-@pytest.mark.parametrize('condition', ['direct', 'unbound_preview'])
-def test_direct_shares_binding_and_unbound_preview_leaves_supplied_patch(client, condition):
+@pytest.mark.parametrize('condition', ['direct', 'bound_revision'])
+def test_both_conditions_bind_members_from_evidence(client, condition):
     old, current = setup(client, condition)
     client.post('/api/evidence', json={'revision': old['revision'], 'view_id': 'v1'})
     proposal = preview(client)
-    assert proposal['card']['binding_applied'] is (condition == 'direct')
-    expected = old['views'][0]['source']['categories'] if condition == 'direct' else [r['label'] for r in current['views'][0]['data']['rows']]
-    assert proposal['card']['changes'][0]['after_members'] == expected
+    assert proposal['card']['binding_applied'] is True
+    assert proposal['card']['changes'][0]['after_members'] == old['views'][0]['source']['categories']
     assert proposal['card']['evidence']['members'] == old['views'][0]['source']['categories']
     assert client.get('/api/bootstrap').json()['state'] == current
 
@@ -103,7 +102,7 @@ def test_new_edit_supersedes_old_preview_without_undoing_the_edit(client):
 
 
 def test_same_raw_historical_context_for_all_conditions_and_no_private_answer(client):
-    for condition in ['direct', 'bound_revision', 'unbound_preview']:
+    for condition in ['direct', 'bound_revision']:
         old, current = setup(client, condition)
         client.post('/api/evidence', json={'revision': old['revision'], 'view_id': 'v1'})
         workspace = client.app.state.workspace

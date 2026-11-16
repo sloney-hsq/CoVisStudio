@@ -20,14 +20,6 @@ test('an explicit local metric revision preserves all unspecified source fields'
   assert.deepEqual(revisionPayload(form, evidence, 'bound_revision').source_patch, { metric: 'low_review_rate' })
 })
 
-test('unbound preview uses only the members explicitly selected in the form', () => {
-  const form = revisionDefaults(['v2'], true)
-  form.categories = ['category_b']
-  const payload = revisionPayload(form, evidence, 'unbound_preview')
-  assert.deepEqual(payload.source_patch, { categories: ['category_b'], top_n: null })
-  assert.deepEqual(evidence.members, ['category_a', 'category_b'])
-})
-
 test('reranking explicitly releases fixed members without restoring historical filters', () => {
   const form = revisionDefaults(['v1', 'v2', 'v3'], true)
   Object.assign(form, { member_action: 'rerank', top_n: 3, rank_by: 'orders', region: 'MG' })
@@ -91,11 +83,4 @@ test('correcting a committed card reuses its exact shared patch across heterogen
   const seed = revisionSeed(proposal)
   assert.deepEqual(revisionPayload(seed.form, seed.evidence, 'bound_revision').source_patch, { end: '2017-04-01' })
   assert.deepEqual(seed.form.view_ids, ['v2', 'v3'])
-})
-
-test('correcting an authored unbound proposal retains its explicitly chosen subset', () => {
-  const payload = { evidence, view_ids: ['v2'], member_action: 'use_evidence', source_patch: { categories: ['category_b'], top_n: null } }
-  const proposal = { id: 'p5', card: { evidence, view_ids: ['v2'], member_action: 'use_evidence', changes: [] } }
-  const seed = revisionSeed(proposal, payload)
-  assert.deepEqual(revisionPayload(seed.form, seed.evidence, 'unbound_preview').source_patch, { categories: ['category_b'], top_n: null })
 })

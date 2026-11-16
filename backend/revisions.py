@@ -8,7 +8,7 @@ from .charts import VIEW_IDS, _tool
 from .data import SOURCE_SCHEMA
 
 
-CONDITIONS = ("direct", "bound_revision", "unbound_preview")
+CONDITIONS = ("direct", "bound_revision")
 EVIDENCE_SCHEMA = {
     "type": ["object", "null"],
     "properties": {
@@ -63,9 +63,10 @@ REVISION_TOOL_DEFINITIONS = [
         "keep_current preserves the current membership rule. use_evidence takes an exact candidate_id "
         "from list_evidence_candidates or the user's selected evidence; only category members are "
         "reused, never historical dates, region or metric. rerank releases fixed members and requires "
-        "top_n and rank_by. Dates are inclusive start/exclusive end. Set needs_confirmation=true "
-        "with a question only for an unresolved user choice; then the edit remains a preview. "
-        "Explain success only from a committed result.",
+        "top_n and rank_by. Dates are inclusive start/exclusive end. Rates are within-group; never "
+        "sum or renormalize review rates or delivery means. Exclude freight from revenue. Set "
+        "needs_confirmation=true with a question only for an unresolved user choice; then the edit "
+        "remains a preview. Explain success only from a committed result.",
         REVISE_ANALYSIS_PROPERTIES, ["view_ids", "member_action"],
     ),
     _tool(
@@ -75,11 +76,9 @@ REVISION_TOOL_DEFINITIONS = [
         "existing membership rule unless the patch changes it. use_evidence uses an exact candidate_id "
         "or the user's selected evidence. In direct and bound_revision the exact "
         "members are bound automatically, while current region, dates and metrics stay unchanged "
-        "unless explicitly patched. In historical unbound_preview, supply the intended categories and "
-        "top_n=null in source_patch yourself; evidence remains inspectable but does not rewrite the patch. "
-        "rerank requires source_patch.top_n and rank_by and releases fixed categories. Set "
-        "needs_confirmation=true with a concrete question only when the user's choice is unresolved. "
-        "The returned proposal is a preview, not a completed edit.",
+        "unless explicitly patched. rerank requires source_patch.top_n and rank_by and releases fixed "
+        "categories. Set needs_confirmation=true with a concrete question only when the user's choice "
+        "is unresolved. The returned proposal is a preview, not a completed edit.",
         MODEL_REVISION_PROPERTIES, ["view_ids", "source_patch", "member_action"],
     ),
     _tool(
