@@ -32,15 +32,15 @@ def write_new(path, content):
 def coding_template(packet):
     return {'schema': SCHEMA, 'packet_id': packet['packet_id'], 'reviewer_id': '',
             'status': 'pending', 'intent': {
-                'status': 'unknown', 'target_view_ids': [], 'source_patch': {},
-                'members': {'mode': 'keep_current'},
-                'source_requirement': {'mode': 'unknown', 'candidate_id': None, 'reason': ''},
+                'status': 'unknown', 'disposition': 'revise', 'target_view_ids': [],
+                'source_patch': {}, 'members': {'mode': 'keep_current'},
+                'source_requirement': {'mode': 'none', 'candidate_id': None, 'reason': ''},
                 'retained_fields': [], 'released_fields': [], 'view_overrides': {},
-                'reason': '', 'evidence_indices': []},
+                'reference_interval': 'unknown', 'reason': '', 'evidence_indices': []},
             'speech_verification': 'pending'}
 
 
-def lock_intent(packet, coder_a, coder_b, adjudication):
+def lock_intent(packet, coder_a, coder_b, adjudication, level='episode'):
     """Validate an explicit two-coder handoff; never manufacture a human label."""
     for coder in (coder_a, coder_b):
         if coder['packet_id'] != packet['packet_id'] or coder['status'] != 'completed':
@@ -59,13 +59,13 @@ def lock_intent(packet, coder_a, coder_b, adjudication):
     if not intent['reason'].strip() or not intent['evidence_indices'] or not set(intent['evidence_indices']) <= available:
         raise ValueError('Cite source events in the blinded packet and explain the interpretation.')
     if intent['status'] == 'resolved':
-        validate_resolved_intent(intent)
+        validate_resolved_intent(intent, level=level)
         for view_id, override in intent.get('view_overrides', {}).items():
             if view_id not in intent['target_view_ids']:
                 raise ValueError('Per-view overrides must identify an intended target view.')
             if set(override) - {'source_patch', 'members', 'source_requirement', 'retained_fields', 'released_fields'}:
                 raise ValueError('Per-view overrides use the existing analytical intent fields.')
-            validate_resolved_intent({**intent, **override, 'target_view_ids': [view_id]})
+            validate_resolved_intent({**intent, **override, 'target_view_ids': [view_id]}, level='episode')
     record = {'schema': SCHEMA, 'packet_id': packet['packet_id'], 'packet_hash': digest(packet),
               'status': 'locked', 'locked_at': datetime.now(timezone.utc).isoformat(),
               'coder_a': deepcopy(coder_a), 'coder_b': deepcopy(coder_b),
@@ -77,7 +77,18 @@ def lock_intent(packet, coder_a, coder_b, adjudication):
 
 
 
-def validate_resolved_intent(intent):
+def validate_resolved_intent(intent, level='episode'):
+    disposition = intent.get('disposition', 'revise')
+    if disposition not in ('revise', 'no_change', 'retain_all'):
+        raise ValueError('Code the disposition as revise, no_change or retain_all.')
+    if level == 'episode' and disposition == 'retain_all':
+        raise ValueError('retain_all is a terminal-level disposition.')
+    if level == 'terminal' and disposition == 'no_change':
+        raise ValueError('no_change is an episode-level disposition.')
+    if disposition in ('no_change', 'retain_all'):
+        if intent['target_view_ids']:
+            raise ValueError(f'{disposition} targets no views; leave target_view_ids empty.')
+        return
     if not intent['target_view_ids']:
         raise ValueError('Specify the intended current views.')
     if not set(intent['source_patch']) <= SOURCE_FIELDS:
@@ -106,7 +117,7 @@ def validate_resolved_intent(intent):
     requirement = intent.get('source_requirement', {'mode': 'unknown'})
     if requirement['mode'] not in ('exact', 'members_only', 'none', 'unknown'):
         raise ValueError('Code whether source identity is exact, members-only, not required, or unknown.')
-    if requirement['mode'] != 'unknown' and not requirement.get('reason', '').strip():
+    if requirement['mode'] in ('exact', 'members_only') and not requirement.get('reason', '').strip():
         raise ValueError('Explain the source requirement using the cited participant evidence.')
     if requirement['mode'] == 'exact' and not requirement.get('candidate_id'):
         raise ValueError('An exact source requirement needs an independently coded candidate ID.')
@@ -198,7 +209,7 @@ def score_episode(archive, packet, lock, end_event_index, data):
     result = {'schema': SCHEMA, 'packet_id': packet['packet_id'],
               'session_id': archive['session']['id'], 'onset_index': onset,
               'end_event_index': end_event_index, 'intent_status': 'pending',
-              'first_commit_correct': None, 'final_correct': None,
+              'first_publication_consistent': None, 'final_correct': None,
               'understanding': {field: None for field in UNDERSTANDING_FIELDS},
               'human_listening': 'pending', 'repair_cost': None,
               'archive_hash': digest(archive), 'packet_hash': digest(packet),
@@ -224,8 +235,98 @@ def score_episode(archive, packet, lock, end_event_index, data):
                   publication_indices=[e['index'] for e in publications])
     if publications:
         first = compare_state(base, state_at(archive, publications[0]['index']), lock['intent'], data)
-        result['first_commit_correct'] = first['correct']
+        result['first_publication_consistent'] = first['correct']
     return result
+
+
+def terminal_packet(archive, episode_locks):
+    """Blinded terminal-intent material: trial-start state and every participant
+    input segment with its pre-input state. Strictly excludes the final state,
+    post-final-input model output, and the task_response submission."""
+    input_names = ('user_transcript', 'request_accepted', 'user_input', 'manual_edit_requested')
+    segments = []
+    for event in archive['events']:
+        if event['name'] not in input_names:
+            continue
+        segments.append({
+            'index': event['index'], 'name': event['name'],
+            'text': event.get('text', event.get('details', {}).get('text', '')),
+            'pre_input_state': state_at(archive, event['index'] - 1),
+        })
+    return {'schema': 'covis-terminal-packet-1',
+            'session_id': archive['session']['id'],
+            'trial_start': deepcopy(archive['initial']),
+            'input_segments': segments,
+            'episode_locks': deepcopy(episode_locks)}
+
+
+def terminal_coverage(episode_locks, terminal_packet, input_dispositions):
+    """Every participant input segment is classified; episode locks carry forward."""
+    segments = terminal_packet['input_segments']
+    covered = set(input_dispositions)
+    uncovered = [segment['index'] for segment in segments if segment['index'] not in covered]
+    return {'covered': not uncovered, 'uncovered_segments': uncovered,
+            'carry_forward_episodes': [lock['packet_id'] for lock in episode_locks]}
+
+
+def score_terminal(archive, terminal_intent, data):
+    """Terminal intent-consistency: cumulative active intent versus terminal state,
+    scored against the trial-start state, reusing compare_state unchanged."""
+    if terminal_intent.get('status') == 'unknown':
+        return {'intent_status': 'unknown', 'correct': None}
+    score = compare_state(archive['initial'], archive['final'], terminal_intent, data)
+    return {'intent_status': terminal_intent.get('status', 'resolved'), **score}
+
+
+def interpretation_key(archive):
+    """Execution-grounded answer key from actual committed state, never from intent."""
+    initial = {view['id']: view for view in archive['initial']['views']}
+    final = archive['final']
+    changed = [view['id'] for view in final['views']
+               if view['id'] not in initial or initial[view['id']]['source'] != view['source']]
+    origin = {view['id']: view.get('membership_origin') for view in final['views']}
+    scope = {view['id']: {k: view['source'][k] for k in ('region', 'start', 'end', 'metric', 'status')
+                          if k in view['source']} for view in final['views'] if view['id'] in changed}
+    kept_released = {}
+    for view in final['views']:
+        if view['id'] not in initial:
+            continue
+        before, after = initial[view['id']]['source'], view['source']
+        kept_released[view['id']] = {
+            'released_fields': [field for field in before if before[field] is not None and after.get(field) is None],
+            'kept_fields': [field for field in after if field in before and after[field] == before[field]],
+        }
+    key = {'object_origin': origin, 'target_views': changed,
+           'calculation_scope': scope, 'kept_released': kept_released}
+    return {'schema': 'covis-interpretation-key-1', 'final_revision': final['revision'],
+            'key': key, 'key_hash': digest(key)}
+
+
+def lock_understanding(key, response, review_a, review_b, adjudication):
+    """Lock the understanding review: two distinct reviewers, a matching key hash,
+    and key-field plus response-span citations."""
+    for reviewer in (review_a, review_b):
+        if not reviewer.get('reviewer_id', '').strip():
+            raise ValueError('Identify each understanding reviewer.')
+        if reviewer.get('key_hash') != key['key_hash']:
+            raise ValueError('Understanding reviews must cite the matching interpretation key.')
+        if not set(reviewer.get('key_fields', [])) <= set(UNDERSTANDING_FIELDS):
+            raise ValueError('Cite the interpretation key fields used.')
+        if not reviewer.get('response_span'):
+            raise ValueError('Cite the response span the judgment is based on.')
+    if review_a['reviewer_id'] == review_b['reviewer_id']:
+        raise ValueError('Use two distinct understanding reviewers.')
+    if response.get('revision') != key['final_revision']:
+        raise ValueError('The response must correspond to the final chart revision.')
+    if not adjudication.get('reviewer_id', '').strip() or not adjudication.get('reason', '').strip():
+        raise ValueError('Record who adjudicated and why.')
+    labels = {field: adjudication.get('labels', {}).get(field) for field in UNDERSTANDING_FIELDS}
+    return {'schema': SCHEMA, 'status': 'locked', 'key_hash': key['key_hash'],
+            'final_revision': key['final_revision'],
+            'reviewer_a': deepcopy(review_a), 'reviewer_b': deepcopy(review_b),
+            'adjudication': deepcopy(adjudication), 'labels': labels,
+            'response': deepcopy(response),
+            'locked_at': datetime.now(timezone.utc).isoformat()}
 
 
 def outcome_summary(values):
@@ -274,6 +375,8 @@ def episode_index(directory):
         scored = path.parent / 'score.json'
         if scored.exists():
             record.update(json.loads(scored.read_text(encoding='utf-8')))
+            if 'first_publication_consistent' not in record and 'first_commit_correct' in record:
+                record['first_publication_consistent'] = record.pop('first_commit_correct')
         elif (path.parent / 'locked.json').exists():
             record['intent_status'] = 'locked_unscored'
         assessment = path.parent / 'understanding.json'
@@ -300,7 +403,7 @@ def review_understanding(archive, body):
             'response': deepcopy(response), 'human_listening': 'pending'}
 
 
-def attach_formal_scores(report, records):
+def attach_formal_scores(report, records, data=None):
     """Attach offline outcomes without replacing the first assigned attempt."""
     indexed = {session_id: episode_index(record['directory']) for session_id, record in records.items()}
     report['intent_episodes'] = indexed
@@ -309,7 +412,15 @@ def attach_formal_scores(report, records):
         session_id = row.get('primary_session_id', row.get('session_id'))
         if session_id is None:
             continue
-        selection_path = records[session_id]['directory'] / 'intent-episodes' / 'primary.json'
+        directory = records[session_id]['directory']
+        terminal_lock = directory / 'intent-episodes' / 'terminal' / 'locked.json'
+        if terminal_lock.exists() and data is not None:
+            archive = json.loads((directory / 'session.json').read_text(encoding='utf-8'))
+            lock = json.loads(terminal_lock.read_text(encoding='utf-8'))
+            score = score_terminal(archive, lock['intent'], data)
+            row.update(intent_status=score['intent_status'], revision_correct=score['correct'])
+            continue
+        selection_path = directory / 'intent-episodes' / 'primary.json'
         if not selection_path.exists():
             continue
         selection = json.loads(selection_path.read_text(encoding='utf-8'))

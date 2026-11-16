@@ -23,9 +23,10 @@ export function episodeControls(episode, episodes, terminalIndex) {
 }
 
 export function blankCodingFiles(packetId) {
-  const intent = () => ({ status: 'unknown', target_view_ids: [], source_patch: {},
-    members: { mode: 'keep_current' }, source_requirement: { mode: 'unknown', candidate_id: null, reason: '' },
-    retained_fields: [], released_fields: [], reason: '', evidence_indices: [] })
+  const intent = () => ({ status: 'unknown', disposition: 'revise', target_view_ids: [], source_patch: {},
+    members: { mode: 'keep_current' }, source_requirement: { mode: 'none', candidate_id: null, reason: '' },
+    retained_fields: [], released_fields: [], view_overrides: {}, reference_interval: 'unknown',
+    reason: '', evidence_indices: [] })
   const coder = () => ({ schema: 'covis-intent-episode-1', packet_id: packetId, reviewer_id: '',
     status: 'pending', intent: intent(), speech_verification: 'pending' })
   return { coder_a: coder(), coder_b: coder(), adjudication: { reviewer_id: '', reason: '', intent: intent() } }

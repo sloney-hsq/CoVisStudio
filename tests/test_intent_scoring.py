@@ -57,7 +57,7 @@ def test_correct_followup_after_wrong_commit_is_not_first_commit_success(data):
     saved = archive(before, right, events)
     saved['states']['wrong'] = wrong
     result = score_episode(saved, packet, lock, 5, data)
-    assert result['first_commit_correct'] is False
+    assert result['first_publication_consistent'] is False
     assert result['final_correct'] is True
     assert result['request_ids'] == ['q1', 'q2']
     assert result['repair_cost'] is None and result['human_listening'] == 'pending'
@@ -229,7 +229,7 @@ def test_latest_cumulative_intent_keeps_other_view_obligation(data):
     saved = archive(before, final, events)
     saved['states']['only-latest'] = only_latest
     result = score_episode(saved, packet, lock, 4, data)
-    assert result['first_commit_correct'] is False
+    assert result['first_publication_consistent'] is False
     assert result['final_correct'] is True
     assert final['views'][2]['source']['categories'] == before['views'][2]['source']['categories']
     assert final['views'][1]['source']['categories'] is None

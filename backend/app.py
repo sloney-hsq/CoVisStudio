@@ -1062,7 +1062,7 @@ def create_app(settings=None):
         records = experiment_archives()
         if protocol == 'formal':
             report = formal_primary_attempts([r['archive'] for r in records.values()], registered_participants())
-            return attach_formal_scores(report, records)
+            return attach_formal_scores(report, records, app.state.workspace.data)
         legacy = [record for record in records.values()
                   if record['archive']['session']['assignment'].get('protocol') != FORMAL_PROTOCOL]
         report = aggregate_reports([record['archive']['report']['trial_report'] for record in legacy

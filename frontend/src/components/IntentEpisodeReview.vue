@@ -146,7 +146,7 @@ function describe(index) {
           <p class="field-help">Designation requires locked intent, task-terminal event #{{ terminal?.index }}, and no prior score or designated endpoint.</p>
         </template>
         <div class="intent-score-action"><button class="button primary" :disabled="busy || !controls.score" @click="action(score)">Score against locked intent</button><span>{{ selected.scored ? 'Score recorded' : 'Not scored' }}</span></div>
-        <dl class="intent-outcomes"><div><dt>Intent</dt><dd>{{ selected.intent_status.replaceAll('_', ' ') }}</dd></div><div><dt>First committed revision</dt><dd>{{ outcomeLabel(selected.first_commit_correct) }}</dd></div><div><dt>Final revision</dt><dd>{{ outcomeLabel(selected.final_correct) }}</dd></div><div><dt>Human listening</dt><dd>{{ selected.human_listening || 'pending' }}</dd></div><div><dt>Repair cost</dt><dd>{{ selected.repair_cost ?? 'Unknown / pending' }}</dd></div></dl>
+        <dl class="intent-outcomes"><div><dt>Intent</dt><dd>{{ selected.intent_status.replaceAll('_', ' ') }}</dd></div><div><dt>First publication</dt><dd>{{ outcomeLabel(selected.first_publication_consistent) }}</dd></div><div><dt>Final revision</dt><dd>{{ outcomeLabel(selected.final_correct) }}</dd></div><div><dt>Human listening</dt><dd>{{ selected.human_listening || 'pending' }}</dd></div><div><dt>Repair cost</dt><dd>{{ selected.repair_cost ?? 'Unknown / pending' }}</dd></div></dl>
         <details v-if="selected.scored"><summary>Recorded analytical checks</summary><pre>{{ JSON.stringify(selected, null, 2) }}</pre></details>
       </section>
 
