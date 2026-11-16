@@ -1,5 +1,6 @@
 """Offline scoring uses coded intent, never the authored task answer or model text."""
 from copy import deepcopy
+import json
 from pathlib import Path
 import pytest
 
@@ -144,7 +145,7 @@ def test_known_incorrect_understanding_is_not_replaced_by_unknown(tmp_path):
                                  'revision_correct': None, 'understanding_correct': None}], 'attempt_rows': []}
     result = attach_formal_scores(report, {'s': {'directory': tmp_path}})
     assert result['assigned_rows'][0]['understanding_correct'] is False
-    assert result['conditions'][0]['understanding']['success_upper'] == 0
+    assert result['secondary']['interpretation']['conditions'][0]['success_upper'] == 0
 
 
 def test_superseded_goal_is_not_terminal_requirement_and_prior_commit_survives(data):
@@ -206,7 +207,7 @@ def test_later_annotation_invalidates_earlier_primary_attachment(tmp_path):
         'revision_correct': None, 'understanding_correct': None}], 'attempt_rows': []}
     result = attach_formal_scores(report, {'s': {'directory': tmp_path}})
     assert result['assigned_rows'][0]['intent_status'] == 'superseded_endpoint'
-    assert result['conditions'][0]['revision']['unknown'] == 1
+    assert result['primary']['conditions'][0]['unknown'] == 1
 
 
 def test_latest_cumulative_intent_keeps_other_view_obligation(data):
@@ -245,7 +246,7 @@ def test_wrong_execution_and_correct_interpretation_are_separate(data):
         {'index': 2, 'name': 'tool_committed', 'revision': wrong['revision']}])
     score = score_terminal(saved, lock['intent'], data)
     assert score['intent_status'] == 'resolved'
-    assert score['correct'] is False  # revision incorrect: v2 wrong region, v3 unfulfilled
+    assert score['final_correct'] is False  # revision incorrect: v2 wrong region, v3 unfulfilled
     key = interpretation_key(saved)
     assert key['key']['target_views'] == ['v2']  # ground truth from actual state, not intent
     assert key['key']['calculation_scope']['v2']['region'] == 'MG'
@@ -267,6 +268,123 @@ def test_terminal_packet_coverage_and_scoring(data):
     assert partial['covered'] is False and partial['uncovered_segments'] == [3]
     full = terminal_coverage([lock], packet, {1: 'revise', 3: 'revise'})
     assert full['covered'] is True and full['carry_forward_episodes'] == ['test-packet']
+
+
+def test_terminal_lock_cites_segment_and_rejects_foreign_index():
+    packet = {'schema': 'covis-terminal-packet-1', 'kind': 'terminal', 'packet_id': 'terminal',
+              'session_id': 'offline-fixture',
+              'boundary': {'onset': {'index': 4, 'name': 'trial_started'},
+                           'utterance_arrival_end': {'index': 20, 'name': 'terminal_input'}},
+              'input_segments': [{'index': 12, 'name': 'request_accepted', 'text': 'Use RJ.'},
+                                 {'index': 20, 'name': 'request_accepted', 'text': 'Keep the cohort.'}],
+              'episode_locks': []}
+
+    def coder(reviewer_id, evidence=(12,)):
+        item = coding_template(packet)
+        item['intent'].update(status='resolved', disposition='retain_all', target_view_ids=[],
+                              reason='Authored terminal fixture, not human review.',
+                              evidence_indices=list(evidence))
+        item.update(status='completed', reviewer_id=reviewer_id)
+        return item
+
+    adjudication = {'reviewer_id': 'fixture-adjudicator', 'reason': 'Local unit fixture.',
+                    'intent': deepcopy(coder('a')['intent'])}
+    lock = lock_intent(packet, coder('a'), coder('b'), adjudication)
+    assert lock['status'] == 'locked' and lock['lock_hash']
+    assert lock['intent']['status'] == 'resolved'
+    assert lock['intent']['disposition'] == 'retain_all'
+    assert 'reference_interval' not in lock['intent']
+    assert lock['reference_interval'] == 'unknown'
+
+    foreign = deepcopy(adjudication)
+    foreign['intent']['evidence_indices'] = [999]
+    with pytest.raises(ValueError, match='Cite source events'):
+        lock_intent(packet, coder('a'), coder('b'), foreign)
+
+    interval = {'start_ms': 1000, 'end_ms': 1600, 'basis': 'sample_locked',
+                'uncertainty_ms': 0, 'note': 'Authored interval.'}
+    locked = lock_intent(packet, coder('a'), coder('b'),
+                         {**deepcopy(adjudication), 'reference_interval': interval})
+    assert locked['reference_interval'] == interval
+
+    for broken in (
+            {'start_ms': 1600, 'end_ms': 1000, 'basis': 'sample_locked', 'uncertainty_ms': 0, 'note': ''},
+            {'start_ms': 0, 'end_ms': 1000, 'basis': 'sample_locked', 'uncertainty_ms': 0},
+            {'start_ms': 0, 'end_ms': 1000, 'basis': 'sample_locked', 'uncertainty_ms': -1, 'note': ''}):
+        with pytest.raises(ValueError, match='Reference interval'):
+            lock_intent(packet, coder('a'), coder('b'),
+                        {**deepcopy(adjudication), 'reference_interval': broken})
+
+
+def terminal_record(path, correct, labels=None):
+    terminal = path / 'intent-episodes' / 'terminal'
+    terminal.mkdir(parents=True)
+    (terminal / 'score.json').write_text(json.dumps({'final_correct': correct}), encoding='utf-8')
+    (terminal / 'locked.json').write_text(json.dumps({'intent': {'status': 'resolved'}}), encoding='utf-8')
+    if labels is not None:
+        (path / 'understanding-locked.json').write_text(json.dumps({'labels': labels}), encoding='utf-8')
+    return {'directory': path}
+
+
+def test_formal_report_primary_secondary_shape(tmp_path):
+    directories = {}
+    records = {}
+    for session_id, correct, labels in (
+            ('d1', True, {field: True for field in ('object_origin', 'target_views', 'calculation_scope', 'kept_released')}),
+            ('d2', False, None),
+            ('b1', None, {field: None for field in ('object_origin', 'target_views', 'calculation_scope', 'kept_released')}),
+            ('b2', True, None)):
+        directories[session_id] = tmp_path / session_id
+        records[session_id] = terminal_record(directories[session_id], correct, labels)
+    report = {'assigned_rows': [
+        {'participant_id': 'P01', 'participant_slot': 1, 'condition': 'direct',
+         'primary_session_id': 'd1', 'revision_correct': None, 'understanding_correct': None},
+        {'participant_id': 'P01', 'participant_slot': 1, 'condition': 'direct',
+         'primary_session_id': 'd2', 'revision_correct': None, 'understanding_correct': None},
+        {'participant_id': 'P01', 'participant_slot': 1, 'condition': 'bound_revision',
+         'primary_session_id': 'b1', 'revision_correct': None, 'understanding_correct': None},
+        {'participant_id': 'P01', 'participant_slot': 1, 'condition': 'bound_revision',
+         'primary_session_id': 'b2', 'revision_correct': None, 'understanding_correct': None},
+    ], 'attempt_rows': []}
+    result = attach_formal_scores(report, records)
+    assert result['primary']['outcome'] == 'terminal_intent_consistency'
+    assert result['primary']['row_key'] == 'revision_correct'
+    assert {'condition', 'assigned', 'success', 'failure', 'unknown'} <= set(result['primary']['conditions'][0])
+    assert result['primary']['paired']['participants'] == 1
+    assert set(result['primary']['bootstrap']) == {'samples', 'mean', 'ci_lower', 'ci_upper'}
+    assert result['secondary']['interpretation']['row_key'] == 'understanding_correct'
+    assert 'conditions' not in result
+    assert 'first_publication_consistent' not in result['primary']
+    assert sum(row['assigned'] for row in result['primary']['conditions']) == 4
+    assert sum(row['unknown'] for row in result['primary']['conditions']) == 1
+    assert sum(row['assigned'] for row in result['secondary']['interpretation']['conditions']) == 4
+    assert sum(row['unknown'] for row in result['secondary']['interpretation']['conditions']) == 3
+
+    failed = terminal_record(tmp_path / 'failed', False)
+    repeat = terminal_record(tmp_path / 'repeat', True)
+    repeat_report = {'assigned_rows': [
+        {'participant_id': 'P02', 'participant_slot': 2, 'condition': 'direct',
+         'primary_session_id': 'failed', 'revision_correct': None, 'understanding_correct': None}],
+        'attempt_rows': [{'session_id': 'failed', 'condition': 'direct', 'revision_correct': None},
+                         {'session_id': 'repeat', 'condition': 'direct', 'revision_correct': None}]}
+    repeated = attach_formal_scores(repeat_report, {'failed': failed, 'repeat': repeat})
+    assert repeated['assigned_rows'][0]['revision_correct'] is False
+    assert repeated['attempt_rows'][1]['revision_correct'] is True
+
+
+def test_terminal_packet_is_not_later_intent_for_primary_episode(tmp_path):
+    folder = tmp_path / 'intent-episodes' / 'episode'
+    folder.mkdir(parents=True)
+    write_new(folder / 'locked.json', {'status': 'locked'})
+    write_new(folder / 'private.json', {'end_event_index': 5})
+    write_new(folder / 'packet.json', {'packet_id': 'episode', 'boundary': {'onset': {'index': 1}}})
+    terminal = tmp_path / 'intent-episodes' / 'terminal'
+    terminal.mkdir()
+    write_new(terminal / 'packet.json', {'packet_id': 'terminal', 'kind': 'terminal',
+                                         'boundary': {'onset': {'index': 4}}})
+    write_new(tmp_path / 'session.json', {'events': [{'index': 5, 'name': 'trial_finished'}]})
+    assert designate_primary_episode(tmp_path, 'episode', 'reviewer',
+                                     'Final task revision.')['packet_id'] == 'episode'
 
 
 def test_lock_understanding_enforces_two_reviewers_and_key_hash(data):

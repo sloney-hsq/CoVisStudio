@@ -63,6 +63,20 @@ test('source differences remain visible even when category members are equal', (
   assert.equal(provenanceNotice({}), '')
 })
 
+test('saved-set reuse of the selected chart version is not an override', () => {
+  const selected = { label: 'Chart 1 · version 3' }, used = { label: 'Saved set: Historical' }
+  assert.equal(provenanceNotice({ execution_provenance: {
+    selected_source_at_onset: selected, executed_source: used,
+    overrides_selection: false, lineage_equal: true, candidate_ids_equal: false, members_equal: true } }),
+  'Selected Chart 1 · version 3; used Saved set: Historical, saved from the selected chart version.')
+  assert.equal(provenanceNotice({ execution_provenance: {
+    selected_source_at_onset: selected, executed_source: used,
+    overrides_selection: false, lineage_equal: true, candidate_ids_equal: true, members_equal: true } }), '')
+  assert.equal(provenanceNotice({ execution_provenance: {
+    selected_source_at_onset: selected, executed_source: used,
+    overrides_selection: false, members_equal: true } }), '')
+})
+
 test('revision display separates fixed category filters from a dynamic ranking for any grouping', () => {
   assert.match(membershipRule({ dimension: 'month', categories: ['health_beauty'], top_n: null }), /^Fixed categories \(1\):/)
   assert.match(membershipRule({ dimension: 'category', categories: null, top_n: 3, rank_by: 'orders' }), /^Dynamic top 3 by/)

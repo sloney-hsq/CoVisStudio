@@ -12,6 +12,13 @@ watch(() => props.assignment?.trial_index, index => { selected.value = index || 
 const trial = computed(() => props.plan?.trials.find(item => item.trial_index === selected.value))
 const active = computed(() => props.trialStatus === 'running' || props.trialStatus === 'ready')
 const conditionName = id => id === 'direct' ? 'Direct editing' : 'Evidence-linked revision'
+const outcomes = computed(() => {
+  const primary = props.aggregate?.primary?.conditions || []
+  const interpretation = props.aggregate?.secondary?.interpretation?.conditions || []
+  return primary.map(result => ({
+    ...result, interpretation: interpretation.find(item => item.condition === result.condition),
+  }))
+})
 const attempts = computed(() => {
   if (!props.aggregate) return []
   const rows = [...props.aggregate.attempt_rows]
@@ -54,7 +61,8 @@ const attempts = computed(() => {
     <ExperimentSummary v-if="aggregate && protocol !== 'formal'" :report="aggregate"/>
     <section v-if="aggregate && protocol === 'formal'" class="experiment-summary">
       <div class="report-stats"><div><span>Registered participants</span><strong>{{ aggregate.registered_participant_count }}</strong></div><div><span>Assigned trials</span><strong>{{ aggregate.assigned_trial_count }}</strong></div><div><span>Missing trials</span><strong>{{ aggregate.missing_trials?.length }}</strong></div></div>
-      <article v-for="result in aggregate.conditions" :key="result.condition" class="participant-summary"><strong>{{ conditionName(result.condition) }}</strong><p v-for="outcome in ['revision', 'understanding']" :key="outcome" class="field-help">{{ outcome === 'revision' ? 'Revision correctness' : 'Understanding' }}: {{ result[outcome].success }} known correct · {{ result[outcome].failure }} known incorrect · {{ result[outcome].unknown }} unknown / {{ result[outcome].assigned }} assigned.</p></article>
+      <article v-for="result in outcomes" :key="result.condition" class="participant-summary"><strong>{{ conditionName(result.condition) }}</strong><p class="field-help">Terminal intent-consistency: {{ result.success }} known correct · {{ result.failure }} known incorrect · {{ result.unknown }} unknown / {{ result.assigned }} assigned.</p><p v-if="result.interpretation" class="field-help">Interface-assisted interpretation: {{ result.interpretation.success }} known correct · {{ result.interpretation.failure }} known incorrect · {{ result.interpretation.unknown }} unknown / {{ result.interpretation.assigned }} assigned.</p></article>
+      <p v-if="aggregate.primary?.paired" class="field-help">Paired B2 minus B0 bounds: {{ aggregate.primary.paired.lower_bound }} to {{ aggregate.primary.paired.upper_bound }}. Participant-cluster bootstrap: {{ aggregate.primary.bootstrap.ci_lower }} to {{ aggregate.primary.bootstrap.ci_upper }}.</p>
       <p class="field-help">{{ aggregate.selection_rule }} Local authored checks and repeat attempts stay separate. An unknown result is not a failure; chart checks do not supply human intent or understanding.</p>
       <p class="field-help">{{ aggregate.non_primary_records?.length || 0 }} non-primary records retained. Human review remains pending.</p>
     </section>

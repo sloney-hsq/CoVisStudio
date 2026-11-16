@@ -49,10 +49,16 @@ declare `source_requirement` using user speech, selections and contemporary evid
 
 | Mode | Source-identity assessment |
 | --- | --- |
-| `exact` | Compare the independently specified candidate ID with recorded origin |
+| `exact` | Compare the independently specified candidate ID with recorded origin; a saved set built from the required chart version satisfies the same lineage while retaining its set ID |
 | `members_only` | Grade the required members; report origin without requiring version equality |
 | `none` | No new historical-source requirement (for example, explicit reranking) |
 | `unknown` | Source requirement unresolved; retain uncertainty |
+
+`lineage_id` identifies the chart version independently of whether it was reached
+as a chart candidate or through a saved set. A set built from the selected version
+is therefore not an override: the card says it was saved from the selected chart
+version, and an exact requirement for that version is satisfied by the set while a
+`set:` requirement is not satisfied by a plain chart execution.
 
 The selection is context, not automatic ground truth. SQL checks numerical results;
 it does not identify the intended source. A missing actual source record cannot be

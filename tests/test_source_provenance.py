@@ -46,6 +46,8 @@ def test_source_identity_and_parity_without_replacing_explicit_choice(workspace,
             assert provenance['executed_source']['candidate_id'] == (candidate_id or 'chart:3:v1')
             assert provenance['source_basis'] == basis
             assert provenance['members_equal'] is True
+            assert provenance['lineage_equal'] == (candidate_id != 'chart:1:v1')
+            assert provenance['candidate_ids_equal'] == (candidate_id != 'chart:1:v1')
             assert provenance['overrides_selection'] == (candidate_id == 'chart:1:v1')
             assert receipt['state']['views'][0] == before['views'][0]
             for old, new in zip(before['views'][1:], receipt['state']['views'][1:]):
@@ -53,6 +55,34 @@ def test_source_identity_and_parity_without_replacing_explicit_choice(workspace,
                 assert all(new['source'][key] == old['source'][key] for key in ('region', 'metric', 'start', 'end', 'status'))
             records.append((receipt['state'], card, workspace.instructions()))
         assert records[0] == records[1]
+    asyncio.run(run())
+
+
+def test_saved_set_lineage_is_not_an_override(workspace):
+    async def run():
+        for condition in ('direct', 'bound_revision'):
+            await setup(workspace, condition)
+            three = (await workspace.execute('save_category_set', {
+                'name': 'Set from version 3', 'revision': 3, 'view_id': 'v1'}, actor='user'))['result']['category_set']
+            one = (await workspace.execute('save_category_set', {
+                'name': 'Set from version 1', 'revision': 1, 'view_id': 'v1'}, actor='user'))['result']['category_set']
+            receipt = await workspace.execute('revise_analysis', {
+                'view_ids': ['v2', 'v3'], 'member_action': 'use_evidence',
+                'candidate_id': f"set:{three['id']}"})
+            assert receipt['committed'] is True
+            provenance = receipt['result']['revision_card']['execution_provenance']
+            assert provenance['executed_source']['candidate_id'] == f"set:{three['id']}"
+            assert provenance['executed_source']['lineage_id'] == provenance['selected_source_at_onset']['lineage_id'] == 'chart:3:v1'
+            assert (provenance['lineage_equal'], provenance['candidate_ids_equal'],
+                    provenance['overrides_selection'], provenance['members_equal']) == (True, False, False, True)
+            assert provenance['source_basis'] == 'explicit_match'
+            assert [view['membership_origin']['candidate_id'] for view in receipt['state']['views'][1:]] == [f"set:{three['id']}", f"set:{three['id']}"]
+            other = await workspace.execute('revise_analysis', {
+                'view_ids': ['v2', 'v3'], 'member_action': 'use_evidence',
+                'candidate_id': f"set:{one['id']}"})
+            overridden = other['result']['revision_card']['execution_provenance']
+            assert overridden['overrides_selection'] is True
+            assert overridden['lineage_equal'] is False
     asyncio.run(run())
 
 
@@ -134,6 +164,17 @@ def test_independent_source_requirement_not_ui_selection_or_sql(workspace):
         assert compare_state(base, observed, intent, workspace.data)['correct'] is True
         intent['source_requirement']['mode'] = 'unknown'
         assert compare_state(base, observed, intent, workspace.data)['correct'] is None
+        saved = (await workspace.execute('save_category_set', {
+            'name': 'Selected version', 'revision': 3, 'view_id': 'v1'}, actor='user'))['result']['category_set']
+        set_receipt = await workspace.execute('revise_analysis', {
+            'view_ids': ['v2', 'v3'], 'member_action': 'use_evidence',
+            'candidate_id': f"set:{saved['id']}"})
+        set_observed = set_receipt['state']
+        intent['source_requirement'] = {'mode': 'exact', 'candidate_id': 'chart:3:v1',
+                                        'reason': 'Fixture requires the selected chart version.'}
+        assert compare_state(base, set_observed, intent, workspace.data)['correct'] is True
+        intent['source_requirement']['candidate_id'] = 'chart:1:v1'
+        assert compare_state(base, set_observed, intent, workspace.data)['correct'] is False
         intent['source_patch'] = {'region': 'SP'}
         assert compare_state(base, observed, intent, workspace.data)['correct'] is False
     asyncio.run(run())

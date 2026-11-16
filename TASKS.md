@@ -42,6 +42,50 @@ Four commits, all local-only (zero paid API calls), pushed to `origin`.
   violations. No real Qwen call, no participant evidence; human intent/listening
   review remains pending.
 
+## Revision support completion R1–R7 — local-only, 2026-11-16
+
+- **R1 terminal locking.** `lock_intent` cites blinded events through
+  `packet_event_indices`: episode packets keep `prior_context + participant_input`;
+  terminal packets use `input_segments` plus the `evidence_indices` carried by
+  episode locks, then the packet onset in both cases. Terminal level is inferred
+  from `packet.kind`, so `retain_all` can lock through the existing route.
+  `validate_reference_interval` accepts `unknown` or exactly
+  `{start_ms, end_ms, basis, uncertainty_ms, note}` with ordered nonnegative
+  bounds, nonnegative uncertainty and `basis` in `sample_locked`/`coarse`. Coder
+  and adjudication templates carry it beside `intent`; the lock stores it.
+  `designate_primary_episode` ignores terminal packets when checking later intent.
+- **R2 routes.** Added terminal packet preparation, terminal scoring via the
+  existing `/lock` and `/score` routes, `terminal_intent` on the attempt GET,
+  `GET .../interpretation-key` and `POST .../understanding-lock`. Terminal packets
+  carry `packet_id='terminal'`; `score_terminal` now emits `final_correct`,
+  checks, components and revision facts.
+- **R3 report.** `attach_formal_scores` reads terminal `score.json` and
+  `understanding-locked.json`, keeps the pre-A1 `primary.json` fallback, and
+  replaces `report['conditions']` with `primary` (terminal intent-consistency,
+  paired bounds and seeded participant bootstrap) and `secondary.interpretation`.
+  `formal_manifest()['analysis_plan']` now carries bootstrap settings; the formal
+  experiment panel reads the new conditions.
+- **R4 saved-set lineage.** `evidence_source` emits `lineage_id`;
+  `prepare_revision` records `lineage_equal` and `candidate_ids_equal` and defines
+  `overrides_selection` by lineage. `compare_state` accepts a saved set built from
+  the required chart version. The card distinguishes same-version set reuse; the
+  `exact` row in `docs/PROVENANCE_REVIEW.md` is updated.
+- **R5 lazy researcher UI.** `App.vue` loads the six researcher components with
+  `defineAsyncComponent`; `ArchiveReview` is also gated by `!participantSession`.
+  The production build emits separate chunks and the entry bundle lacks their
+  sentinels.
+- **R6 B0 wording.** The compact card says “Modify revision” and explains that the
+  source, target charts or conditions can change, without claiming a system
+  interpretation. B2 wording and the shared `revise` event are unchanged.
+- **R7 metric rules.** Metric and rank definitions now live in
+  `SOURCE_SCHEMA.properties`, so every tool exposing `metric` receives the same
+  freight-exclusion and within-group rule text. Duplicate text was removed from
+  `revise_analysis`; `tool_schema_sha256` changes as expected.
+- **Verification:** local only (no paid API calls, no participant evidence).
+  `pytest tests` reports **419 passed**; `npm --prefix frontend test` reports
+  **53 passed**; `npm --prefix frontend run build` passed with the existing
+  ECharts chunk-size advisory. Human intent coding and listening remain pending.
+
 The entries below preserve earlier implementation stages and their original outcomes.
 
 ## Source provenance and correction UI — local verification only

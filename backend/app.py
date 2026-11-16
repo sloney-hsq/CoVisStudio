@@ -24,7 +24,9 @@ from .experiment import (formal_allocation_for, formal_allocation_table, formal_
                          formal_primary_attempts, formal_assignment_csv)
 from .formal_tasks import FORMAL_PROTOCOL, formal_tasks
 from .intent_scoring import (create_episode, lock_intent, score_episode, write_new, episode_index,
-                             review_understanding, attach_formal_scores, designate_primary_episode)
+                             review_understanding, attach_formal_scores, designate_primary_episode,
+                             terminal_packet, score_terminal, interpretation_key, lock_understanding,
+                             coding_template)
 from .revisions import prepare_revision, normalize_revise_analysis, evidence_source, REVISION_TOOL_DEFINITIONS, CONDITIONS
 from .category_sets import CategorySets, CATEGORY_SET_TOOL_DEFINITIONS
 from .observations import interaction_summary
@@ -1064,7 +1066,8 @@ def create_app(settings=None):
         records = experiment_archives()
         if protocol == 'formal':
             report = formal_primary_attempts([r['archive'] for r in records.values()], registered_participants())
-            return attach_formal_scores(report, records, app.state.workspace.data)
+            return attach_formal_scores(report, records, app.state.workspace.data,
+                                        plan=formal_manifest()['analysis_plan'])
         legacy = [record for record in records.values()
                   if record['archive']['session']['assignment'].get('protocol') != FORMAL_PROTOCOL]
         report = aggregate_reports([record['archive']['report']['trial_report'] for record in legacy
@@ -1078,11 +1081,40 @@ def create_app(settings=None):
             raise HTTPException(404, 'This assigned attempt is not in the experiment archive.')
         return records[session_id]
 
+    def terminal_intent(directory):
+        folder = directory / 'intent-episodes' / 'terminal'
+        if not (folder / 'packet.json').exists():
+            return None
+        read = lambda name: json.loads((folder / name).read_text(encoding='utf-8'))
+        scored = (folder / 'score.json').exists()
+        return {'packet': read('packet.json'),
+                'locked': read('locked.json') if (folder / 'locked.json').exists() else None,
+                'scored': scored,
+                'final_correct': read('score.json').get('final_correct') if scored else None}
+
     @app.get('/api/experiment/attempts/{session_id}')
     def experiment_attempt(session_id: str):
         record = attempt_record(session_id)
         return {**build_review_packet(record['archive'], record['directory']),
-                'intent_episodes': episode_index(record['directory'])}
+                'intent_episodes': episode_index(record['directory']),
+                'terminal_intent': terminal_intent(record['directory'])}
+
+    @app.get('/api/experiment/attempts/{session_id}/interpretation-key')
+    def experiment_interpretation_key(session_id: str):
+        record = attempt_record(session_id)
+        return interpretation_key(record['archive'])
+
+    @app.post('/api/experiment/attempts/{session_id}/understanding-lock')
+    def experiment_understanding_lock(session_id: str, body: dict):
+        record = attempt_record(session_id)
+        key = interpretation_key(record['archive'])
+        try:
+            locked = lock_understanding(key, record['archive'].get('task_response') or {},
+                                        body['review_a'], body['review_b'], body['adjudication'])
+            write_new(record['directory'] / 'understanding-locked.json', locked)
+        except (ValueError, FileExistsError) as error:
+            raise HTTPException(400, str(error)) from error
+        return locked
 
     @app.post('/api/experiment/attempts/{session_id}/intent-episodes')
     def prepare_intent_episode(session_id: str, body: dict):
@@ -1091,6 +1123,37 @@ def create_app(settings=None):
             raise HTTPException(409, 'Finish the attempt before preparing blinded intent coding.')
         return create_episode(record['directory'], body['onset_index'], body['utterance_end_index'],
                               body['end_event_index'], record['archive']['session']['evidence_kind'])
+
+    @app.post('/api/experiment/attempts/{session_id}/intent-episodes/terminal')
+    def prepare_terminal_intent(session_id: str, body: dict):
+        record = attempt_record(session_id)
+        if record['archive']['session']['trial_status'] != 'finished':
+            raise HTTPException(409, 'Finish the attempt before preparing blinded terminal intent coding.')
+        directory = record['directory']
+        locks = []
+        for path in (directory / 'intent-episodes').glob('*/packet.json'):
+            packet = json.loads(path.read_text(encoding='utf-8'))
+            if packet.get('kind') == 'terminal' or not (path.parent / 'locked.json').exists():
+                continue
+            locks.append((packet['boundary']['onset']['index'], path.parent.name,
+                          json.loads((path.parent / 'locked.json').read_text(encoding='utf-8'))))
+        episode_locks = [lock for _, _, lock in sorted(locks, key=lambda item: item[:2])]
+        try:
+            packet = terminal_packet(record['archive'], episode_locks)
+            destination = directory / 'intent-episodes' / 'terminal'
+            destination.mkdir(parents=True)
+            write_new(destination / 'packet.json', packet)
+            template = coding_template(packet)
+            write_new(destination / 'coder-a.json', template)
+            write_new(destination / 'coder-b.json', template)
+            write_new(destination / 'adjudication.json', {
+                'reviewer_id': '', 'reason': '', 'reference_interval': template['reference_interval'],
+                'intent': template['intent']})
+        except (ValueError, FileExistsError) as error:
+            raise HTTPException(400, str(error)) from error
+        return {'packet_id': 'terminal', 'directory': str(destination), 'status': 'pending',
+                'input_segment_count': len(packet['input_segments']),
+                'episode_lock_count': len(episode_locks)}
 
     def intent_files(session_id, packet_id):
         record = attempt_record(session_id)
@@ -1126,8 +1189,13 @@ def create_app(settings=None):
         if not (directory / 'locked.json').exists():
             raise HTTPException(409, 'Two independent codings must be locked before scoring.')
         read = lambda name: json.loads((directory / name).read_text(encoding='utf-8'))
-        result = score_episode(record['archive'], read('packet.json'), read('locked.json'),
-                               read('private.json')['end_event_index'], app.state.workspace.data)
+        packet = read('packet.json')
+        locked = read('locked.json')
+        if packet.get('kind') == 'terminal':
+            result = score_terminal(record['archive'], locked['intent'], app.state.workspace.data)
+        else:
+            result = score_episode(record['archive'], packet, locked,
+                                   read('private.json')['end_event_index'], app.state.workspace.data)
         write_new(directory / 'score.json', result)
         return result
 

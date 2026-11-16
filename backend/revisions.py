@@ -63,8 +63,7 @@ REVISION_TOOL_DEFINITIONS = [
         "keep_current preserves the current membership rule. use_evidence takes an exact candidate_id "
         "from list_evidence_candidates or the user's selected evidence; only category members are "
         "reused, never historical dates, region or metric. rerank releases fixed members and requires "
-        "top_n and rank_by. Dates are inclusive start/exclusive end. Rates are within-group; never "
-        "sum or renormalize review rates or delivery means. Exclude freight from revenue. Set "
+        "top_n and rank_by. Dates are inclusive start/exclusive end. Set "
         "needs_confirmation=true with a question only for an unresolved user choice; then the edit "
         "remains a preview. Explain success only from a committed result.",
         REVISE_ANALYSIS_PROPERTIES, ["view_ids", "member_action"],
@@ -129,6 +128,7 @@ def evidence_source(evidence, candidate=None):
     return {"candidate_id": candidate["candidate_id"] if candidate else f"chart:{evidence['revision']}:{evidence['view_id']}",
             "label": candidate["label"] if candidate else f"Chart {evidence['number']} · version {evidence['revision']}",
             "revision": evidence["revision"], "view_id": evidence["view_id"],
+            "lineage_id": f"chart:{evidence['revision']}:{evidence['view_id']}",
             "members": list(evidence["members"])}
 
 
@@ -178,12 +178,17 @@ def prepare_revision(store, snapshots, payload, condition="bound_revision", reso
     candidate = {view["id"]: view for view in prepared["candidate"]["views"]}
     selected = evidence_source(selected_evidence)
     executed = evidence_source(evidence, resolved_candidate) if binding_applied else None
-    overrides = (selected["candidate_id"] != executed["candidate_id"] if selected and executed else None)
+    lineage_equal = (selected["lineage_id"] == executed["lineage_id"]
+                     if selected and executed else None)
+    overrides = (not lineage_equal) if lineage_equal is not None else None
+    candidate_ids_equal = (selected["candidate_id"] == executed["candidate_id"]
+                           if selected and executed else None)
     provenance = {"selected_source_at_onset": selected, "executed_source": executed,
                   "source_basis": ("not_used" if executed is None else
                       "selection" if not payload.get("candidate_id") and not payload.get("evidence") else
                       "explicit_override" if overrides else "explicit_match" if selected else "explicit"),
-                  "overrides_selection": overrides,
+                  "overrides_selection": overrides, "lineage_equal": lineage_equal,
+                  "candidate_ids_equal": candidate_ids_equal,
                   "members_equal": set(selected["members"]) == set(executed["members"]) if selected and executed else None}
     changes = []
     for view_id in payload["view_ids"]:

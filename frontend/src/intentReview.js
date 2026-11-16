@@ -25,11 +25,12 @@ export function episodeControls(episode, episodes, terminalIndex) {
 export function blankCodingFiles(packetId) {
   const intent = () => ({ status: 'unknown', disposition: 'revise', target_view_ids: [], source_patch: {},
     members: { mode: 'keep_current' }, source_requirement: { mode: 'none', candidate_id: null, reason: '' },
-    retained_fields: [], released_fields: [], view_overrides: {}, reference_interval: 'unknown',
+    retained_fields: [], released_fields: [], view_overrides: {},
     reason: '', evidence_indices: [] })
   const coder = () => ({ schema: 'covis-intent-episode-1', packet_id: packetId, reviewer_id: '',
-    status: 'pending', intent: intent(), speech_verification: 'pending' })
-  return { coder_a: coder(), coder_b: coder(), adjudication: { reviewer_id: '', reason: '', intent: intent() } }
+    status: 'pending', reference_interval: 'unknown', intent: intent(), speech_verification: 'pending' })
+  return { coder_a: coder(), coder_b: coder(),
+    adjudication: { reviewer_id: '', reason: '', reference_interval: 'unknown', intent: intent() } }
 }
 
 export function outcomeLabel(value) {

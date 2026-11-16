@@ -16,7 +16,7 @@ function toggle() {
 </script>
 
 <template>
-  <section class="revision-support" :class="{ compact: !structured }" aria-label="Revision support">
+  <section class="revision-support" :class="{ compact: !structured }" :aria-label="structured ? 'Revision support' : 'Revision'">
     <RevisionObservation v-if="structured" :key="`${proposal.id}-${proposal.status}`" :proposal-id="proposal.id" :proposal-status="proposal.status" surface="summary" :active="active" @observation="(name, details, time) => emit('observation', name, details, time)">
       <div class="revision-support-heading"><div><span class="revision-interpretation-label">System interpretation</span><strong>{{ title }}</strong></div><button class="text-button revision-detail-toggle" :aria-expanded="expanded" @click="toggle">{{ expanded ? 'Summary' : 'Details' }}<ChevronDown :size="15" :class="{ collapsed: expanded }"/></button></div>
       <p v-if="proposal.card.question" class="revision-question">{{ proposal.card.question }}</p>
@@ -24,7 +24,7 @@ function toggle() {
       <RevisionObservation v-if="expanded" :proposal-id="proposal.id" :proposal-status="proposal.status" surface="detail" :active="active" @observation="(name, details, time) => emit('observation', name, details, time)"><RevisionDetails :card="proposal.card" :state="state"/></RevisionObservation>
     </RevisionObservation>
     <template v-else><strong class="revision-simple-title">{{ title }}</strong><p v-if="proposal.card.question" class="revision-question">{{ proposal.card.question }}</p><p v-else-if="pending" class="revision-question">Apply this proposal or modify it before continuing.</p></template>
-    <div class="revision-support-footer"><p class="revision-publication-note">Review this system interpretation. You can correct the source, target charts, or conditions.</p><div class="revision-support-actions"><button class="text-button" :disabled="busy || readonly" @click="emit('revise')"><Pencil :size="14"/> Correct interpretation</button><button class="text-button" :disabled="busy" @click="emit('close')"><X :size="14"/> Close</button><button v-if="pending" class="button primary" :disabled="busy || readonly" @click="emit('apply')"><Check :size="15"/> Apply revision</button></div></div>
+    <div class="revision-support-footer"><p class="revision-publication-note">{{ structured ? 'Review this system interpretation. You can correct the source, target charts, or conditions.' : 'You can change the source, target charts, or conditions in a revised proposal.' }}</p><div class="revision-support-actions"><button class="text-button" :disabled="busy || readonly" @click="emit('revise')"><Pencil :size="14"/> {{ structured ? 'Correct interpretation' : 'Modify revision' }}</button><button class="text-button" :disabled="busy" @click="emit('close')"><X :size="14"/> Close</button><button v-if="pending" class="button primary" :disabled="busy || readonly" @click="emit('apply')"><Check :size="15"/> Apply revision</button></div></div>
   </section>
 </template>
 

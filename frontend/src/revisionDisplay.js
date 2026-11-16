@@ -46,5 +46,8 @@ export function provenanceNotice(card) {
   if (provenance.overrides_selection || provenance.members_equal === false) {
     return `Selected ${selected.label}; used ${used.label}. ${provenance.members_equal ? 'Same categories; different source.' : 'Different category selection.'}`
   }
+  if (provenance.candidate_ids_equal === false) {
+    return `Selected ${selected.label}; used ${used.label}, saved from the selected chart version.`
+  }
   return ''
 }

@@ -329,6 +329,7 @@ def formal_manifest():
                                  'first_publication_consistent', 'window_expiry'],
             'estimand': 'Participant-level paired difference (bound_revision minus direct), two tasks per condition.',
             'uncertainty': 'Cluster bootstrap over participants with Manski-style lower/upper bounds for unknown outcomes.',
+            'bootstrap': {'seed': 0, 'samples': 2000},
             'multiple_testing': 'Single primary outcome; no Holm adjustment.',
         },
     )

@@ -98,6 +98,50 @@ def test_independent_intent_handoff_from_http_to_locked_sql_and_archive(client):
     assert 'local-fixture-a' not in client.app.state.workspace.context()
 
 
+def test_terminal_routes_roundtrip(client):
+    prepared = prepare(client)
+    session_id = prepared['session']['id']
+    response = {key: 'Synthetic terminal route fixture; not participant evidence.' for key in
+                ('conclusion', 'rationale', 'object_origin', 'calculation_scope', 'target_views', 'kept_released')}
+    assert client.post('/api/task-response', json=response).status_code == 200
+    client.post('/api/finish')
+    prefix = f'/api/experiment/attempts/{session_id}'
+    created = client.post(prefix + '/intent-episodes/terminal', json={})
+    assert created.status_code == 200, created.text
+    assert created.json()['packet_id'] == 'terminal'
+    assert client.post(prefix + '/intent-episodes/terminal', json={}).status_code == 400
+    packet = client.get(prefix + '/intent-episodes/terminal').json()
+    assert packet['kind'] == 'terminal'
+    onset = packet['boundary']['onset']['index']
+    coder = coding_template(packet)
+    assert coder['kind'] == 'terminal'
+    coder.update(status='completed', reviewer_id='terminal-fixture-a')
+    coder['intent'].update(status='resolved', disposition='retain_all', target_view_ids=[],
+                           reason='Authored terminal fixture; no human review.',
+                           evidence_indices=[onset])
+    body = {'coder_a': coder, 'coder_b': {**deepcopy(coder), 'reviewer_id': 'terminal-fixture-b'},
+            'adjudication': {'reviewer_id': 'terminal-fixture', 'reason': 'Authored test.',
+                             'intent': coder['intent']}}
+    locked = client.post(prefix + '/intent-episodes/terminal/lock', json=body)
+    assert locked.status_code == 200, locked.text
+    scored = client.post(prefix + '/intent-episodes/terminal/score')
+    assert scored.status_code == 200, scored.text
+    assert scored.json()['final_correct'] is True
+    attempt = client.get(prefix).json()
+    assert attempt['terminal_intent']['scored'] is True
+    assert attempt['terminal_intent']['final_correct'] is True
+    key = client.get(prefix + '/interpretation-key').json()
+    assert key['key_hash'] and key['key']['target_views'] == []
+    review = {'reviewer_id': 'understanding-a', 'key_hash': key['key_hash'],
+              'key_fields': ['target_views'], 'response_span': [0, 1]}
+    understanding = client.post(prefix + '/understanding-lock', json={
+        'review_a': review, 'review_b': {**review, 'reviewer_id': 'understanding-b'},
+        'adjudication': {'reviewer_id': 'understanding-c', 'reason': 'Authored test.',
+                         'labels': {'target_views': True}}})
+    assert understanding.status_code == 200, understanding.text
+    assert understanding.json()['labels']['target_views'] is True
+
+
 def test_registration_retains_four_missing_assigned_rows(client):
     # This pseudonymous fixture is only in pytest's temporary directory.
     response = client.post('/api/experiment/register', json={'participant_id': 'fixture-roster-only', 'participant_slot': 2})
@@ -105,6 +149,6 @@ def test_registration_retains_four_missing_assigned_rows(client):
     report = client.get('/api/experiment/report?protocol=formal').json()
     assert len(report['assigned_rows']) == 4 and len(report['missing_trials']) == 4
     assert all(row['revision_correct'] is None for row in report['assigned_rows'])
-    assert all(row['revision']['unknown'] == 2 for row in report['conditions'])
+    assert all(row['unknown'] == 2 for row in report['primary']['conditions'])
     exported = client.get('/api/experiment/export?protocol=formal&format=csv').text
     assert len(exported.splitlines()) == 5

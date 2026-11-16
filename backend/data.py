@@ -22,7 +22,11 @@ DEFAULT_SOURCE = {
     "categories": None, "top_n": 5, "rank_by": "orders",
 }
 SOURCE_PROPERTIES = {
-    "metric": {"type": "string", "enum": list(METRICS)},
+    "metric": {"type": "string", "enum": list(METRICS), "description":
+        "orders = distinct orders; revenue = item revenue excluding freight; "
+        "low_review_rate = reviewed orders scoring 2 or below divided by valid reviewed orders; "
+        "avg_delivery_days = mean elapsed delivery days. Rates and means are within-group values: "
+        "never sum, average or renormalize them across groups."},
     "dimension": {"type": "string", "enum": list(DIMENSIONS)},
     "region": {"type": ["string", "null"]},
     "start": {"type": "string", "description": "Inclusive ISO date."},
@@ -30,7 +34,8 @@ SOURCE_PROPERTIES = {
     "status": {"type": "string", "enum": ["delivered", "shipped", "canceled", "unavailable", "invoiced", "processing", "approved", "created"]},
     "categories": {"type": ["array", "null"], "items": {"type": "string"}, "minItems": 1, "uniqueItems": True, "description": "Exact category IDs to retain. Set top_n to null when supplying a fixed list."},
     "top_n": {"type": ["integer", "null"], "minimum": 1, "description": "Dynamic ranking size; null shows all matching groups. Cannot be combined with fixed categories."},
-    "rank_by": {"type": "string", "enum": list(METRICS)},
+    "rank_by": {"type": "string", "enum": list(METRICS), "description":
+        "Rank by the same metric definitions as metric; ranks are computed within each group."},
 }
 SOURCE_SCHEMA = {"type": "object", "properties": SOURCE_PROPERTIES, "additionalProperties": False}
 
