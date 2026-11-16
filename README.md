@@ -25,6 +25,11 @@ saved sets and execution rules. It tests the support package, not whether
 full-duplex is superior to text or sequential voice. Participant effects and human
 listening remain unverified.
 
+The sole primary outcome is **terminal intent-consistency** (terminal committed
+state vs. cumulative active intent); interface-assisted interpretation, the repair
+funnel and interaction cost/time are secondary. See
+[docs/amendments/A1-single-primary-2026-11-15.md](docs/amendments/A1-single-primary-2026-11-15.md).
+
 ## What works
 
 - Select one or more charts and discuss or revise them while the assistant speaks.

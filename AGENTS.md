@@ -9,9 +9,11 @@ are English. Use real Olist computations.
 
 The primary comparison is B0 (direct) versus B2 (bound_revision), both in the
 same full-duplex environment. Study the support package for separating historical
-evidence from current edit scope: final intent consistency, interface-assisted
-interpretation and repair cost. Do not claim full-duplex superiority, a new
-interruption algorithm, or participant benefits from implementation tests.
+evidence from current edit scope. Terminal intent-consistency is the sole primary
+outcome; interface-assisted interpretation, the repair funnel and interaction cost
+are secondary (docs/amendments/A1-single-primary-2026-11-15.md). Do not claim
+full-duplex superiority, a new interruption algorithm, or participant benefits
+from implementation tests.
 
 Follow docs/UNIFIED_RESEARCH_PROTOCOL.md and docs/FORMAL_STUDY.md. Four business
 families in study_* are participant materials. Earlier biz_*, exp_*, rev_* and

@@ -132,9 +132,10 @@ The function-level implementation and current verification boundary are in [STAG
 
 ## Terminal intent and repair analysis clarification
 
-The fixed primary outcomes are final-intent consistency and interface-assisted
-interpretation (final revision correctness and understanding). High pilot accuracy
-must not trigger replacement of either primary after inspecting outcomes.
+The fixed primary outcome is terminal intent-consistency (the match between the
+terminal committed state and the participant's cumulative active intent).
+Interface-assisted interpretation and repair cost are secondary. High pilot accuracy
+must not trigger replacement of the primary after inspecting outcomes.
 
 The human terminal lock includes ALL still-active per-view requirements, including
 earlier unfulfilled requests. A later scoped goal change supersedes only the affected

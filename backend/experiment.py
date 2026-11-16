@@ -321,6 +321,16 @@ def formal_manifest():
             'meaningful_effect_and_precision_thresholds': 'pending',
             'consent_and_analysis_plan': 'pending',
         },
+        analysis_plan={
+            'primary_outcomes': ['terminal_intent_consistency'],
+            'secondary_outcomes': ['interface_assisted_interpretation', 'repair_funnel',
+                                   'interaction_cost_time', 'public_constraint_completion'],
+            'descriptive_only': ['overlap_incidence', 'reference_dependence',
+                                 'first_publication_consistent', 'window_expiry'],
+            'estimand': 'Participant-level paired difference (bound_revision minus direct), two tasks per condition.',
+            'uncertainty': 'Cluster bootstrap over participants with Manski-style lower/upper bounds for unknown outcomes.',
+            'multiple_testing': 'Single primary outcome; no Holm adjustment.',
+        },
     )
     manifest['manifest_sha256'] = content_sha256(manifest)
     return manifest

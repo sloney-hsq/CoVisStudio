@@ -136,11 +136,13 @@ understanding rubrics, consent scope, unknown handling, rerun reasons and analys
 No code function produces an approval or an actual participant result.
 
 The planned independent unit is the participant. Account for family, version and
-order, retaining all assigned tasks and reporting missing/unknown reasons. Understanding
-and final revision correctness are the two primary outcomes; any confirmatory tests
-need joint adjustment (for example Holm), effect sizes and participant-clustered
-uncertainty. Report known success and unknown counts plus lower/upper success bounds.
-Repair and time are secondary; failed or time-limited attempts must not disappear from
+order, retaining all assigned tasks and reporting missing/unknown reasons. Terminal
+intent-consistency is the sole primary outcome. Interface-assisted interpretation,
+the repair funnel and interaction cost/time are secondary. Estimate the
+participant-level paired B2-minus-B0 difference with participant-clustered (cluster
+bootstrap) uncertainty and report known success and unknown counts plus lower/upper
+success bounds; with one primary outcome, no Holm adjustment applies. Repair and
+time are secondary; failed or time-limited attempts must not disappear from
 timing analysis. Thirty is the existing recruitment target: the meaningful effect,
 variance/precision rationale and interval-width thresholds require a human decision
 before outcome inspection. None is silently supplied by software.
@@ -154,9 +156,10 @@ treatment effect.
 
 ## Terminal intent and repair analysis clarification
 
-The fixed primary outcomes are final-intent consistency and interface-assisted
-interpretation (final revision correctness and understanding). High pilot accuracy
-must not trigger replacement of either primary after inspecting outcomes.
+The fixed primary outcome is terminal intent-consistency (the match between the
+terminal committed state and the participant's cumulative active intent).
+Interface-assisted interpretation and repair cost are secondary. High pilot accuracy
+must not trigger replacement of the primary after inspecting outcomes.
 
 The human terminal lock includes ALL still-active per-view requirements, including
 earlier unfulfilled requests. A later scoped goal change supersedes only the affected
