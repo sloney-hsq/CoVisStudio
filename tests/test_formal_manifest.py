@@ -1,6 +1,33 @@
 """Amendment A1 analysis plan and first-attempt primary accounting. No API."""
 from backend.experiment import formal_manifest, formal_primary_attempts, formal_allocation_for
 from backend.formal_tasks import FORMAL_PROTOCOL
+from backend.intent_scoring import paired_bounds, participant_bootstrap
+
+
+def test_paired_bounds_treat_unknown_as_both_extremes():
+    participants = [
+        {'direct': True, 'bound_revision': True},
+        {'direct': False, 'bound_revision': True},
+        {'direct': None, 'bound_revision': True},
+        {'direct': True, 'bound_revision': None},
+    ]
+    bounds = paired_bounds(participants)
+    assert bounds['participants'] == 4
+    # Lower: unknown-as-failure for B2, unknown-as-success for B0; upper reversed.
+    assert bounds['lower_bound'] <= bounds['upper_bound']
+    # All-known case is exact.
+    assert paired_bounds([{'direct': True, 'bound_revision': True},
+                          {'direct': False, 'bound_revision': True}])['lower_bound'] == 0.5
+
+
+def test_participant_bootstrap_is_deterministic():
+    participants = [{'direct': True, 'bound_revision': True},
+                    {'direct': False, 'bound_revision': True},
+                    {'direct': None, 'bound_revision': False}]
+    first = participant_bootstrap(participants, seed=7)
+    second = participant_bootstrap(participants, seed=7)
+    assert first == second
+    assert first['ci_lower'] <= first['ci_upper']
 
 
 def test_manifest_declares_single_primary_outcome():

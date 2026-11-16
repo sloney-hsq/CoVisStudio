@@ -118,6 +118,8 @@ class Workspace:
                         'models': {'text': self.settings['text_model'], 'voice': self.settings['realtime_model']},
                         'used_modes': [], 'condition': condition}
         self.session['instructions_sha256'] = hashlib.sha256(self.instructions().encode('utf-8')).hexdigest()
+        self.session['tool_schema_sha256'] = hashlib.sha256(
+            json.dumps(MODEL_TOOLS, sort_keys=True, ensure_ascii=False).encode('utf-8')).hexdigest()
         self.trace = Trace(self.settings['trace_dir'] / self.session['id'])
         self.evidence_store = EvidenceStore(self.trace)
         self.evidence_package = None
@@ -809,7 +811,7 @@ class Workspace:
             with self.trace.scope(self.trace.origin(response_id, event.get('item_id'))):
                 self.trace.record(kind, event=event, **{key: event[key] for key in ('response_id', 'item_id', 'call_id') if event.get(key) is not None})
         if kind == 'assistant_done' and event.get('text'):
-            self.history.append({'role': 'assistant', 'content': event['text']})
+            self.history.append({'role': 'assistant', 'content': event['text'], 'response_id': response_id})
             self.evidence_store.add('assistant_text_received', {'text': event['text'], 'status': 'received_not_aligned'},
                 captured_at=self.trace.now_ms(), response_id=response_id,
                 source_request_id=self.trace.origin(response_id).get('request_id'))
@@ -840,7 +842,8 @@ class Workspace:
         image = self.decision_image()
         if image:
             content.append({'type': 'image_url', 'image_url': {'url': 'data:image/jpeg;base64,' + image['image']}})
-        messages = [{'role': 'system', 'content': self.instructions()}, *deepcopy(self.history[:-1]), {'role': 'user', 'content': content}]
+        history = [{key: entry[key] for key in ('role', 'content')} for entry in self.history[:-1]]
+        messages = [{'role': 'system', 'content': self.instructions()}, *history, {'role': 'user', 'content': content}]
 
         async def run():
             await self.send({'type': 'status', 'status': 'thinking'})

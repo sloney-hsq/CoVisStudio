@@ -31,7 +31,7 @@ def write_new(path, content):
 
 def coding_template(packet):
     return {'schema': SCHEMA, 'packet_id': packet['packet_id'], 'reviewer_id': '',
-            'status': 'pending', 'intent': {
+            'status': 'pending', 'kind': 'episode', 'intent': {
                 'status': 'unknown', 'disposition': 'revise', 'target_view_ids': [],
                 'source_patch': {}, 'members': {'mode': 'keep_current'},
                 'source_requirement': {'mode': 'none', 'candidate_id': None, 'reason': ''},
@@ -244,8 +244,11 @@ def terminal_packet(archive, episode_locks):
     input segment with its pre-input state. Strictly excludes the final state,
     post-final-input model output, and the task_response submission."""
     input_names = ('user_transcript', 'request_accepted', 'user_input', 'manual_edit_requested')
+    events = archive['events']
+    trial_started = next((event for event in events if event['name'] == 'trial_started'),
+                         events[0] if events else {'index': 0, 'name': 'trial_started'})
     segments = []
-    for event in archive['events']:
+    for event in events:
         if event['name'] not in input_names:
             continue
         segments.append({
@@ -253,8 +256,11 @@ def terminal_packet(archive, episode_locks):
             'text': event.get('text', event.get('details', {}).get('text', '')),
             'pre_input_state': state_at(archive, event['index'] - 1),
         })
-    return {'schema': 'covis-terminal-packet-1',
+    last_input = segments[-1]['index'] if segments else trial_started['index']
+    return {'schema': 'covis-terminal-packet-1', 'kind': 'terminal',
             'session_id': archive['session']['id'],
+            'boundary': {'onset': {'index': trial_started['index'], 'name': trial_started.get('name', 'trial_started')},
+                         'utterance_arrival_end': {'index': last_input, 'name': 'terminal_input'}},
             'trial_start': deepcopy(archive['initial']),
             'input_segments': segments,
             'episode_locks': deepcopy(episode_locks)}
@@ -338,6 +344,43 @@ def outcome_summary(values):
             'success_upper': (success + unknown) / count if count else None}
 
 
+def paired_bounds(participants):
+    """Manski-style bounds on the participant-level paired B2-minus-B0 difference.
+
+    Each participant is {'direct': outcome, 'bound_revision': outcome} with outcome
+    in {True, False, None}. Unknown contributes as failure in the lower bound and
+    as success in the upper bound."""
+    lower_total, upper_total, count = 0.0, 0.0, 0
+    for participant in participants:
+        b2, b0 = participant['bound_revision'], participant['direct']
+        lower_total += (1 if b2 is True else 0) - (0 if b0 is False else 1)
+        upper_total += (0 if b2 is False else 1) - (1 if b0 is True else 0)
+        count += 1
+    if not count:
+        return {'participants': 0, 'lower_bound': None, 'upper_bound': None}
+    return {'participants': count, 'lower_bound': lower_total / count,
+            'upper_bound': upper_total / count}
+
+
+def participant_bootstrap(participants, seed=0, samples=2000):
+    """Seeded participant-level bootstrap of the paired difference, using a
+    symmetric midpoint for unknown outcomes. Deterministic."""
+    import random
+    rng = random.Random(seed)
+    n = len(participants)
+    if not n:
+        return {'samples': samples, 'mean': None, 'ci_lower': None, 'ci_upper': None}
+
+    def estimate(outcome):
+        return 0.5 if outcome is None else float(bool(outcome))
+
+    observed = [estimate(p['bound_revision']) - estimate(p['direct']) for p in participants]
+    means = [sum(observed[rng.randrange(n)] for _ in range(n)) / n for _ in range(samples)]
+    means.sort()
+    return {'samples': samples, 'mean': sum(observed) / n,
+            'ci_lower': means[int(0.025 * samples)], 'ci_upper': means[int(0.975 * samples) - 1]}
+
+
 def create_episode(directory, onset_index, utterance_end_index, end_event_index, evidence_kind):
     from scripts.prepare_intent_review import prepare_packet
     directory = Path(directory)
@@ -365,6 +408,8 @@ def episode_index(directory):
     primary = json.loads(selection_file.read_text(encoding='utf-8'))['packet_id'] if selection_file.exists() else None
     for path in sorted((Path(directory) / 'intent-episodes').glob('*/packet.json')):
         packet = json.loads(path.read_text(encoding='utf-8'))
+        if packet.get('kind') == 'terminal':
+            continue
         boundary = json.loads((path.parent / 'private.json').read_text(encoding='utf-8'))
         record = {'packet_id': path.parent.name, 'intent_status': 'pending', 'final_correct': None,
                   'onset_index': packet['boundary']['onset']['index'],

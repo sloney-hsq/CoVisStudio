@@ -54,7 +54,7 @@ After a model tool commits during active voice with an established browser visua
 ## HTTP / browser WS (root implements backend/app.py)
 
 GET /api/bootstrap -> `{state,catalog,tasks,diagnostic_tasks,experiment_tasks,category_sets,task_response,report,settings:{configured,text_model,realtime_model},session,nodes,condition,conditions,evidence,proposal}`.
-POST /api/session `{mode:'text'|'push_to_talk'|'live_voice',condition?:'direct'|'bound_revision'|'unbound_preview',task_id?:string,participant_id?:string}` -> bootstrap; explicit new session, no API connect. `mode` is transport; `condition` is the revision mechanism. The default mechanism is bound_revision.
+POST /api/session `{mode:'text'|'push_to_talk'|'live_voice',condition?:'direct'|'bound_revision',task_id?:string,participant_id?:string}` -> bootstrap; explicit new session, no API connect. `mode` is transport; `condition` is the revision mechanism. The default mechanism is bound_revision.
 POST /api/tools `{name,arguments,reference?}` -> `{state,result,node}`.
 POST /api/undo -> `{state,result,node}`. GET /api/history -> `{nodes}`.
 GET /api/nodes/{id} -> `{node,state,events}` (historical snapshot). POST /api/nodes/{id}/restore -> tool-like receipt.
@@ -63,7 +63,7 @@ POST /api/finish -> `{report,export_url}`. GET /api/export -> downloadable JSON 
 WS /ws sends bootstrap on connect. Client:
 - `{type:'text',text,reference,image,captured_client_ms,client_clock_id}` image is JPEG base64; reference `{revision,view_ids,entities:{view_id:[labels]}}` is captured from actually rendered state.
 - `{type:'voice_start',mode,reference,image,captured_client_ms,client_clock_id}` opens paid provider only on explicit user click; missing key reports English error, never fake response.
-- `{type:'audio',data}` PCM16 mono 16kHz base64; `{type:'voice_commit'}` manual segment; `{type:'voice_stop'}` closes provider and releases work.
+- `{type:'audio',data,sequence,first_sample,sample_count,capture_client_ms,client_clock_id}` PCM16 mono 16kHz base64 plus capture sample-clock metadata. The metadata enters the local `audio_sent` log only (never the provider payload); missing metadata degrades to `timing_precision:'coarse'`. `{type:'voice_commit'}` manual segment; `{type:'voice_stop'}` closes provider and releases work.
 - `{type:'context',reference,image,captured_client_ms,client_clock_id}` after rendering/selection; captures and arrivals are archived, and an eligible image is supplied at response preparation through the existing native buffer path.
 - `{type:'cancel'}` revoke current work and stop playback; `{type:'stop_speaking'}` only audio stops, tool continues.
 - `{type:'event',name,client_ms,details}` actual render/audio start/end, selection, edit focus, recording boundaries. Both clock domains logged separately.
@@ -101,7 +101,7 @@ The model receives the same tool definitions in every condition; model history/s
 `preview_revision({evidence?,view_ids,source_patch,member_action,needs_confirmation?,question?})` prepares a private candidate. Evidence is `{revision,view_id,members?}` using stable category IDs from an actually saved chart. If omitted, the explicitly selected evidence bound to this user request is used. `view_ids` identifies current targets; `source_patch` contains only desired source changes. `member_action` is:
 
 - `keep_current`: leave the current membership rule unchanged unless explicitly patched.
-- `use_evidence`: in direct and bound_revision, use the selected historical category IDs and clear dynamic top_n through the same compiler. Do not copy historical region, dates, status or metric. The historical unbound_preview diagnostic still uses supplied categories/top_n explicitly.
+- `use_evidence`: in direct and bound_revision, use the selected historical category IDs and clear dynamic top_n through the same compiler. Do not copy historical region, dates, status or metric.
 - `rerank`: release fixed categories and require explicit top_n and rank_by.
 
 Return `{status:'completed',committed:false,proposal:{id,epoch,status:'pending',card}}`. The card shows evidence, current target IDs, before/after source, actual member lists, changed/kept fields and unresolved question. Preview does not publish or add a committed Journey node. Ambiguity is a user/model decision; the server does not fabricate the user's intention.
