@@ -5,6 +5,7 @@ class CoVisMicrophone extends AudioWorkletProcessor {
     this.offset = 0
     this.running = false
     this.count = 0
+    this.sequence = 0
     this.limit = null
     this.port.onmessage = event => {
       if (event.data.type === 'start') {
@@ -20,7 +21,8 @@ class CoVisMicrophone extends AudioWorkletProcessor {
   flush(level = 0) {
     if (!this.offset) return
     const buffer = this.samples.slice(0, this.offset).buffer
-    this.port.postMessage({ type: 'pcm', buffer, level }, [buffer])
+    this.port.postMessage({ type: 'pcm', buffer, level,
+      sequence: this.sequence++, first_sample: this.count - this.offset, sample_count: this.offset }, [buffer])
     this.offset = 0
   }
   process(inputs) {

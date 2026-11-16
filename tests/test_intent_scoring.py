@@ -7,7 +7,9 @@ from backend.charts import ChartStore
 from backend.data import OlistData
 from backend.intent_scoring import (coding_template, lock_intent, score_episode,
                                    outcome_summary, review_understanding, digest,
-                                   designate_primary_episode, write_new, attach_formal_scores)
+                                   designate_primary_episode, write_new, attach_formal_scores,
+                                   terminal_packet, terminal_coverage, score_terminal,
+                                   interpretation_key, lock_understanding)
 from backend.study import starter_operations
 
 
@@ -233,3 +235,57 @@ def test_latest_cumulative_intent_keeps_other_view_obligation(data):
     assert result['final_correct'] is True
     assert final['views'][2]['source']['categories'] == before['views'][2]['source']['categories']
     assert final['views'][1]['source']['categories'] is None
+
+
+def test_wrong_execution_and_correct_interpretation_are_separate(data):
+    store, before, packet, lock = fixture(data)
+    wrong = store.commit(store.prepare('edit_charts', {'view_ids': ['v2'],
+        'patch': {'source': {'region': 'MG'}}}))['state']
+    saved = archive(before, wrong, [{'index': 1, 'name': 'trial_started'},
+        {'index': 2, 'name': 'tool_committed', 'revision': wrong['revision']}])
+    score = score_terminal(saved, lock['intent'], data)
+    assert score['intent_status'] == 'resolved'
+    assert score['correct'] is False  # revision incorrect: v2 wrong region, v3 unfulfilled
+    key = interpretation_key(saved)
+    assert key['key']['target_views'] == ['v2']  # ground truth from actual state, not intent
+    assert key['key']['calculation_scope']['v2']['region'] == 'MG'
+
+
+def test_terminal_packet_coverage_and_scoring(data):
+    store, before, packet, lock = fixture(data)
+    final = store.commit(store.prepare('edit_charts', {'view_ids': ['v2'],
+        'patch': {'source': {'region': 'RJ'}}}))['state']
+    events = [{'index': 0, 'name': 'trial_started'},
+        {'index': 1, 'name': 'request_accepted', 'text': 'Use RJ on the service charts.'},
+        {'index': 2, 'name': 'tool_committed', 'revision': final['revision']},
+        {'index': 3, 'name': 'request_accepted', 'text': 'Now also Q1.'}]
+    saved = archive(before, final, events)
+    packet = terminal_packet(saved, [lock])
+    assert [segment['index'] for segment in packet['input_segments']] == [1, 3]
+    assert packet['trial_start']['revision'] == before['revision']
+    partial = terminal_coverage([lock], packet, {1: 'revise'})
+    assert partial['covered'] is False and partial['uncovered_segments'] == [3]
+    full = terminal_coverage([lock], packet, {1: 'revise', 3: 'revise'})
+    assert full['covered'] is True and full['carry_forward_episodes'] == ['test-packet']
+
+
+def test_lock_understanding_enforces_two_reviewers_and_key_hash(data):
+    store, before, packet, lock = fixture(data)
+    final = store.commit(store.prepare('edit_charts', {'view_ids': ['v2'],
+        'patch': {'source': {'region': 'RJ'}}}))['state']
+    saved = archive(before, final, [])
+    key = interpretation_key(saved)
+    response = {'revision': final['revision']}
+    review = {'reviewer_id': 'a', 'key_hash': key['key_hash'], 'key_fields': ['target_views'],
+              'response_span': [0, 1]}
+    with pytest.raises(ValueError, match='two distinct'):
+        lock_understanding(key, response, review, {**review}, {'reviewer_id': 'c', 'reason': 'x'})
+    with pytest.raises(ValueError, match='matching interpretation key'):
+        lock_understanding(key, response, review, {**review, 'reviewer_id': 'b', 'key_hash': 'bad'},
+                           {'reviewer_id': 'c', 'reason': 'x'})
+    with pytest.raises(ValueError, match='final chart revision'):
+        lock_understanding(key, {'revision': before['revision']}, review,
+                           {**review, 'reviewer_id': 'b'}, {'reviewer_id': 'c', 'reason': 'x'})
+    locked = lock_understanding(key, response, review, {**review, 'reviewer_id': 'b'},
+                                {'reviewer_id': 'c', 'reason': 'x', 'labels': {'target_views': True}})
+    assert locked['status'] == 'locked' and locked['labels']['target_views'] is True

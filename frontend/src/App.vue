@@ -346,7 +346,7 @@ async function startVoice() {
   voiceConnecting.value = true
   try {
     await speaker.prepare()
-    microphone = new Microphone(data => send({ type: 'audio', data }), level => { microphoneLevel.value = level }, () => action(submitVoice))
+    microphone = new Microphone((data, meta) => send({ type: 'audio', data, ...meta }), level => { microphoneLevel.value = level }, () => action(submitVoice), clockSync.clockId)
     await microphone.prepare(); const context = await updateContext()
     send({ type: 'voice_start', mode: mode.value, ...context })
   } catch (error) {

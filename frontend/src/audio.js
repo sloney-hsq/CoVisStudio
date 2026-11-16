@@ -19,7 +19,7 @@ export function wavBlob(chunks, sampleRate = 24000) {
 }
 
 export class Microphone {
-  constructor(onChunk, onLevel, onLimit = () => {}) { this.onChunk = onChunk; this.onLevel = onLevel; this.onLimit = onLimit; this.running = false }
+  constructor(onChunk, onLevel, onLimit = () => {}, clockId = '') { this.onChunk = onChunk; this.onLevel = onLevel; this.onLimit = onLimit; this.clockId = clockId; this.running = false }
   async prepare() {
     this.stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true } })
     this.context = new AudioContext({ sampleRate: 16000 })
@@ -29,7 +29,10 @@ export class Microphone {
     this.worklet.port.onmessage = event => {
       if (event.data.type === 'paused') { this.paused(); return }
       if (event.data.type === 'limit_reached') { this.onLimit(); return }
-      this.onChunk(encodePCM(event.data.buffer))
+      this.onChunk(encodePCM(event.data.buffer), {
+        sequence: event.data.sequence, first_sample: event.data.first_sample,
+        sample_count: event.data.sample_count, capture_client_ms: performance.now(),
+        client_clock_id: this.clockId })
       this.onLevel(event.data.level || 0)
     }
     this.gain = this.context.createGain(); this.gain.gain.value = 0

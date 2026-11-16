@@ -211,11 +211,11 @@ class QwenRealtime:
             raise RuntimeError("Qwen: " + event["error"]["message"])
         return event
 
-    async def audio(self, pcm_b64):
+    async def audio(self, pcm_b64, metadata=None):
         if not self.audio_open and self.mode == "push_to_talk":
             await self._speech_started(None)
         self.audio_open = True
-        await self.on_event({'type': 'audio_input', 'data': pcm_b64, 'mode': self.mode})
+        await self.on_event({'type': 'audio_input', 'data': pcm_b64, 'mode': self.mode, 'capture': metadata})
         await self._send({"type": "input_audio_buffer.append", "audio": pcm_b64},
                          context={} if self.mode == 'live_voice' else None)
         if self.pending_image is not None:

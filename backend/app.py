@@ -712,7 +712,13 @@ class Workspace:
             origin = self.trace.origin() if event['mode'] == 'push_to_talk' else {}
             with self.trace.scope(origin):
                 info = self.trace.audio(event['data'], 'input', self.session['id'])
-                self.trace.record('audio_sent', stream_id=self.session['id'], **info)
+                capture = event.get('capture') or {}
+                sample_meta = {key: capture[key] for key in
+                    ('sequence', 'first_sample', 'sample_count', 'capture_client_ms', 'client_clock_id')
+                    if key in capture}
+                timing_precision = 'sample_locked' if sample_meta else 'coarse'
+                self.trace.record('audio_sent', stream_id=self.session['id'], **info,
+                                  capture_metadata=sample_meta, timing_precision=timing_precision)
             return
         if kind == 'provider_input':
             origin = event.get('context', self.trace.requests.get(expected_epoch, {})
@@ -1379,7 +1385,7 @@ def create_app(settings=None):
                     await ws.start_voice(message)
                 elif kind == 'audio':
                     if ws.voice:
-                        await ws.voice.audio(message['data'])
+                        await ws.voice.audio(message['data'], message)
                 elif kind == 'voice_commit':
                     await ws.voice.commit()
                 elif kind == 'voice_stop':

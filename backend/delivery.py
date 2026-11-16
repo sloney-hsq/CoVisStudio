@@ -106,3 +106,91 @@ def summarize_delivery(events):
         'interpretation': 'Commit, render, exposure, generated text and playback are independent observations. '
                           'Playback is not acoustic listening or comprehension. Control events do not grade semantic mismatch. '
                           'Earlier legitimate commits remain recorded after later revocation.'}
+
+
+def reference_context(events, snapshots, anchor_interval):
+    """Reconstruct browser-visible and audible state around a spoken reference.
+
+    Pure and offline: separates the online binding, the offline anchor interval
+    and the model evidence cutoff. Reports generated, played (never 'heard'),
+    rendered, committed and pending states with before/after/unknown ordering.
+    """
+    if anchor_interval == 'unknown':
+        timing_precision, ordering_ambiguities = 'unresolved', True
+        start_ms = end_ms = None
+    else:
+        start_ms, end_ms = anchor_interval['start_ms'], anchor_interval['end_ms']
+        uncertainty = anchor_interval.get('uncertainty_ms') or 0
+        if uncertainty and (end_ms - start_ms) < uncertainty:
+            timing_precision, ordering_ambiguities = 'unresolved', True
+        else:
+            timing_precision = anchor_interval.get('basis', 'sample_locked')
+            ordering_ambiguities = False
+
+    def order(ms):
+        if ms is None or start_ms is None:
+            return 'unknown'
+        return 'before' if ms < start_ms else 'during' if ms <= end_ms else 'after'
+
+    generated, played, rendered, committed, pending, selections = [], [], [], [], [], []
+    onset = None
+    for event in events:
+        name, ms = event['name'], event.get('server_ms')
+        item = {'index': event['index'], 'name': name, 'order': order(ms), 'server_ms': ms}
+        if name == 'speech_start' and onset is None:
+            onset = item
+        elif name in ('assistant_done', 'assistant_delta'):
+            generated.append({**item, 'text': event.get('text', '')})
+        elif name.startswith('playback_'):
+            played.append({**item, 'played_samples': event.get('played_samples'),
+                           'received_samples': event.get('received_samples'),
+                           'sample_start': event.get('sample_start'),
+                           'sample_end': event.get('sample_end')})
+        elif name == 'chart_rendered':
+            rendered.append({**item, 'revision': event.get('revision')})
+        elif name in ('tool_committed', 'undo', 'restore'):
+            committed.append({**item, 'revision': event.get('revision')})
+        elif name in ('revision_proposed', 'tool_started'):
+            pending.append(item)
+        elif name in ('selection', 'evidence_selected'):
+            selections.append({**item, 'reference': event.get('reference'),
+                               'evidence': event.get('evidence')})
+
+    visible_at = {}
+    for point, bound in (('at_start', start_ms), ('at_end', end_ms)):
+        visible_at[point] = None
+        if bound is None:
+            continue
+        for render in rendered:
+            if render['server_ms'] is not None and render['server_ms'] <= bound:
+                visible_at[point] = render['revision']
+
+    committed_not_yet_rendered = []
+    for commit in committed:
+        if commit['order'] in ('before', 'during') and commit['revision'] is not None:
+            if any(r['revision'] == commit['revision'] and r['order'] == 'after' for r in rendered):
+                committed_not_yet_rendered.append(commit['revision'])
+
+    played_prefix = [p for p in played if p['order'] in ('before', 'during')
+                     and p.get('played_samples') is not None]
+    received_unplayed = [p for p in played if p.get('received_samples') is not None
+                         and p.get('played_samples') is not None
+                         and p['received_samples'] > p['played_samples']]
+
+    return {
+        'schema': 'covis-reference-context-1',
+        'anchor_interval': deepcopy(anchor_interval),
+        'timing_precision': timing_precision,
+        'ordering_ambiguities': ordering_ambiguities,
+        'online_binding': onset,
+        'generated': generated,
+        'played': played,
+        'played_audio_prefix': played_prefix,
+        'received_unplayed': received_unplayed,
+        'rendered': rendered,
+        'committed': committed,
+        'pending': pending,
+        'active_ui_selection_at_anchor': selections,
+        'visible_chart_versions': visible_at,
+        'committed_not_yet_rendered': committed_not_yet_rendered,
+    }
