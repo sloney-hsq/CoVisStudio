@@ -1,5 +1,49 @@
 # Implementation and acceptance — 2026-11-13
 
+## Amendment A1, dual ground truth, temporal anchoring and shared prompt — 2026-11-16
+
+Four commits, all local-only (zero paid API calls), pushed to `origin`.
+
+- **Amendment A1** (`docs/amendments/A1-single-primary-2026-11-15.md`): terminal
+  intent-consistency is the sole primary outcome; interface-assisted interpretation,
+  repair funnel, interaction cost/time and public-constraint completion are
+  secondary; overlap, reference dependence, `first_publication_consistent` and
+  window expiry are descriptive only. Paired B2-minus-B0 estimand with cluster
+  bootstrap and Manski bounds; no Holm adjustment. `formal_manifest()` now carries
+  the `analysis_plan` block. `FORMAL_STUDY.md`, `UNIFIED_RESEARCH_PROTOCOL.md`,
+  `README.md` and `AGENTS.md` updated to match.
+- **Scoring & dual ground truth** (`backend/intent_scoring.py`, `app.py`,
+  `prepare_intent_review.py`, `intentReview.js`, `IntentEpisodeReview.vue`):
+  `terminal_packet`, `terminal_coverage` and `score_terminal` (reusing
+  `compare_state` against trial-start/trial-finished states); `no_change`
+  (episode) and `retain_all` (terminal) dispositions with `disposition="revise"`
+  default; `source_requirement` defaults to `none` (reason required only for
+  `exact`/`members_only`); `interpretation_key` + `lock_understanding`;
+  `first_commit_correct` renamed to `first_publication_consistent` (legacy
+  `score.json` still read); `view_overrides`/`reference_interval` synced across
+  backend and frontend templates.
+- **Temporal anchoring** (`delivery.py`, `app.py`, `providers.py`, `microphone.js`,
+  `audio.js`, `App.vue`): pure `reference_context(events, snapshots,
+  anchor_interval)` reports generated/played (never "heard")/rendered/committed/
+  pending states with before/after/unknown ordering and committed-not-yet-rendered
+  flags; capture sample-clock metadata (`sequence`, `first_sample`, `sample_count`,
+  `capture_client_ms`, `client_clock_id`) forwarded into local `audio_sent` logs
+  only, degrading to `coarse`.
+- **Shared prompt, tool contracts, frontend** (`app.py`, `revisions.py`,
+  `style.css`, `RevisionPanel.vue`, `revision.js`): INSTRUCTIONS replaced with the
+  6-sentence shared prompt; domain rules (inclusive/exclusive dates, within-group
+  rates, freight exclusion) moved into the `revise_analysis` tool description;
+  `unbound_preview` removed from participant-reachable paths; 12px font floor and
+  4.5:1 contrast floor enforced with `scripts/audit_text_floor.py`.
+- **Verification:** **411 backend tests** passed (7 new: reference_context cases
+  1–4, terminal scoring/interpretation key, formal manifest analysis plan and
+  repeat accounting); **50 frontend tests** passed; production build passed with
+  the existing ECharts chunk-size advisory; `audit_text_floor.py` reports no
+  violations. No real Qwen call, no participant evidence; human intent/listening
+  review remains pending.
+
+The entries below preserve earlier implementation stages and their original outcomes.
+
 ## Source provenance and correction UI — local verification only
 
 - The shared compiler now records selected versus consumed source identity,
