@@ -32,12 +32,17 @@ Keep code direct: no automatic retries, speculative compatibility branches,
 recovery frameworks or production mock models. Keep normal domain/schema validation,
 private candidates, atomic commits and stale-response suppression.
 
-Use flat revise_analysis for analytical edits. Keep the declared model top_n
+The model sees six tools (backend/model_tools.py): read_dashboard, list_evidence_candidates,
+revise_analysis, create_chart, style_charts, manage_dashboard. Internal and REST tool names
+are unchanged. Use flat revise_analysis for analytical edits. Keep the declared model top_n
 decimal-string/null contract and domain integer/null contract; compile once at the
 shared gateway. Do not silently repair nested JSON strings or add unsupported
 forced-tool fields. Failed tools do not automatically trigger another model response.
 
-Speech onset revokes old publication permission and stops playback. Previously
+Speech onset revokes old publication permission and stops playback. Exception (v5,
+docs/CONTRACT.md): in live voice, an onset over audible assistant speech first holds
+publication and pauses playback; a short acknowledgement releases the hold, anything else
+revokes exactly as an immediate onset, with the binding fixed at onset. Previously
 legal commits remain legal. Receipt/outcome association is by request ID.
 Within the provider's continuing VAD group, only the first onset binds the default
 reference/evidence. Later clicks are recorded and apply to the next group; they do
@@ -61,7 +66,8 @@ controls separate from participant analysis.
 
 Record card exposure, opening and successful application separately. Never infer
 reading from exposure. Keep explicit task start/end and one <=60-second voice
-window inside the 480-second task; input recordings are <=10 seconds. A task timer
+window inside the 480-second task (a diagnostic COVIS_VOICE_BUDGET_SECONDS never applies to
+assigned formal tasks); input recordings are <=10 seconds. A task timer
 does not expand the voice budget.
 
 Independent intent locks, terminal episode selection and SQL scores are private

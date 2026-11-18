@@ -44,6 +44,23 @@ The participant interface is designed for a 27-inch 4K monitor, including Window
 scaling at 1920 and 2560 CSS pixels. Rendered chart state and system interpretation
 are distinct from user approval.
 
+## Voice re-planning scenarios (local-only, 2026-11-17)
+
+The model now sees six tools (`read_dashboard`, `list_evidence_candidates`, `revise_analysis`,
+`create_chart`, `style_charts`, `manage_dashboard`). In live voice a short acknowledgement such as
+"mm-hm" over assistant speech no longer cancels work. Sixteen multi-turn scenarios
+([spec](docs/VOICE_REPLAN_SCENARIOS.md)) test intent re-planning under barge-in, self-repair,
+pauses and backchannels:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\prepare_scenario_speech.py --output-dir traces\scenario-speech            # text only
+.\.venv\Scripts\python.exe scripts\run_voice_scenarios.py --mode text --output-dir traces\scenario-dry       # preflight
+# Paid runs need explicit authorization: add --run-real --env-file .env.local (and --audio-dir for voice).
+```
+
+Researchers can also open **Scenarios** in the workspace to set one up and score the session.
+None of this has been run against a real model yet.
+
 ## Install and configure
 
 Requirements: Python 3.11+, Node.js 20+, and the Olist CSV dataset.

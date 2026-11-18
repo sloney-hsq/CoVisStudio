@@ -7,27 +7,60 @@ from pathlib import Path
 import pytest
 from jsonschema import ValidationError, validate
 
-from backend.category_sets import CATEGORY_SET_TOOL_DEFINITIONS
 from backend.charts import TOOL_DEFINITIONS
 from backend.data import SOURCE_SCHEMA
-from backend.evidence_candidates import EVIDENCE_CANDIDATE_TOOL_DEFINITIONS
 from backend.model_contract import TOP_N_PATHS, compile_model_arguments, model_tool_definitions
+from backend.model_tools import MODEL_TOOL_DEFINITIONS, MODEL_TOOL_NAMES, to_internal
 from backend.revisions import REVISION_TOOL_DEFINITIONS, normalize_revise_analysis, prepare_revision
 from test_revisions import real_data, regional_workspace
 
 
-DOMAIN_TOOLS = [*TOOL_DEFINITIONS, *REVISION_TOOL_DEFINITIONS,
-                *CATEGORY_SET_TOOL_DEFINITIONS, *EVIDENCE_CANDIDATE_TOOL_DEFINITIONS]
-MODEL_TOOLS = model_tool_definitions(DOMAIN_TOOLS)
+DOMAIN_TOOLS = [*TOOL_DEFINITIONS, *REVISION_TOOL_DEFINITIONS]
+MODEL_TOOLS = model_tool_definitions(MODEL_TOOL_DEFINITIONS)
+
+
+def test_six_tool_surface_and_only_query_tools_carry_counts():
+    assert MODEL_TOOL_NAMES == ("read_dashboard", "list_evidence_candidates", "revise_analysis",
+                                "create_chart", "style_charts", "manage_dashboard")
+    assert set(TOP_N_PATHS) == {"revise_analysis", "create_chart"}
+    style = next(t for t in MODEL_TOOLS if t["function"]["name"] == "style_charts")["function"]["parameters"]
+    assert "source" not in style["properties"]
+
+
+def test_unknown_or_retired_model_tool_is_a_validation_failure():
+    for retired in ("edit_charts", "preview_revision", "apply_category_set", "read_history"):
+        with pytest.raises(ValidationError):
+            compile_model_arguments(retired, {}, MODEL_TOOLS)
+
+
+@pytest.mark.parametrize("name,args,internal,internal_args", [
+    ("read_dashboard", {}, "read_dashboard", {}),
+    ("read_dashboard", {"revision": 2}, "read_history", {"revision": 2}),
+    ("style_charts", {"view_ids": ["v1"], "chart_type": "line"}, "edit_charts",
+     {"view_ids": ["v1"], "patch": {"chart_type": "line"}}),
+    ("manage_dashboard", {"action": "remove", "view_ids": ["v3"]}, "remove_charts", {"view_ids": ["v3"]}),
+    ("manage_dashboard", {"action": "arrange", "view_ids": ["v2", "v1"], "columns": 2}, "arrange_charts",
+     {"view_ids": ["v2", "v1"], "columns": 2}),
+    ("manage_dashboard", {"action": "rename", "title": "MG review"}, "set_dashboard", {"title": "MG review"}),
+])
+def test_model_calls_map_to_unchanged_internal_tools(name, args, internal, internal_args):
+    assert to_internal(name, compile_model_arguments(name, args, MODEL_TOOLS)) == (internal, internal_args)
+
+
+@pytest.mark.parametrize("name,args", [
+    ("style_charts", {"view_ids": ["v1"]}),
+    ("manage_dashboard", {"action": "remove"}),
+    ("manage_dashboard", {"action": "arrange", "view_ids": ["v1"]}),
+    ("manage_dashboard", {"action": "rename"}),
+])
+def test_incomplete_flat_combinations_are_rejected(name, args):
+    with pytest.raises(ValueError):
+        to_internal(name, compile_model_arguments(name, args, MODEL_TOOLS))
 
 
 @pytest.mark.parametrize("name,args", [
     ("revise_analysis", {"view_ids": ["v2"], "member_action": "rerank", "top_n": "3", "rank_by": "orders"}),
-    ("preview_revision", {"view_ids": ["v2"], "member_action": "rerank", "source_patch": {"top_n": "3", "rank_by": "orders"}}),
     ("create_chart", {"title": "Orders", "chart_type": "bar", "source": {"top_n": "3"}}),
-    ("edit_charts", {"view_ids": ["v2"], "patch": {"source": {"top_n": "3"}}}),
-    ("apply_category_set", {"set_id": "cs1", "view_ids": ["v2"], "source_patch": {"top_n": "3"}}),
-    ("apply_evidence_candidate", {"candidate_id": "set:cs1", "view_ids": ["v2"], "source_patch": {"top_n": "3"}}),
 ])
 def test_all_source_tools_compile_same_explicit_wire_count(name, args):
     original = deepcopy(args)

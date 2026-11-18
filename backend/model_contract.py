@@ -2,17 +2,14 @@
 
 from copy import deepcopy
 
-from jsonschema import validate
+from jsonschema import ValidationError, validate
 
 
-# These are the model tools that expose the shared domain source schema.
+# The advertised model tools that expose the shared domain source schema
+# (backend/model_tools.py). Internal and REST tools keep strict integer counts.
 TOP_N_PATHS = {
     "revise_analysis": ("top_n",),
-    "preview_revision": ("source_patch", "top_n"),
     "create_chart": ("source", "top_n"),
-    "edit_charts": ("patch", "source", "top_n"),
-    "apply_category_set": ("source_patch", "top_n"),
-    "apply_evidence_candidate": ("source_patch", "top_n"),
 }
 MODEL_TOP_N_SCHEMA = {
     "type": ["string", "null"], "pattern": r"^[1-9][0-9]*(?![\s\S])",
@@ -42,8 +39,10 @@ def compile_model_arguments(name, arguments, definitions):
     This accepts no numeric alternative and performs no string/object repair. The caller
     archives native arguments before this boundary; the input object stays untouched.
     """
-    schema = next(tool["function"]["parameters"] for tool in definitions
-                  if tool["function"]["name"] == name)
+    schema = next((tool["function"]["parameters"] for tool in definitions
+                   if tool["function"]["name"] == name), None)
+    if schema is None:
+        raise ValidationError(f"Unknown tool {name!r}; use one of the advertised tools.")
     validate(arguments, schema)
     compiled = deepcopy(arguments)
     path = TOP_N_PATHS.get(name)

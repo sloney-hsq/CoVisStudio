@@ -5,6 +5,7 @@ import csv
 from io import StringIO
 
 from .observations import interaction_summary
+from .model_tools import MODEL_TOOL_NAMES
 from .formal_tasks import (FORMAL_PROTOCOL, FORMAL_MATERIALS_PROTOCOL, VOICE_BUDGET_SECONDS,
                            content_sha256, formal_task_brief, formal_materials_manifest)
 
@@ -308,7 +309,8 @@ def formal_manifest():
         },
         shared_capabilities={
             'voice_model': 'qwen3.8-omni-flash-realtime',
-            'saved_sets': ['save_category_set', 'list_category_sets', 'apply_category_set'],
+            'model_tools': list(MODEL_TOOL_NAMES),
+            'saved_sets': 'Saved in the interface; the model reuses them through list_evidence_candidates and revise_analysis.',
             'execution': 'Shared evidence-candidate resolution and revision compiler.',
             'history': 'Retained native history with exact outgoing archives; no claim of frozen native context.',
         },

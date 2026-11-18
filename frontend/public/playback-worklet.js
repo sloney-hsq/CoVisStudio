@@ -1,12 +1,16 @@
 // Receipts measure PCM handed to the output graph, not acoustic listening.
 class Playback extends AudioWorkletProcessor {
   constructor() {
-    super(); this.queue = []; this.generation = 0
+    super(); this.queue = []; this.generation = 0; this.paused = false
     this.port.onmessage = ({ data }) => {
       if (data.type === 'clear' && data.generation_epoch >= this.generation) {
         for (const item of this.queue) this.report('ended', item, true, currentTime)
-        this.queue = []; this.generation = data.generation_epoch
+        this.queue = []; this.generation = data.generation_epoch; this.paused = false
         this.port.postMessage({ type: 'cleared', generation_epoch: this.generation })
+      } else if (data.type === 'pause' || data.type === 'resume') {
+        // A held utterance pauses output without advancing source cursors.
+        this.paused = data.type === 'pause'
+        this.port.postMessage({ type: data.type === 'pause' ? 'paused' : 'resumed', context_time: currentTime })
       } else if (data.type === 'audio' && data.generation_epoch === this.generation) {
         this.queue.push({ ...data, cursor: 0, reported: 0, started: false })
       }
@@ -19,6 +23,7 @@ class Playback extends AudioWorkletProcessor {
   }
   process(inputs, outputs) {
     const out = outputs[0][0]; out.fill(0)
+    if (this.paused) return true
     for (let i = 0; i < out.length; i++) {
       const item = this.queue[0]
       if (!item) break

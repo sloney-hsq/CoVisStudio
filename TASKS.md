@@ -1,5 +1,37 @@
 # Implementation and acceptance — 2026-11-13
 
+## Voice re-planning rebuild: six tools, acknowledgement hold, 16 scenarios — 2026-11-17, local-only
+
+- **Six model tools** (`backend/model_tools.py`): read_dashboard (optional revision),
+  list_evidence_candidates, revise_analysis, create_chart, style_charts, manage_dashboard; down from
+  15 advertised routes. Calls map to the unchanged internal tools after top_n compilation
+  (`model_tool_mapped`). Retired names fail as one tool receipt. The model no longer saves sets;
+  interface-saved sets are reused through revise_analysis candidate IDs. Prompt rewritten around the
+  six tools, still identical in both conditions. `docs/formal_manifest.json` regenerated (it was
+  also stale for the A1 analysis plan).
+- **Acknowledgement hold**: an onset over audible assistant speech holds publication and pauses the
+  worklet; a short acknowledgement resumes, anything else revokes with onset binding. Diagnostic
+  voice budget `COVIS_VOICE_BUDGET_SECONDS`; formal windows stay 60 s. See docs/CONTRACT.md v5.
+- **Scenarios**: `docs/voice_replan_scenarios.json` / `.md` (16 scenarios, 113 turns, 58 user
+  utterances; generator `scripts/build_voice_scenarios.py`), `backend/scenarios.py` (setup, cumulative
+  expected state, per-turn first-cause scoring), researcher routes and `ScenarioPanel.vue`,
+  `scripts/prepare_scenario_speech.py` (TTS clips; dry by default) and
+  `scripts/run_voice_scenarios.py` (voice via the real browser path, or text twin; dry by default).
+- **Tests updated** for the new surface: test_model_contract, test_tool_contracts, test_model_flow
+  (model wire now revise_analysis), test_business_model_flow (saved set via REST, reuse via
+  candidate ID). New: test_backchannel_hold (17), test_voice_scenarios (39), frontend scenarios.test.js.
+- **Verification actually run** (sandbox without duckdb/fastapi/node_modules; package installs blocked):
+  test_backchannel_hold 17 passed and test_voice_scenarios 39 passed with only httpx/websockets/duckdb
+  import stubs (no stubbed logic); test_model_contract 28 passed, its 6 data/Workspace tests not run;
+  test_flat_revision 11 passed, 5 data tests not run; all 14 frontend unit test files passed;
+  py_compile on changed Python; dry runs of both new scripts. **Not run**: the full backend suite,
+  any Workspace/data/browser test, the frontend build (ScenarioPanel.vue is uncompiled), any model
+  call. Older scripted drivers that still send retired model tool names
+  (verify_live_browser_local, verify_playback_revision, verify_browser_voice, verify_assigned_voice)
+  now receive failed receipts by design and need updating before reuse.
+
+The entries below preserve earlier implementation stages and their original outcomes.
+
 ## Amendment A1, dual ground truth, temporal anchoring and shared prompt — 2026-11-16
 
 Four commits, all local-only (zero paid API calls), pushed to `origin`.

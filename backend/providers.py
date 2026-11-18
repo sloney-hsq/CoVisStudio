@@ -13,6 +13,8 @@ from uuid import uuid4
 import httpx
 from websockets.asyncio.client import connect
 
+from .backchannel import is_backchannel
+
 
 class QwenText:
     def __init__(self, settings):
@@ -135,6 +137,7 @@ class QwenRealtime:
         self.speech_failed = False
         self.response_started_since_speech = False
         self.transcript_epoch = None
+        self.hold = None
         self.calls = {}
         self.jobs = set()
         self.audio_open = False
@@ -255,6 +258,7 @@ class QwenRealtime:
         """Revoke pending tool/voice delivery; already committed chart state stays."""
         self.epoch += 1
         self.wanted = None
+        self.hold = None
         self.speech_items.clear()
         self.speech_failed = False
         if self.active is not None:
@@ -262,7 +266,7 @@ class QwenRealtime:
 
     async def _speech_started(self, item_id, **offsets):
         # VAD fragments before assistant delivery remain one continuing utterance.
-        if self.response_started_since_speech:
+        if self.response_started_since_speech and self.hold is None:
             self.speech_items.clear()
             self.speech_failed = False
         continuation = bool(self.speech_items)
@@ -270,16 +274,48 @@ class QwenRealtime:
         self.transcript_epoch = None
         if item_id is not None:
             self.speech_items[item_id] = None
+        group = next(iter(self.speech_items), item_id)
+        # Live voice over audible assistant speech: hold publication and pause playback
+        # until the transcript shows whether this is a short acknowledgement. The
+        # Workspace decides whether a hold applies (assistant audible, hold enabled).
+        if self.mode == "live_voice" and item_id is not None:
+            if self.hold is None and not continuation:
+                decision = await self.on_event({"type": "speech_hold", "item_id": item_id,
+                                                "continuation": continuation, "speech_group_id": group, **offsets})
+                if decision and decision.get("hold"):
+                    self.hold = {"item_id": item_id, "continuation": continuation, "offsets": offsets}
+            if self.hold is not None:
+                self.item_epochs[item_id] = self.epoch
+                return
+        await self._revoke_for_speech(item_id, continuation, group, offsets)
+
+    async def _revoke_for_speech(self, item_id, continuation, group, offsets, held=False):
         self.epoch += 1
         self.wanted = None
         if item_id is not None:
             self.item_epochs[item_id] = self.epoch
         # Revoke Workspace permissions and stop local playback before network I/O.
         await self.on_event({"type": "speech_start", "item_id": item_id,
-                             "continuation": continuation,
-                             "speech_group_id": next(iter(self.speech_items), item_id), **offsets})
+                             "continuation": continuation, "speech_group_id": group, **offsets,
+                             **({"held": True} if held else {})})
         if self.active is not None and self.active not in self.draining:
             await self._send({"type": "response.cancel", "response_id": self.active})
+
+    async def _resolve_hold(self, text, item_ids):
+        """Return True when the held utterance was an acknowledgement and is finished."""
+        hold, self.hold = self.hold, None
+        if text and is_backchannel(text):
+            self.speech_items.clear()
+            self.speech_failed = False
+            # The assistant keeps the floor; the next onset starts a new speech group.
+            self.response_started_since_speech = True
+            await self.on_event({"type": "backchannel", "text": text, "item_ids": item_ids,
+                                 "speech_group_id": item_ids[0] if item_ids else hold["item_id"]})
+            return True
+        await self._revoke_for_speech(hold["item_id"], hold["continuation"],
+                                      item_ids[0] if item_ids else hold["item_id"], hold["offsets"], held=True)
+        self.transcript_epoch = self.epoch
+        return False
 
     async def _request_response(self, epoch):
         if not self.closed and epoch == self.epoch:
@@ -303,6 +339,11 @@ class QwenRealtime:
         if self.transcript_epoch != self.epoch or any(text is None for text in self.speech_items.values()):
             return
         item_ids = list(self.speech_items)
+        if self.hold is not None:
+            text = '' if self.speech_failed else ' '.join(
+                text.strip() for text in self.speech_items.values() if text.strip())
+            if await self._resolve_hold(text, item_ids):
+                return
         if self.speech_failed:
             self.speech_items.clear()
             self.speech_failed = False

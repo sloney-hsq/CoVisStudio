@@ -1,5 +1,47 @@
 # Integration contract (v4 — assigned experiments and unified reports)
 
+## v5 extension — six model tools, acknowledgement hold, re-planning scenarios (2026-11-17, local-only)
+
+**Model tool surface** (`backend/model_tools.py`). Both conditions advertise exactly six tools:
+`read_dashboard({revision?})`, `list_evidence_candidates({})`, `revise_analysis(flat)`,
+`create_chart({title,chart_type,source,style?})`, `style_charts({view_ids,title?,chart_type?,style?})`
+and `manage_dashboard({action: remove|arrange|rename, view_ids?, columns?, title?})`. After the
+existing top_n compilation, `to_internal` maps each call to the unchanged internal tool
+(`read_dashboard` without revision also returns the version index; with revision it reads that
+version; `style_charts` → `edit_charts` with no source; `manage_dashboard` → `remove_charts` /
+`arrange_charts` / `set_dashboard`) and records `model_tool_mapped`. Every query change goes through
+`revise_analysis`; saved sets and earlier charts are reused through its `candidate_id`. The model
+no longer saves sets. A retired or unknown name is one failed tool receipt. Internal names, REST
+routes and manual browser actions are unchanged. `top_n` string compilation now covers the two
+advertised tools that expose it (`revise_analysis`, `create_chart`).
+
+**Acknowledgement hold** (`backend/backchannel.py`, `providers.py`, `app.py`). In live voice, a speech
+onset while assistant audio is audible (browser `playback_start` without `playback_end/stopped`)
+emits `speech_hold`: the Workspace fixes the reference/evidence binding at onset, clears the
+publication gate (no commit, preview or apply can publish) and sends `hold_audio` (the worklet
+pauses without advancing cursors). The completed transcript decides. A short acknowledgement
+(≤3 tokens from a fixed list; never yes/no/wait/stop) emits `backchannel`: the gate reopens,
+`resume_audio` resumes playback, `backchannel_ignored` is recorded, no request is accepted and no
+response is created. Anything else, including a failed transcription, emits the deferred
+`speech_start` with `held: true` and the onset item/offsets, then proceeds exactly as an immediate
+onset (epoch advance, revocation, stop_audio, response.cancel). Onsets with no audible assistant,
+push-to-talk and continuing fragments keep the immediate path. `COVIS_BACKCHANNEL_HOLD=0`
+disables the hold; each session records `backchannel_hold`.
+
+**Voice budget.** Formal assigned windows stay at 60 s. Other sessions use
+`COVIS_VOICE_BUDGET_SECONDS` (default 60); `voice_budget_set` records the value and whether it is
+diagnostic.
+
+**Scenarios** (`backend/scenarios.py`, `docs/voice_replan_scenarios.json`). Researcher routes:
+`GET /api/scenarios` (utterances and timing only), `POST /api/scenarios/{id}/setup {mode, condition}`
+(reset, then build history and current canvas through real chart operations) and
+`POST /api/scenarios/{id}/score {turn_windows?, codings?}`. Scores compare each user turn's
+committed state with cumulative expected sources (members resolved from real snapshots or real
+queries; `played:` prefixes require human coding) and assign one first cause: ASR, segmentation/
+timing, tool contract or decision. Spoken claims and clarifying questions remain human-coded.
+Scenario goals and ground truth never enter model context.
+
+
 Execution-fact extension: every prepared model context includes `execution_state`
 with current public revision, this request's commit revisions and recent settled
 outcomes. Native superseded receipts retain their original request/call association
@@ -27,7 +69,7 @@ Stage 1 update (2026-11-13): [STAGE1_IMPLEMENTATION.md](STAGE1_IMPLEMENTATION.md
 
 Source shape: `{metric: 'orders'|'revenue'|'low_review_rate'|'avg_delivery_days', dimension: 'category'|'month'|'state', region: 'SP'|null, start:'2017-01-01', end:'2018-01-01', status:'delivered', categories: null|[category IDs], top_n: 5|null, rank_by:'orders'|metric}`. Dates are start-inclusive/end-exclusive. Fixed categories and dynamic top_n are mutually exclusive. Category order is preserved for a fixed list.
 
-The model wire contract deliberately differs in one representation: `top_n` is a positive decimal string (for example `"3"`) or null. `backend/model_contract.py` advertises this in all six tools exposing the field. `Workspace.execute_model` validates the advertised schema and compiles the declared string once to the domain integer; `model_arguments_compiled` records both raw and compiled arguments. Null clears ranking and omission preserves the current rule. Numeric alternatives, decimal strings and malformed text are rejected at this boundary; there is no permissive type fallback or corrective model retry. Manual editing, domain queries and stored sources keep the strict integer/null contract above. Both text and Realtime providers and both study conditions use the same gateway. Existing integer-schema failures remain failures in their original archives.
+The model wire contract deliberately differs in one representation: `top_n` is a positive decimal string (for example `"3"`) or null. `backend/model_contract.py` advertises this in the advertised tools exposing the field (v5: `revise_analysis`, `create_chart`). `Workspace.execute_model` validates the advertised schema and compiles the declared string once to the domain integer; `model_arguments_compiled` records both raw and compiled arguments. Null clears ranking and omission preserves the current rule. Numeric alternatives, decimal strings and malformed text are rejected at this boundary; there is no permissive type fallback or corrective model retry. Manual editing, domain queries and stored sources keep the strict integer/null contract above. Both text and Realtime providers and both study conditions use the same gateway. Existing integer-schema failures remain failures in their original archives.
 
 `ChartStore(data)` owns `state = {revision:0,title:'Untitled dashboard',views:[]}`. `snapshot()` deepcopies state. `prepare(name,args,reference=None)` returns `{base_revision,candidate,result}` without changing public state; `commit(prepared)` installs candidate, increments revision and returns `{state,result}`; reject stale base revision. Pure reads return candidate null. Root handles request-epoch permissions. `restore(snapshot)` publishes a new revision. No undo history duplication in store.
 

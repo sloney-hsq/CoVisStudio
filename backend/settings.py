@@ -20,4 +20,7 @@ def load_settings(env_file=None):
         'voice': values.get('QWEN_VOICE', 'Maia'),
         'data_dir': Path(values.get('OLIST_DATA_DIR', 'C:/VerbalVis/datasets/olist/data')),
         'trace_dir': ROOT / 'traces',
+        # Diagnostic runs only; formal study windows stay at 60 s regardless.
+        'voice_budget_seconds': int(values.get('COVIS_VOICE_BUDGET_SECONDS', '60')),
+        'backchannel_hold': values.get('COVIS_BACKCHANNEL_HOLD', '1') != '0',
     }

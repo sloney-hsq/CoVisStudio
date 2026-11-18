@@ -17,11 +17,9 @@ from test_model_flow import application, receive_until
 
 EVIDENCE = (Path(__file__).resolve().parents[1] / "traces" / "business-model-flow" /
             datetime.now().strftime("%Y%m%d-%H%M%S-%f"))
-SET_TOOLS = {"save_category_set", "list_category_sets", "apply_category_set"}
 REQUEST = (
-    "Save the categories from the first complete SP dashboard as SP priority categories. "
-    "Reuse that saved set in current charts 2 and 3. Keep MG, each chart's current metric, "
-    "dates and status, and leave chart 1 unchanged."
+    "Reuse the saved SP priority categories in current charts 2 and 3. Keep MG, each chart's "
+    "current metric, dates and status, and leave chart 1 unchanged."
 )
 
 
@@ -42,36 +40,25 @@ class CategorySetTextPeer:
         if step == 1:
             text = body["messages"][-1]["content"][0]["text"]
             self.context = json.loads(text.split("\nVisible reference:\n", 1)[1])
-            versions = [version for version in self.context["history_index"]
-                        if len(version["views"]) == 3 and
-                        all(view["source"]["region"] == "SP" for view in version["views"])]
-            revision = min(version["revision"] for version in versions)
-            name, args = "read_history", {"revision": revision}
+            name, args = "list_evidence_candidates", {}
         elif step == 2:
-            state = self.receipts[-1]["result"]
-            view = next(view for view in state["views"] if view["number"] == 1)
-            name, args = "save_category_set", {
-                "name": "SP priority categories", "revision": state["revision"], "view_id": view["id"],
-            }
-        elif step == 3:
-            self.saved = self.receipts[-1]["result"]["category_set"]
-            name, args = "list_category_sets", {}
-        elif step == 4:
-            saved = self.receipts[-1]["result"]["category_sets"]
-            assert saved == [self.saved]
+            sets = [candidate for candidate in self.receipts[-1]["result"]["candidates"]
+                    if candidate["origin"] == "saved_set"]
+            assert len(sets) == 1
+            self.saved = sets[0]
             targets = [view["id"] for view in self.context["current_dashboard"]["views"]
                        if view["number"] in (2, 3)]
-            name, args = "apply_category_set", {"set_id": saved[0]["id"], "view_ids": targets}
-        elif step == 5:
+            name, args = "revise_analysis", {"view_ids": targets, "member_action": "use_evidence",
+                                             "candidate_id": self.saved["candidate_id"]}
+        elif step == 3:
             assert self.receipts[-1]["committed"] is True
-            assert self.receipts[-1]["result"]["category_set"] == self.saved
             name, args = "read_dashboard", {}
         else:
-            assert step == 6
+            assert step == 4
             views = self.receipts[-1]["result"]["views"]
             second, third = (next(view for view in views if view["number"] == number) for number in (2, 3))
             assert second["source"]["region"] == third["source"]["region"]
-            self.reply = (f"Charts 2 and 3 now use saved set {self.saved['id']} in "
+            self.reply = (f"Charts 2 and 3 now use {self.saved['label']} in "
                           f"{second['source']['region']}. Their metrics remain "
                           f"{second['source']['metric']} and {third['source']['metric']}. "
                           "This is a scripted local protocol response.")
@@ -122,6 +109,10 @@ def test_saved_sets_through_local_text_provider_in_every_condition(condition):
             })
             seeded.raise_for_status()
             historical = seeded.json()["state"]
+            saved = await http.post("/api/category-sets", json={
+                "name": "SP priority categories", "revision": historical["revision"], "view_id": "v1",
+            })
+            saved.raise_for_status()
             current = await http.post("/api/tools", json={"name": "edit_charts", "arguments": {
                 "view_ids": ["v1", "v2", "v3"], "patch": {"source": {
                     "region": "MG", "categories": None, "top_n": 3, "rank_by": "orders",
@@ -141,37 +132,34 @@ def test_saved_sets_through_local_text_provider_in_every_condition(condition):
                     commit = await receive_until(browser, "state")
                     answer = await receive_until(browser, "assistant_done", lambda event: bool(event.get("text")))
                     assert answer["text"] == scripted.reply
-                    assert len(scripted.requests) == 6
-                    assert len(scripted.receipts) == 5
+                    assert len(scripted.requests) == 4
+                    assert len(scripted.receipts) == 3
                     assert all(request["tools"] == MODEL_TOOLS for request in scripted.requests)
-                    assert SET_TOOLS <= {tool["function"]["name"] for tool in MODEL_TOOLS}
                     assert "condition" not in scripted.context
                     assert workspace.session["condition"] == condition
-                    assert scripted.receipts[0]["result"] == historical
                     assert scripted.saved["members"] == historical_members
                     assert scripted.saved["evidence"]["revision"] == historical["revision"]
                     assert scripted.saved["evidence"]["source"]["region"] == "SP"
-                    assert [receipt["committed"] for receipt in scripted.receipts] == [False, False, False, True, False]
+                    assert [receipt["committed"] for receipt in scripted.receipts] == [False, True, False]
 
                     after = workspace.store.snapshot()
                     assert after == commit["state"]
-                    assert after == scripted.receipts[3]["state"]
+                    assert after == scripted.receipts[1]["state"]
                     assert after["revision"] == before["revision"] + 1
                     assert after["views"][0] == before["views"][0]
-                    assert scripted.receipts[4]["result"]["views"] == after["views"]
+                    assert scripted.receipts[2]["result"]["views"] == after["views"]
                     for old, view in zip(before["views"][1:], after["views"][1:]):
                         assert view["source"] == {**old["source"], "categories": historical_members, "top_n": None}
                         assert view["data"]["selection"]["members"] == historical_members
                         assert numeric_rows_equal(view["data"]["rows"], category_rows(workspace.data, view["source"]))
                     calls = [event for event in workspace.trace.events if event["name"] == "tool_started" and event["actor"] == "model"]
                     assert [event["tool"] for event in calls] == [
-                        "read_history", "save_category_set", "list_category_sets", "apply_category_set", "read_dashboard",
+                        "list_evidence_candidates", "preview_revision", "apply_revision", "read_dashboard",
                     ]
-                    assert calls[3]["arguments"] == {"set_id": scripted.saved["id"], "view_ids": ["v2", "v3"]}
+                    assert calls[1]["arguments"]["candidate_id"] == scripted.saved["candidate_id"]
                     publications = [event for event in workspace.trace.events if event["name"] == "tool_committed" and event["actor"] == "model"]
-                    assert len(publications) == 1 and publications[0]["tool"] == "apply_category_set"
-                    assert not any(event["name"] == "revision_proposed" for event in workspace.trace.events)
-                    assert workspace.proposal is None
+                    assert len(publications) == 1 and publications[0]["tool"] == "apply_revision"
+                    assert workspace.proposal["status"] == "committed"
                     assert workspace.voice is None
                     completed = True
             finally:
@@ -185,11 +173,11 @@ def test_saved_sets_through_local_text_provider_in_every_condition(condition):
                     "actual_browser_rendering": False, "human_listening": "not tested",
                     "initial_revision": before["revision"], "final_revision": workspace.store.state["revision"],
                     "historical_evidence_revision": historical["revision"],
-                    "checks_passed": (["same tools in every condition", "real history read before save",
-                                       "returned set ID applied without category transcription", "only v2/v3 edited",
+                    "checks_passed": (["same six tools in every condition", "interface-saved set listed as a candidate",
+                                       "candidate ID applied without category transcription", "only v2/v3 edited",
                                        "current MG and each metric/date/status retained", "independent raw-table values checked",
                                        "actual committed receipt returned to peer", "read_dashboard before fixture response",
-                                       "no revision proposal required"] if completed else []),
+                                       "single revise_analysis call committed"] if completed else []),
                 })
 
     try:

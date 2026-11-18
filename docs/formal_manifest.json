@@ -3628,11 +3628,15 @@
   },
   "shared_capabilities": {
     "voice_model": "qwen3.8-omni-flash-realtime",
-    "saved_sets": [
-      "save_category_set",
-      "list_category_sets",
-      "apply_category_set"
+    "model_tools": [
+      "read_dashboard",
+      "list_evidence_candidates",
+      "revise_analysis",
+      "create_chart",
+      "style_charts",
+      "manage_dashboard"
     ],
+    "saved_sets": "Saved in the interface; the model reuses them through list_evidence_candidates and revise_analysis.",
     "execution": "Shared evidence-candidate resolution and revision compiler.",
     "history": "Retained native history with exact outgoing archives; no claim of frozen native context."
   },
@@ -3646,5 +3650,29 @@
     "meaningful_effect_and_precision_thresholds": "pending",
     "consent_and_analysis_plan": "pending"
   },
-  "manifest_sha256": "a1704a120e93156ed5fe4fe7d1530b8012c264f869153c5f80540c871970aaac"
+  "analysis_plan": {
+    "primary_outcomes": [
+      "terminal_intent_consistency"
+    ],
+    "secondary_outcomes": [
+      "interface_assisted_interpretation",
+      "repair_funnel",
+      "interaction_cost_time",
+      "public_constraint_completion"
+    ],
+    "descriptive_only": [
+      "overlap_incidence",
+      "reference_dependence",
+      "first_publication_consistent",
+      "window_expiry"
+    ],
+    "estimand": "Participant-level paired difference (bound_revision minus direct), two tasks per condition.",
+    "uncertainty": "Cluster bootstrap over participants with Manski-style lower/upper bounds for unknown outcomes.",
+    "bootstrap": {
+      "seed": 0,
+      "samples": 2000
+    },
+    "multiple_testing": "Single primary outcome; no Holm adjustment."
+  },
+  "manifest_sha256": "832b6637e62d32e9250fb0ac7a5d33a2b78118085609b593aa071713919ed2c8"
 }

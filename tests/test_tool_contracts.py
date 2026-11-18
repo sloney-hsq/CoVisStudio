@@ -19,8 +19,8 @@ def metric_descriptions(node):
 
 
 def test_metric_rules_reach_every_tool_that_exposes_metric():
-    expected = ('create_chart', 'edit_charts', 'revise_analysis', 'preview_revision',
-                'apply_evidence_candidate', 'apply_category_set')
+    expected = ('create_chart', 'revise_analysis')
+    assert {name for name, schema in TOOLS.items() if metric_descriptions(schema)} == set(expected)
     descriptions = set()
     for name in expected:
         found = metric_descriptions(TOOLS[name])

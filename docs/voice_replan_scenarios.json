@@ -1,0 +1,6789 @@
+{
+ "protocol": "covis-voice-replan-0.1",
+ "visibility": "evaluator-private; never inject into model context",
+ "membership_notation": "(resolved by the oracle at run time, never sent to the model):\n  {\"rule\": \"ranked\", \"top_n\": 3, \"rank_by\": \"orders\"}\n  {\"rule\": \"fixed\", \"from\": \"H1:v1\"}            members displayed by v1 in setup snapshot H1\n  {\"rule\": \"fixed\", \"from\": \"after:T5:v1\"}      members displayed by v1 after turn 5 committed\n  {\"rule\": \"fixed\", \"from\": \"played:T2\"}        categories named in the PLAYED part of turn 2\n                                                (human-coded from played-sample cutoff)",
+ "scenarios": [
+  {
+   "id": "S01",
+   "title": "Seasonal reuse: first-quarter categories in the third quarter",
+   "goal": "Compare service quality for the categories that led in Q1 against the current Q3 period in RJ.",
+   "replan": [
+    "REUSE",
+    "RETAIN",
+    "RETARGET",
+    "REVERT"
+   ],
+   "setup": {
+    "history": {
+     "H1": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2017-04-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2017-04-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2017-04-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     }
+    },
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "RJ",
+      "start": "2017-07-01",
+      "end": "2017-10-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "RJ",
+      "start": "2017-07-01",
+      "end": "2017-10-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "RJ",
+      "start": "2017-07-01",
+      "end": "2017-10-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "What changed between the first quarter and now?",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "NO-OP"
+     ],
+     "expect": {
+      "action": "answer",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": "Discussion only; reading history must not restore it."
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "explain"
+     },
+     "constraint": "Compares H1 and current; must not edit."
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "Put the first-quarter categories into charts two and three, but keep the third quarter.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 3.0
+     },
+     "pauses": [],
+     "critical_words": [
+      "first-quarter",
+      "two",
+      "three",
+      "third quarter"
+     ],
+     "tags": [
+      "BI",
+      "NUM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "Historical members only; Q1 dates must NOT return."
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Chart one too.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "one"
+     ],
+     "tags": [
+      "ELLIPSIS"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "Elliptical retarget: same operation, add v1."
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 7,
+     "speaker": "user",
+     "text": "Hmm, no, leave chart one showing this quarter's own top three.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 1.5
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart one",
+      "own top three"
+     ],
+     "tags": [
+      "BI",
+      "REVERT"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "Undo of the previous turn for v1 only, expressed as a rule, not Undo."
+    },
+    {
+     "turn": 8,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "orders",
+     "dimension": "category",
+     "region": "RJ",
+     "start": "2017-07-01",
+     "end": "2017-10-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "RJ",
+     "start": "2017-07-01",
+     "end": "2017-10-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "RJ",
+     "start": "2017-07-01",
+     "end": "2017-10-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    }
+   },
+   "summary": {
+    "turns": 8,
+    "user_turns": 4,
+    "edit_turns": 3,
+    "no_edit_turns": 1,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 47.8
+   }
+  },
+  {
+   "id": "S02",
+   "title": "Release a fixed set, then change and restore one ranking rule",
+   "goal": "MG charts still carry RJ's fixed categories; the analyst wants MG's own leaders.",
+   "replan": [
+    "RELEASE",
+    "SUPERSEDE",
+    "REVERT"
+   ],
+   "setup": {
+    "history": {
+     "H1": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     }
+    },
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "Which categories are these?",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "NO-OP"
+     ],
+     "expect": {
+      "action": "answer",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "answer"
+     },
+     "constraint": "Names the fixed RJ members; may say they are fixed."
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "Release the fixed categories and show Minas Gerais' own top three by orders, in all three charts.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 2.0
+     },
+     "pauses": [],
+     "critical_words": [
+      "Release",
+      "fixed",
+      "top three",
+      "orders",
+      "all three"
+     ],
+     "tags": [
+      "BI",
+      "LEX",
+      "NM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1",
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": "Known ASR risk: 'Release' heard as 'These'."
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Rank chart three by delivery time instead.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart three",
+      "delivery time"
+     ],
+     "tags": [
+      "NUM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v3": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "avg_delivery_days"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "avg_delivery_days"
+        }
+       }
+      }
+     },
+     "note": "Ranking criterion only; v3 metric unchanged."
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 7,
+     "speaker": "user",
+     "text": "No wait, keep chart three ranked by orders like the others.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 1.0
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart three",
+      "orders"
+     ],
+     "tags": [
+      "BI",
+      "REVERT"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v3": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 8,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "orders",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    }
+   },
+   "summary": {
+    "turns": 8,
+    "user_turns": 4,
+    "edit_turns": 3,
+    "no_edit_turns": 1,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 47.5
+   }
+  },
+  {
+   "id": "S03",
+   "title": "Replace a measure, abandon a half-spoken change, then rank one view",
+   "goal": "Look at revenue for the frozen SP cohort without disturbing the service views.",
+   "replan": [
+    "REPLACE",
+    "RETAIN",
+    "CANCEL",
+    "RELEASE"
+   ],
+   "setup": {
+    "history": {
+     "H1": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     }
+    },
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "Change chart one to revenue, keep everything else.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart one",
+      "revenue"
+     ],
+     "tags": [
+      "RETAIN"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "metric": "revenue"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "revenue",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "Hmm, also chart three, show it for shipped orders. No, delivered is right, leave it.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 1.5
+     },
+     "pauses": [],
+     "critical_words": [
+      "shipped",
+      "No",
+      "leave it"
+     ],
+     "tags": [
+      "BI",
+      "SC",
+      "CANCEL"
+     ],
+     "expect": {
+      "action": "no_edit",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "revenue",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "Self-repair that ends in no change. Any status edit on v3 is an error."
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "answer"
+     },
+     "constraint": "Acknowledges chart three is unchanged."
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Now rank chart one by revenue, top five.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "rank",
+      "revenue",
+      "top five"
+     ],
+     "tags": [
+      "NUM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "revenue"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "revenue",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "revenue"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "Ranking releases v1's fixed set only; v2/v3 keep the fixed cohort."
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "revenue",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 5,
+      "rank_by": "revenue"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    }
+   },
+   "summary": {
+    "turns": 6,
+    "user_turns": 3,
+    "edit_turns": 2,
+    "no_edit_turns": 1,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 38.7
+   }
+  },
+  {
+   "id": "S04",
+   "title": "Backchannels during an explanation must not edit",
+   "goal": "Listen to an explanation with natural acknowledgements, then narrow the view.",
+   "replan": [
+    "NO-OP",
+    "NARROW"
+   ],
+   "setup": {
+    "history": {},
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 5,
+       "rank_by": "orders"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 5,
+       "rank_by": "orders"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 5,
+       "rank_by": "orders"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "Explain why chart two looks high for one category.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "NO-OP"
+     ],
+     "expect": {
+      "action": "answer",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "explain"
+     },
+     "constraint": "Long explanation (>8 s) so that backchannels land inside playback."
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "Mm-hm.",
+     "timing": {
+      "type": "backchannel",
+      "offset_s": 3.0
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "BC"
+     ],
+     "expect": {
+      "action": "no_edit",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": "Current runtime revokes on every onset; record whether playback was cut and whether the explanation resumed. Any chart change is an error."
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "explain"
+     },
+     "constraint": "Continues or restarts the explanation."
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Okay, right.",
+     "timing": {
+      "type": "backchannel",
+      "offset_s": 2.0
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "BC"
+     ],
+     "expect": {
+      "action": "no_edit",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "explain"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 7,
+     "speaker": "user",
+     "text": "Got it. Narrow all three to the top three.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "all three",
+      "top three"
+     ],
+     "tags": [
+      "NUM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1",
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 8,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "orders",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    }
+   },
+   "summary": {
+    "turns": 8,
+    "user_turns": 4,
+    "edit_turns": 1,
+    "no_edit_turns": 3,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 44.3
+   }
+  },
+  {
+   "id": "S05",
+   "title": "Keep only the categories the assistant has already said",
+   "goal": "Stop a spoken list part-way and freeze exactly the items heard so far.",
+   "replan": [
+    "FREEZE",
+    "RETAIN"
+   ],
+   "setup": {
+    "history": {},
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "RJ",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 5,
+       "rank_by": "orders"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "RJ",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 5,
+       "rank_by": "orders"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "RJ",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 5,
+       "rank_by": "orders"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "Read me the five categories in chart one, from the largest.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "NO-OP"
+     ],
+     "expect": {
+      "action": "answer",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "answer"
+     },
+     "constraint": "Lists five category names in rank order."
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "Stop, keep just the ones you've said so far, in all three charts.",
+     "timing": {
+      "type": "barge_in"
+     },
+     "pauses": [],
+     "critical_words": [
+      "ones you've said",
+      "all three"
+     ],
+     "tags": [
+      "BI",
+      "DX"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "membership": {
+         "rule": "fixed",
+         "from": "played:T2"
+        }
+       },
+       "v2": {
+        "membership": {
+         "rule": "fixed",
+         "from": "played:T2"
+        }
+       },
+       "v3": {
+        "membership": {
+         "rule": "fixed",
+         "from": "played:T2"
+        }
+       }
+      },
+      "acceptable_alternatives": [
+       "clarify naming the played candidates"
+      ],
+      "changed_views": [
+       "v1",
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "played:T2"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "played:T2"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "played:T2"
+        }
+       }
+      }
+     },
+     "note": "THE full-duplex case. Inject after the 3rd category name has PLAYED (use playback receipts, not generated text). Truth = names in the played prefix; using all five, or names generated but not played, is an error."
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Switch to the second half of 2017.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "second half",
+      "2017"
+     ],
+     "tags": [
+      "NUM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "start": "2017-07-01",
+        "end": "2018-01-01"
+       },
+       "v2": {
+        "start": "2017-07-01",
+        "end": "2018-01-01"
+       },
+       "v3": {
+        "start": "2017-07-01",
+        "end": "2018-01-01"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1",
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "played:T2"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "played:T2"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-07-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "played:T2"
+        }
+       }
+      }
+     },
+     "note": "Frozen members kept; ranking must not return."
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "orders",
+     "dimension": "category",
+     "region": "RJ",
+     "start": "2017-07-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "played:T2"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "RJ",
+     "start": "2017-07-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "played:T2"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "RJ",
+     "start": "2017-07-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "played:T2"
+     }
+    }
+   },
+   "summary": {
+    "turns": 6,
+    "user_turns": 3,
+    "edit_turns": 2,
+    "no_edit_turns": 1,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 41.2
+   }
+  },
+  {
+   "id": "S06",
+   "title": "Self-repair inside a date request, then a question that sounds like an edit",
+   "goal": "Compare Q3 service metrics; decide later whether order volume follows.",
+   "replan": [
+    "NARROW",
+    "NO-OP",
+    "RETARGET"
+   ],
+   "setup": {
+    "history": {
+     "H1": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     }
+    },
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "Show the second quarter, sorry, third quarter of 2017 in charts two and three.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "third quarter",
+      "two",
+      "three"
+     ],
+     "tags": [
+      "SC",
+      "NUM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "start": "2017-07-01",
+        "end": "2017-10-01"
+       },
+       "v3": {
+        "start": "2017-07-01",
+        "end": "2017-10-01"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "Q2 dates anywhere is an error."
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "And chart one stays the full year, right?",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "NO-OP"
+     ],
+     "expect": {
+      "action": "answer",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "Yes/no question. Editing v1 is an error."
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "answer"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Actually put chart one on the same quarter.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 1.0
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart one",
+      "same quarter"
+     ],
+     "tags": [
+      "BI",
+      "ELLIPSIS"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "start": "2017-07-01",
+        "end": "2017-10-01"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-07-01",
+        "end": "2017-10-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "orders",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-07-01",
+     "end": "2017-10-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-07-01",
+     "end": "2017-10-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-07-01",
+     "end": "2017-10-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    }
+   },
+   "summary": {
+    "turns": 6,
+    "user_turns": 3,
+    "edit_turns": 2,
+    "no_edit_turns": 1,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 37.8
+   }
+  },
+  {
+   "id": "S07",
+   "title": "An utterance split by a pause",
+   "goal": "Bring SP's earlier leaders into MG service views, with natural hesitations.",
+   "replan": [
+    "REUSE",
+    "RETAIN",
+    "REPLACE"
+   ],
+   "setup": {
+    "history": {
+     "H1": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     }
+    },
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "For charts two and three... use the categories from the São Paulo chart we looked at first.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [
+      {
+       "after_words": 5,
+       "ms": 900
+      }
+     ],
+     "critical_words": [
+      "two",
+      "three",
+      "São Paulo",
+      "first"
+     ],
+     "tags": [
+      "FR",
+      "NM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "900 ms pause > 600 ms VAD silence. The first fragment alone must not produce a response or edit. MG must stay."
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "Keep Minas Gerais... and the dates too.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [
+      {
+       "after_words": 3,
+       "ms": 800
+      }
+     ],
+     "critical_words": [
+      "Keep",
+      "Minas Gerais",
+      "dates"
+     ],
+     "tags": [
+      "FR",
+      "RETAIN"
+     ],
+     "expect": {
+      "action": "no_edit",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "Confirmation of retention; any edit is an error."
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "answer"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Change chart one to low-review rate.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart one",
+      "low-review rate"
+     ],
+     "tags": [
+      "REPLACE"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "metric": "low_review_rate"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "v1 keeps top-3-by-orders membership; rank_by stays orders."
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    }
+   },
+   "summary": {
+    "turns": 6,
+    "user_turns": 3,
+    "edit_turns": 2,
+    "no_edit_turns": 1,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 45.5
+   }
+  },
+  {
+   "id": "S08",
+   "title": "Barge-in while the tool is still running",
+   "goal": "Move service views to 2018 while order volume stays in 2017.",
+   "replan": [
+    "SUPERSEDE",
+    "RETARGET",
+    "RELEASE"
+   ],
+   "setup": {
+    "history": {
+     "H1": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     }
+    },
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "RJ",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "RJ",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "RJ",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "Compare all three charts for 2018 instead.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "all three",
+      "2018"
+     ],
+     "tags": [
+      "NUM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "start": "2018-01-01",
+        "end": "2019-01-01"
+       },
+       "v2": {
+        "start": "2018-01-01",
+        "end": "2019-01-01"
+       },
+       "v3": {
+        "start": "2018-01-01",
+        "end": "2019-01-01"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1",
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2018-01-01",
+        "end": "2019-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2018-01-01",
+        "end": "2019-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2018-01-01",
+        "end": "2019-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "Intermediate state; superseded by T2 for v1."
+    },
+    {
+     "turn": 2,
+     "speaker": "user",
+     "text": "Only charts two and three, leave chart one in 2017.",
+     "timing": {
+      "type": "during_tool",
+      "offset_s": 0.3
+     },
+     "pauses": [],
+     "critical_words": [
+      "Only",
+      "two and three",
+      "chart one",
+      "2017"
+     ],
+     "tags": [
+      "BT",
+      "SUPERSEDE"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "start": "2017-01-01",
+        "end": "2018-01-01"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2018-01-01",
+        "end": "2019-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2018-01-01",
+        "end": "2019-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "If T1 already committed, v1 must be explicitly restored to 2017 (a legal earlier commit stays legal). If T1 was revoked before commit, v2/v3 still need 2018."
+    },
+    {
+     "turn": 3,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": "Must say which charts changed and that chart one is 2017."
+    },
+    {
+     "turn": 4,
+     "speaker": "user",
+     "text": "Use their own top three by orders in 2018.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "own top three",
+      "orders"
+     ],
+     "tags": [
+      "RELEASE"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2018-01-01",
+        "end": "2019-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2018-01-01",
+        "end": "2019-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": "'their' = charts two and three."
+    },
+    {
+     "turn": 5,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "orders",
+     "dimension": "category",
+     "region": "RJ",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "RJ",
+     "start": "2018-01-01",
+     "end": "2019-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "RJ",
+     "start": "2018-01-01",
+     "end": "2019-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    }
+   },
+   "summary": {
+    "turns": 5,
+    "user_turns": 3,
+    "edit_turns": 3,
+    "no_edit_turns": 0,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 34.7
+   }
+  },
+  {
+   "id": "S09",
+   "title": "Wrong chart named, then corrected",
+   "goal": "Revenue belongs on the order view; align delivery view to the same cohort.",
+   "replan": [
+    "RETARGET",
+    "REVERT",
+    "REUSE-CURRENT"
+   ],
+   "setup": {
+    "history": {
+     "H1": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     }
+    },
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 5,
+       "rank_by": "orders"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "Change chart two to revenue.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart two",
+      "revenue"
+     ],
+     "tags": [],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "metric": "revenue"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "revenue",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "Oh, I meant chart one, not two. Put chart two back to low-review rate.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 1.0
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart one",
+      "not two",
+      "low-review rate"
+     ],
+     "tags": [
+      "BI",
+      "RETARGET"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "metric": "revenue"
+       },
+       "v2": {
+        "metric": "low_review_rate"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1",
+       "v2"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "revenue",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "And give chart three the same categories as chart one.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart three",
+      "same categories",
+      "chart one"
+     ],
+     "tags": [
+      "REUSE-CURRENT"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v3": {
+        "membership": {
+         "rule": "fixed",
+         "from": "after:T3:v1"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "revenue",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "after:T3:v1"
+        }
+       }
+      }
+     },
+     "note": "Source is the CURRENT chart one, not history; v3 top-5 ranking released."
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 7,
+     "speaker": "user",
+     "text": "Good. Leave it there.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "NO-OP"
+     ],
+     "expect": {
+      "action": "no_edit",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "revenue",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "after:T3:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "revenue",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "after:T3:v1"
+     }
+    }
+   },
+   "summary": {
+    "turns": 7,
+    "user_turns": 4,
+    "edit_turns": 3,
+    "no_edit_turns": 1,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 41.1
+   }
+  },
+  {
+   "id": "S10",
+   "title": "Swap cohorts and come back to the first one",
+   "goal": "Decide between RJ and SP leaders for an MG service review.",
+   "replan": [
+    "PROVENANCE-Q",
+    "REUSE",
+    "REVERT",
+    "NARROW"
+   ],
+   "setup": {
+    "history": {
+     "H1": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     },
+     "H2": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     }
+    },
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H2:v1"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H2:v1"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "Which region did these categories come from?",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "NO-OP"
+     ],
+     "expect": {
+      "action": "answer",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H2:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H2:v1"
+        }
+       }
+      }
+     },
+     "note": "Correct answer: São Paulo (H2). Tests provenance, not computation."
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "answer"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "Swap them for the Rio ones.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 2.0
+     },
+     "pauses": [],
+     "critical_words": [
+      "Swap",
+      "Rio"
+     ],
+     "tags": [
+      "BI",
+      "NM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "MG stays."
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Hmm, the São Paulo set was better. Go back to that, but keep the current dates.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "São Paulo",
+      "Go back",
+      "current dates"
+     ],
+     "tags": [
+      "REVERT",
+      "NM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H2:v1"
+        }
+       },
+       "v3": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H2:v1"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H2:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H2:v1"
+        }
+       }
+      }
+     },
+     "note": "'Go back' is not Undo/restore of a whole version."
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 7,
+     "speaker": "user",
+     "text": "And only the first half.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 1.0
+     },
+     "pauses": [],
+     "critical_words": [
+      "first half"
+     ],
+     "tags": [
+      "BI",
+      "ELLIPSIS",
+      "NUM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "start": "2017-01-01",
+        "end": "2017-07-01"
+       },
+       "v3": {
+        "start": "2017-01-01",
+        "end": "2017-07-01"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2017-07-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H2:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2017-07-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H2:v1"
+        }
+       }
+      }
+     },
+     "note": "Targets inherited from the previous turn (charts two and three)."
+    },
+    {
+     "turn": 8,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "orders",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2017-07-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H2:v1"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2017-07-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H2:v1"
+     }
+    }
+   },
+   "summary": {
+    "turns": 8,
+    "user_turns": 4,
+    "edit_turns": 3,
+    "no_edit_turns": 1,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 45.5
+   }
+  },
+  {
+   "id": "S11",
+   "title": "Ambiguous 'those three' must trigger a question",
+   "goal": "Choose between RJ historical leaders and MG current leaders.",
+   "replan": [
+    "CLARIFY",
+    "REUSE"
+   ],
+   "setup": {
+    "history": {
+     "H1": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     }
+    },
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "Use those three categories in the service charts.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "those three",
+      "service charts"
+     ],
+     "tags": [
+      "CLARIFY"
+     ],
+     "expect": {
+      "action": "clarify",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": "Ambiguous: RJ historical top 3 vs MG current top 3. Expect one short question; any edit is a premature commit."
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "clarify"
+     },
+     "constraint": "Names both candidates."
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "The Rio ones.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "Rio"
+     ],
+     "tags": [
+      "NM",
+      "ELLIPSIS"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Keep chart one as the local top three.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "RETAIN"
+     ],
+     "expect": {
+      "action": "no_edit",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "answer"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "orders",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    }
+   },
+   "summary": {
+    "turns": 6,
+    "user_turns": 3,
+    "edit_turns": 1,
+    "no_edit_turns": 1,
+    "clarify_turns": 1,
+    "estimated_voice_seconds": 35.9
+   }
+  },
+  {
+   "id": "S12",
+   "title": "Change order status without re-selecting categories",
+   "goal": "Check canceled-order volume for the frozen SP cohort, then return to revenue.",
+   "replan": [
+    "SCOPE",
+    "RETAIN",
+    "REVERT",
+    "REPLACE"
+   ],
+   "setup": {
+    "history": {
+     "H1": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     }
+    },
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "Show chart one for canceled orders instead of delivered.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart one",
+      "canceled",
+      "delivered"
+     ],
+     "tags": [
+      "LEX"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "status": "canceled"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "canceled",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "Leave the categories as they are.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 1.0
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "BI",
+      "RETAIN"
+     ],
+     "expect": {
+      "action": "no_edit",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "canceled",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "Fixed set must not be re-ranked for canceled orders."
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "answer"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Charts two and three stay on delivered.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "RETAIN"
+     ],
+     "expect": {
+      "action": "no_edit",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "canceled",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "answer"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 7,
+     "speaker": "user",
+     "text": "Actually switch chart one back to delivered and make it revenue.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "back to delivered",
+      "revenue"
+     ],
+     "tags": [
+      "REVERT",
+      "REPLACE"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "status": "delivered",
+        "metric": "revenue"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "revenue",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 8,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "revenue",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    }
+   },
+   "summary": {
+    "turns": 8,
+    "user_turns": 4,
+    "edit_turns": 2,
+    "no_edit_turns": 2,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 48.6
+   }
+  },
+  {
+   "id": "S13",
+   "title": "Change grouping dimension and come back",
+   "goal": "See where the SP cohort's orders come from, then analyse it in MG.",
+   "replan": [
+    "DIMENSION",
+    "RETAIN",
+    "SCOPE"
+   ],
+   "setup": {
+    "history": {
+     "H1": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "SP",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     }
+    },
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "fixed",
+       "from": "H1:v1"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "For chart one, break these categories down by customer state, all of Brazil.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "customer state",
+      "all of Brazil"
+     ],
+     "tags": [
+      "NM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "dimension": "state",
+        "region": null
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "state",
+        "region": null,
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "Fixed categories become a filter; region cleared."
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "Show it by month instead.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 1.5
+     },
+     "pauses": [],
+     "critical_words": [
+      "month"
+     ],
+     "tags": [
+      "BI",
+      "SUPERSEDE"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "dimension": "month"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "month",
+        "region": null,
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Okay, back to categories, Minas Gerais.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "categories",
+      "Minas Gerais"
+     ],
+     "tags": [
+      "NM",
+      "ELLIPSIS"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "dimension": "category",
+        "region": "MG"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "Fixed SP cohort retained under MG."
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "orders",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    }
+   },
+   "summary": {
+    "turns": 6,
+    "user_turns": 3,
+    "edit_turns": 3,
+    "no_edit_turns": 0,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 37.4
+   }
+  },
+  {
+   "id": "S14",
+   "title": "Stacked elliptical edits, then freeze the current set",
+   "goal": "Compare RJ order leaders with MG service quality for the same categories.",
+   "replan": [
+    "NARROW",
+    "SCOPE",
+    "RETARGET",
+    "FREEZE"
+   ],
+   "setup": {
+    "history": {},
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "RJ",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "RJ",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "RJ",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "Make all three charts top five.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "all three",
+      "top five"
+     ],
+     "tags": [
+      "NUM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1",
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "And Minas Gerais.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 1.0
+     },
+     "pauses": [],
+     "critical_words": [
+      "Minas Gerais"
+     ],
+     "tags": [
+      "BI",
+      "ELLIPSIS",
+      "NM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "region": "MG"
+       },
+       "v2": {
+        "region": "MG"
+       },
+       "v3": {
+        "region": "MG"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1",
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Wait, keep chart one in Rio.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 0.8
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart one",
+      "Rio"
+     ],
+     "tags": [
+      "BI",
+      "SUPERSEDE"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "region": "RJ"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 7,
+     "speaker": "user",
+     "text": "And freeze the Rio categories from chart one into charts two and three.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "freeze",
+      "chart one",
+      "two and three"
+     ],
+     "tags": [
+      "FREEZE"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "membership": {
+         "rule": "fixed",
+         "from": "after:T5:v1"
+        }
+       },
+       "v3": {
+        "membership": {
+         "rule": "fixed",
+         "from": "after:T5:v1"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "RJ",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "after:T5:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "after:T5:v1"
+        }
+       }
+      }
+     },
+     "note": "Members = RJ top 5 shown by v1 after T5; v2/v3 stay MG."
+    },
+    {
+     "turn": 8,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "orders",
+     "dimension": "category",
+     "region": "RJ",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 5,
+      "rank_by": "orders"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "after:T5:v1"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "after:T5:v1"
+     }
+    }
+   },
+   "summary": {
+    "turns": 8,
+    "user_turns": 4,
+    "edit_turns": 4,
+    "no_edit_turns": 0,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 43.4
+   }
+  },
+  {
+   "id": "S15",
+   "title": "Hypotheticals, polite requests and 'fix it'",
+   "goal": "Move order volume to revenue and service views to Q4.",
+   "replan": [
+    "NO-OP",
+    "CONFIRM",
+    "NARROW",
+    "ALIGN"
+   ],
+   "setup": {
+    "history": {},
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 5,
+       "rank_by": "orders"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 5,
+       "rank_by": "orders"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "SP",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 5,
+       "rank_by": "orders"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "What if we used revenue in chart one?",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "NO-OP",
+      "LEX"
+     ],
+     "expect": {
+      "action": "answer",
+      "patch": {},
+      "acceptable_alternatives": [
+       "clarify"
+      ],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": "Hypothetical. Editing now is a premature commit."
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "answer"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "Yes, do it.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "do it"
+     ],
+     "tags": [
+      "ELLIPSIS"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v1": {
+        "metric": "revenue"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v1"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "revenue",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Could chart three show the last quarter of 2017?",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart three",
+      "last quarter"
+     ],
+     "tags": [
+      "NUM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v3": {
+        "start": "2017-10-01",
+        "end": "2018-01-01"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "revenue",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-10-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": "Polite request = edit."
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 7,
+     "speaker": "user",
+     "text": "Fix it so chart two matches.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 1.0
+     },
+     "pauses": [],
+     "critical_words": [
+      "chart two",
+      "matches"
+     ],
+     "tags": [
+      "BI",
+      "LEX"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "start": "2017-10-01",
+        "end": "2018-01-01"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "revenue",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-10-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "SP",
+        "start": "2017-10-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 5,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": "Match = dates only; v2 metric unchanged."
+    },
+    {
+     "turn": 8,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "revenue",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 5,
+      "rank_by": "orders"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-10-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 5,
+      "rank_by": "orders"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "SP",
+     "start": "2017-10-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 5,
+      "rank_by": "orders"
+     }
+    }
+   },
+   "summary": {
+    "turns": 8,
+    "user_turns": 4,
+    "edit_turns": 3,
+    "no_edit_turns": 1,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 47.3
+   }
+  },
+  {
+   "id": "S16",
+   "title": "Cumulative flow (replicates the failed 2026-11-13 run)",
+   "goal": "Reuse RJ leaders in MG service views, narrow time, then release one view.",
+   "replan": [
+    "REUSE",
+    "NARROW",
+    "SUPERSEDE",
+    "RELEASE"
+   ],
+   "setup": {
+    "history": {
+     "H1": {
+      "v1": {
+       "metric": "orders",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v2": {
+       "metric": "low_review_rate",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      },
+      "v3": {
+       "metric": "avg_delivery_days",
+       "dimension": "category",
+       "region": "RJ",
+       "start": "2017-01-01",
+       "end": "2018-01-01",
+       "status": "delivered",
+       "membership": {
+        "rule": "ranked",
+        "top_n": 3,
+        "rank_by": "orders"
+       }
+      }
+     }
+    },
+    "current": {
+     "v1": {
+      "metric": "orders",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     },
+     "v2": {
+      "metric": "low_review_rate",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     },
+     "v3": {
+      "metric": "avg_delivery_days",
+      "dimension": "category",
+      "region": "MG",
+      "start": "2017-01-01",
+      "end": "2018-01-01",
+      "status": "delivered",
+      "membership": {
+       "rule": "ranked",
+       "top_n": 3,
+       "rank_by": "orders"
+      }
+     }
+    },
+    "selection": null
+   },
+   "turns": [
+    {
+     "turn": 1,
+     "speaker": "user",
+     "text": "Give me a quick read of the three charts.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [],
+     "tags": [
+      "NO-OP"
+     ],
+     "expect": {
+      "action": "answer",
+      "patch": {},
+      "acceptable_alternatives": [],
+      "changed_views": [],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 2,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "explain"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 3,
+     "speaker": "user",
+     "text": "Bring the Rio categories into charts two and three, keep Minas Gerais.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 3.0
+     },
+     "pauses": [],
+     "critical_words": [
+      "Rio",
+      "two and three",
+      "Minas Gerais"
+     ],
+     "tags": [
+      "BI",
+      "NM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 4,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 5,
+     "speaker": "user",
+     "text": "Just the first half.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "first half"
+     ],
+     "tags": [
+      "ELLIPSIS",
+      "NUM"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "start": "2017-01-01",
+        "end": "2017-07-01"
+       },
+       "v3": {
+        "start": "2017-01-01",
+        "end": "2017-07-01"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2017-07-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2017-07-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 6,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 7,
+     "speaker": "user",
+     "text": "No, first quarter.",
+     "timing": {
+      "type": "barge_in",
+      "offset_s": 1.0
+     },
+     "pauses": [],
+     "critical_words": [
+      "first quarter"
+     ],
+     "tags": [
+      "BI",
+      "SUPERSEDE"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "start": "2017-01-01",
+        "end": "2017-04-01"
+       },
+       "v3": {
+        "start": "2017-01-01",
+        "end": "2017-04-01"
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2",
+       "v3"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2017-04-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2017-04-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": ""
+    },
+    {
+     "turn": 8,
+     "speaker": "assistant",
+     "expect": {
+      "kind": "confirm"
+     },
+     "constraint": ""
+    },
+    {
+     "turn": 9,
+     "speaker": "user",
+     "text": "Now drop the Rio set in chart two and show its own top three by orders.",
+     "timing": {
+      "type": "after_end"
+     },
+     "pauses": [],
+     "critical_words": [
+      "drop",
+      "chart two",
+      "top three",
+      "orders"
+     ],
+     "tags": [
+      "RELEASE"
+     ],
+     "expect": {
+      "action": "edit",
+      "patch": {
+       "v2": {
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       }
+      },
+      "acceptable_alternatives": [],
+      "changed_views": [
+       "v2"
+      ],
+      "state_after": {
+       "v1": {
+        "metric": "orders",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2018-01-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v2": {
+        "metric": "low_review_rate",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2017-04-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "ranked",
+         "top_n": 3,
+         "rank_by": "orders"
+        }
+       },
+       "v3": {
+        "metric": "avg_delivery_days",
+        "dimension": "category",
+        "region": "MG",
+        "start": "2017-01-01",
+        "end": "2017-04-01",
+        "status": "delivered",
+        "membership": {
+         "rule": "fixed",
+         "from": "H1:v1"
+        }
+       }
+      }
+     },
+     "note": "v3 keeps RJ members and Q1."
+    }
+   ],
+   "final_state": {
+    "v1": {
+     "metric": "orders",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2018-01-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    },
+    "v2": {
+     "metric": "low_review_rate",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2017-04-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "ranked",
+      "top_n": 3,
+      "rank_by": "orders"
+     }
+    },
+    "v3": {
+     "metric": "avg_delivery_days",
+     "dimension": "category",
+     "region": "MG",
+     "start": "2017-01-01",
+     "end": "2017-04-01",
+     "status": "delivered",
+     "membership": {
+      "rule": "fixed",
+      "from": "H1:v1"
+     }
+    }
+   },
+   "summary": {
+    "turns": 9,
+    "user_turns": 5,
+    "edit_turns": 4,
+    "no_edit_turns": 1,
+    "clarify_turns": 0,
+    "estimated_voice_seconds": 52.6
+   }
+  }
+ ]
+}

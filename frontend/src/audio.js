@@ -92,6 +92,11 @@ export class Speaker {
   }
   emit(name, response, extra = {}) { this.onEvent(name, { ...this.details(response), ...extra }) }
   receipt(message) {
+    if (message.type === 'paused' || message.type === 'resumed') {
+      this.onEvent(message.type === 'paused' ? 'playback_paused' : 'playback_resumed',
+        { timing_basis: 'audio_worklet_source_cursor', audio_context_time: message.context_time })
+      return
+    }
     if (message.type === 'cleared') {
       for (const [id, response] of this.responses) {
         if (!response.stopped || response.published || response.clearGeneration > message.generation_epoch) continue
@@ -145,6 +150,8 @@ export class Speaker {
       { ...response.metadata, label: 'received_audio', received_samples: response.received, sample_rate: response.rate })
     this.emit('playback_end', response, { interrupted: !!response.stopped, started: response.started })
   }
+  pause() { this.worklet?.port.postMessage({ type: 'pause' }) }
+  resume() { this.worklet?.port.postMessage({ type: 'resume' }) }
   stop() {
     this.generation += 1
     for (const [id, response] of this.responses) {

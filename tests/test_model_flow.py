@@ -21,7 +21,8 @@ from backend.app import create_app
 
 EVIDENCE = Path(__file__).resolve().parents[1] / "traces" / "provider-integration"
 PCM = base64.b64encode(bytes(3200)).decode()
-TOOL_ARGUMENTS = {"view_ids": ["v1"], "patch": {"source": {"end": "2017-04-01"}}}
+# Model wire uses the six-tool surface; query edits go through revise_analysis.
+TOOL_ARGUMENTS = {"view_ids": ["v1"], "member_action": "keep_current", "end": "2017-04-01"}
 
 
 def configuration(name, text_url="http://127.0.0.1:1/not-used", realtime_url="ws://127.0.0.1:1/not-used"):
@@ -124,7 +125,7 @@ def test_text_image_tool_commit_and_reply_through_application():
             requests.append(json.loads(self.rfile.read(int(self.headers["Content-Length"]))))
             if len(requests) == 1:
                 delta = {"tool_calls": [{"index": 0, "id": "q1", "function": {
-                    "name": "edit_charts", "arguments": json.dumps(TOOL_ARGUMENTS),
+                    "name": "revise_analysis", "arguments": json.dumps(TOOL_ARGUMENTS),
                 }}]}
                 reason = "tool_calls"
             else:
@@ -214,7 +215,7 @@ class VoicePeer:
                 tool_response = self.count <= (2 if self.first_arguments else 1)
                 if tool_response:
                     args = self.first_arguments if self.count == 1 and self.first_arguments else TOOL_ARGUMENTS
-                    output = [{"type": "function_call", "call_id": f"call-{self.count}", "name": "edit_charts", "arguments": json.dumps(args)}]
+                    output = [{"type": "function_call", "call_id": f"call-{self.count}", "name": "revise_analysis", "arguments": json.dumps(args)}]
                 else:
                     output = []
                     await self.send({"type": "response.audio_transcript.delta", "response_id": rid, "delta": "The first quarter is displayed."})
@@ -264,7 +265,8 @@ def test_voice_input_image_actual_edit_and_output_recording():
 
 def test_live_revision_during_query_prevents_obsolete_half_year_commit():
     async def run():
-        half_year = {"view_ids": ["v1"], "patch": {"source": {"end": "2017-07-01"}}}
+        half_year = {"view_ids": ["v1"], "member_action": "keep_current", "end": "2017-07-01"}
+        compiled_half_year = {"view_ids": ["v1"], "patch": {"source": {"end": "2017-07-01"}}}
         peer, entered, release = VoicePeer(half_year), Event(), Event()
         async with serve(peer.handler, "127.0.0.1", 0) as server:
             port = server.sockets[0].getsockname()[1]
@@ -275,7 +277,7 @@ def test_live_revision_during_query_prevents_obsolete_half_year_commit():
 
                 def blocked_prepare(name, args, reference=None):
                     candidate = original(name, args, reference)
-                    if name == "edit_charts" and args == half_year:
+                    if name == "edit_charts" and args == compiled_half_year:
                         entered.set()
                         release.wait(10)
                     return candidate

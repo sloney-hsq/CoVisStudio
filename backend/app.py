@@ -14,7 +14,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from jsonschema import ValidationError
 
-from .charts import ChartStore, TOOL_DEFINITIONS
+from .charts import ChartStore
 from .model_contract import model_tool_definitions, compile_model_arguments
 from .data import OlistData
 from .settings import ROOT, load_settings
@@ -22,27 +22,32 @@ from .study import tasks, diagnostic_tasks, experiment_tasks, task_brief, setup_
 from .experiment import allocation_for, allocation_table, build_trial_report, aggregate_reports, report_csv
 from .experiment import (formal_allocation_for, formal_allocation_table, formal_manifest,
                          formal_primary_attempts, formal_assignment_csv)
-from .formal_tasks import FORMAL_PROTOCOL, formal_tasks
+from .formal_tasks import FORMAL_PROTOCOL, VOICE_BUDGET_SECONDS, formal_tasks
 from .intent_scoring import (create_episode, lock_intent, score_episode, write_new, episode_index,
                              review_understanding, attach_formal_scores, designate_primary_episode,
                              terminal_packet, score_terminal, interpretation_key, lock_understanding,
                              coding_template)
-from .revisions import prepare_revision, normalize_revise_analysis, evidence_source, REVISION_TOOL_DEFINITIONS, CONDITIONS
-from .category_sets import CategorySets, CATEGORY_SET_TOOL_DEFINITIONS
+from .revisions import prepare_revision, normalize_revise_analysis, evidence_source, CONDITIONS
+from .category_sets import CategorySets
 from .observations import interaction_summary
 from .trace import Trace
 from .evidence import EvidenceStore
 from .delivery import summarize_delivery
-from .evidence_candidates import (build_candidates, resolve_candidate, prepare_candidate_apply,
-                                  EVIDENCE_CANDIDATE_TOOL_DEFINITIONS)
+from .evidence_candidates import build_candidates, resolve_candidate, prepare_candidate_apply
+from .model_tools import MODEL_TOOL_DEFINITIONS, to_internal
+from .scenarios import load_scenarios, scenario_index, apply_setup, score_scenario
 from .review_packets import build_review_packet, save_review_draft, read_trial_archives, attach_review_drafts
 
 
 INSTRUCTIONS = """You are CoVis, an analytical collaborator. Speak and write concise English.
-Use the provided tools to make real chart edits. A spoken promise is not execution.
-Create a new chart with create_chart, including the first chart on an empty canvas.
-To change an existing chart's query, call revise_analysis: name the current view_ids,
-member_action, and only the flat fields the user changed. That call computes and commits the edit.
+You have six tools. A spoken promise is not execution.
+- read_dashboard: current committed charts and an index of earlier versions; give revision to read one.
+- list_evidence_candidates: exact candidate IDs for earlier chart groups and saved sets.
+- revise_analysis: every change to an existing chart's query. Name the current view_ids, member_action,
+  and only the flat fields the user changed. It computes and commits in one call.
+- create_chart: a new chart, including the first chart on an empty canvas.
+- style_charts: title, chart type or style only; never a query change.
+- manage_dashboard: remove, arrange or rename.
 Read saved charts before making numerical claims. Derive the year and exact target IDs from the
 current analysis and user selection. Never serialize evidence into a string.
 You may discuss an observation without editing. Never invent measurements, study scores or user intentions.
@@ -62,6 +67,7 @@ and a dynamic ranking as different things.
 views changed, which stayed unchanged, and which work did not run.
 6. Your generated text is not proof that it was played or heard, so do not rely on the user having
 heard anything beyond what playback_observations show was played.
+7. A short acknowledgement such as "mm-hm" or "okay" is not a request; do not edit or restart.
 execution_state is the runtime's account of actual commits, not an assistant interpretation.
 If it records no commit for a request, that request did not change the charts, regardless of prior speech.
 Cancelled, unexecuted calls changed nothing. If their work still applies, issue a new tool call under
@@ -73,14 +79,7 @@ CONDITION_OPTIONS = [
     {'id': 'direct', 'label': 'Direct editing', 'description': 'Complete evidence and shared chart tools; the model resolves references.'},
     {'id': 'bound_revision', 'label': 'Evidence-linked revision', 'description': 'Use a historical object set in the current analysis with an explicit revision card.'},
 ]
-HISTORY_TOOL = {'type': 'function', 'function': {
-    'name': 'read_history',
-    'description': 'Read the same committed evidence available in every study condition. Omit revision for a version index; give revision to read its complete chart state. Reading never restores a version.',
-    'parameters': {'type': 'object', 'properties': {'revision': {'type': 'integer', 'minimum': 0}}, 'additionalProperties': False},
-}}
-MODEL_TOOLS = model_tool_definitions([
-    *TOOL_DEFINITIONS, HISTORY_TOOL, *REVISION_TOOL_DEFINITIONS,
-    *CATEGORY_SET_TOOL_DEFINITIONS, *EVIDENCE_CANDIDATE_TOOL_DEFINITIONS])
+MODEL_TOOLS = model_tool_definitions(MODEL_TOOL_DEFINITIONS)
 
 
 def media_summary(value):
@@ -118,7 +117,9 @@ class Workspace:
         self.session = {'id': uuid4().hex[:12], 'mode': mode, 'task_id': task_id,
                         'participant_id': participant_id, 'started_at': datetime.now(timezone.utc).isoformat(),
                         'models': {'text': self.settings['text_model'], 'voice': self.settings['realtime_model']},
-                        'used_modes': [], 'condition': condition}
+                        'used_modes': [], 'condition': condition,
+                        'backchannel_hold': self.settings.get('backchannel_hold', True),
+                        'voice_budget_seconds': self.settings.get('voice_budget_seconds', VOICE_BUDGET_SECONDS)}
         self.session['instructions_sha256'] = hashlib.sha256(self.instructions().encode('utf-8')).hexdigest()
         self.session['tool_schema_sha256'] = hashlib.sha256(
             json.dumps(MODEL_TOOLS, sort_keys=True, ensure_ascii=False).encode('utf-8')).hexdigest()
@@ -145,6 +146,12 @@ class Workspace:
         self.image_frame = None
         self.image_revision = None
         self.capture_changed = asyncio.Event()
+        # Responses whose audio has started and not yet ended or stopped in the browser.
+        self.audible = set()
+        self.held_binding = None
+        # Cleared only while a live utterance over audible speech awaits its transcript.
+        self.publication_open = asyncio.Event()
+        self.publication_open.set()
         self.current_intent = ''
         self.response_epochs = {}
         self.current_response = None
@@ -161,6 +168,39 @@ class Workspace:
         self.initial = self.store.snapshot()
         self.snapshots[self.initial['revision']] = self.initial
         self.trace.save('initial.json', self.initial)
+
+    def setup_scenario(self, scenario, mode, condition):
+        """Reset and build a scenario's history and current canvas; ground truth stays private."""
+        self.reset(mode, None, '', condition)
+
+        def commit(name, args):
+            before = self.store.snapshot()
+            receipt = self.store.commit(self.store.prepare(name, args))
+            self.add_node('Scenario setup', 'starter', receipt, 'starter', before)
+            return receipt
+
+        labels, _ = apply_setup(scenario, commit)
+        self.store.state['title'] = 'Olist analysis'
+        self.initial = self.store.snapshot()
+        self.snapshots[self.initial['revision']] = self.initial
+        self.session['scenario'] = {'id': scenario['id'], 'protocol': 'covis-voice-replan-0.1', 'labels': labels}
+        self.trace.record('scenario_setup', scenario_id=scenario['id'], labels=labels,
+                          revision=self.initial['revision'], visibility='researcher_only')
+        self.trace.save('initial.json', self.initial)
+        return labels
+
+    def score_scenario(self, scenario, turn_windows=None, codings=None):
+        labels = self.session['scenario']['labels']
+        members = lambda source: [row['label'] for row in self.data.query(source)['rows']]
+        result = score_scenario(scenario, self.trace.events, self.snapshots, labels, members,
+                                turn_windows=turn_windows, codings=codings)
+        result.update(session_id=self.session['id'], mode=self.session['mode'],
+                      condition=self.session['condition'], models=self.session['models'],
+                      tool_schema_sha256=self.session['tool_schema_sha256'],
+                      voice_budget_seconds=self.session['voice_budget_seconds'],
+                      backchannel_hold=self.session['backchannel_hold'])
+        self.trace.save(f"scenario-score-{scenario['id']}.json", result)
+        return result
 
     def bootstrap(self):
         return {'state': self.store.snapshot(), 'catalog': self.data.catalog(), 'tasks': tasks(),
@@ -217,26 +257,23 @@ class Workspace:
                 self.trace.save('session.json', self.export())
 
     def instructions(self):
-        common = (INSTRUCTIONS + '\nHistorical evidence is distinct from the current execution state. '
-                  'read_history provides prior chart states in every condition. Do not treat citing an old chart as Undo. '
-                  'All conditions support save_category_set, list_category_sets and apply_category_set. '
-                  'Save exact members from a public chart version and reuse its set ID on explicit current targets; no manual copying of category names is required. '
-                  'Saved sets retain object identities, not historical filters or metrics. Never invent a saved set ID. '
-                  'list_evidence_candidates returns real chart groups and saved sets with exact candidate IDs. '
-                  'Choose the intended candidate; apply_evidence_candidate and preview_revision resolve the same exact members in direct and bound_revision. '
-                  'Separate object origin, current targets and scope, and retained or released conditions. '
-                  'Only describe a chart change after a successful committed tool receipt. Give one short sentence of at most 25 words naming the affected charts and result; do not enumerate values unless asked, and do not read raw JSON aloud. '
-                  'Generated assistant text is not proof that it was played or understood. Playback progress is partial when interrupted; specific words are not aligned. '
-                  'Never select an evidence version using an evaluator answer. '
-                  'A revision preview has not changed any chart. A proposal awaiting clarification requires a user answer; do not apply it yourself. '
-                  'A new utterance supersedes the previous proposal. When the user answers a clarification, use the last_proposal card as conversation context and call revise_analysis with the resolved change; do not reuse the old proposal ID.\n')
-        return common + ('Use revise_analysis for explicit changes to existing chart queries; it computes and commits in one call. '
-                         'member_action=use_evidence binds members from the selected historical candidate, keeping current scope except for explicit flat fields. '
-                         'Use apply_evidence_candidate or apply_category_set for deterministic object reuse on explicit current views. '
-                         'For a new ranking, use member_action="rerank", top_n="3" and rank_by="orders" when the user asks for three by orders; the model tool contract requires top_n as a positive decimal string, or null to clear ranking. '
-                         'preview_revision is available when the user asks for a preview, followed by apply_revision for explicit approval. '
-                         'Use needs_confirmation only for a genuine unresolved choice and ask the concrete question. '
-                         'Direct presentation-only edits can use edit_charts.')
+        return (INSTRUCTIONS + '\nHistorical evidence is distinct from the current execution state. '
+                'read_dashboard with a revision reads an earlier version; it never restores it and is not Undo. '
+                'list_evidence_candidates returns real earlier chart groups and saved sets with exact candidate IDs; '
+                'never invent an ID. Reuse members with revise_analysis member_action="use_evidence" and that '
+                'candidate_id (omit candidate_id to use the evidence selected when the user started speaking). '
+                'Saved sets and historical charts supply object identities only, never historical filters or metrics. '
+                'For a new ranking use member_action="rerank" with rank_by and top_n as a positive decimal string, '
+                'for example top_n="3"; null clears ranking. Separate object origin, current targets and scope, '
+                'and retained or released conditions. '
+                'Use needs_confirmation=true only for a genuine unresolved choice and ask the concrete question; '
+                'that edit stays a preview. When the user answers, call revise_analysis again with the resolved '
+                'change; a new utterance supersedes an unanswered preview. '
+                'Only describe a chart change after a successful committed tool receipt. Give one short sentence '
+                'of at most 25 words naming the affected charts and result; do not enumerate values unless asked, '
+                'and do not read raw JSON aloud. Generated assistant text is not proof that it was played or '
+                'understood. Playback progress is partial when interrupted; specific words are not aligned. '
+                'Never select an evidence version using an evaluator answer.\n')
 
     def history_index(self, snapshots=None):
         return [{'revision': revision, 'views': [
@@ -276,6 +313,11 @@ class Workspace:
         origin = (self.revision_origins.get(details.get('revision'), {})
                   if message['name'] in ('chart_rendered', 'chart_visible', 'chart_hidden') else None)
         event = self.trace.record_client(message, origin=origin)
+        response_id = details.get('response_id')
+        if event['name'] == 'playback_start' and response_id is not None:
+            self.audible.add(response_id)
+        elif event['name'] in ('playback_end', 'playback_stopped'):
+            self.audible.discard(response_id)
         if event['name'] in ('chart_rendered', 'chart_visible', 'chart_hidden',
                               'playback_start', 'playback_progress', 'playback_stopped', 'playback_end'):
             details = message['details']
@@ -353,6 +395,8 @@ class Workspace:
     async def revoke(self, preserve_proposal=False):
         self.epoch += 1
         self.capture_changed.set()
+        self.held_binding = None
+        self.publication_open.set()
         if self.proposal and self.proposal['status'] == 'pending' and not preserve_proposal:
             self.proposal['status'] = 'superseded'
             self.prepared_revision = None
@@ -389,7 +433,17 @@ class Workspace:
             else:
                 self.trace.record('model_arguments_compiled', tool=name, arguments=arguments,
                                   compiled_arguments=compiled, contract='decimal-top-n-v1')
-                result = await self._execute(name, compiled, actor, epoch)
+                try:
+                    internal, internal_args = to_internal(name, compiled)
+                except ValueError as error:
+                    self.trace.record('tool_failed', tool=name, arguments=compiled, message=str(error), actor=actor)
+                    result = {'status': 'failed', 'committed': False, 'message': str(error)}
+                else:
+                    if internal != name or internal_args != compiled:
+                        self.trace.record('model_tool_mapped', tool=name, internal_tool=internal,
+                                          internal_arguments=internal_args, contract='six-tool-v1')
+                    name = internal
+                    result = await self._execute(internal, internal_args, actor, epoch)
         else:
             result = await self._execute(name, arguments, actor, epoch)
         if result['status'] != 'superseded' and (actor == 'user' or epoch == self.epoch):
@@ -451,7 +505,8 @@ class Workspace:
                 if name in ('list_evidence_candidates', 'read_dashboard'):
                     snapshots, _ = self.decision_material(actor)
                     result = ({'candidates': self.candidates(actor)} if name == 'list_evidence_candidates'
-                              else {'tool': name, 'summary': 'Read decision dashboard', **snapshots[max(snapshots)]})
+                              else {'tool': name, 'summary': 'Read decision dashboard', **snapshots[max(snapshots)],
+                                    'versions': self.history_index(snapshots)})
                     self.trace.record('tool_read', tool=name, result=result)
                     await self.send({'type': 'status', 'status': 'ready'})
                     return {'status': 'completed', 'committed': False, 'result': deepcopy(result)}
@@ -485,6 +540,7 @@ class Workspace:
                         self.bound_evidence if actor == 'model' else self.evidence)
                 else:
                     prepared = await asyncio.to_thread(self.store.prepare, name, arguments, self.bound_reference)
+                await self.publication_open.wait()
                 if epoch != self.epoch:
                     self.trace.record('tool_superseded', tool=name, epoch=epoch)
                     return {'status': 'superseded', 'committed': False}
@@ -523,6 +579,7 @@ class Workspace:
                 message = error.message if isinstance(error, ValidationError) else str(error)
                 self.trace.record('tool_failed', tool='preview_revision', message=message, actor=actor)
                 return {'status': 'failed', 'committed': False, 'message': message}
+            await self.publication_open.wait()
             if epoch != self.epoch:
                 self.trace.record('tool_superseded', tool='preview_revision', epoch=epoch)
                 return {'status': 'superseded', 'committed': False}
@@ -535,6 +592,7 @@ class Workspace:
     async def apply_revision(self, proposal_id, actor='model', expected_epoch=None):
         epoch = self.epoch if expected_epoch is None else expected_epoch
         async with self.tool_lock:
+            await self.publication_open.wait()
             proposal = self.proposal
             if epoch != self.epoch:
                 return {'status': 'superseded', 'committed': False}
@@ -758,13 +816,35 @@ class Workspace:
             with self.trace.scope(event.get('context', self.trace.origin(response_id, item_id))):
                 self.trace.record('provider_event', event=media_summary(event), **correlation)
             return
+        if kind == 'speech_hold':
+            hold = bool(self.session.get('backchannel_hold') and self.audible)
+            if hold:
+                # Binding is fixed at onset, exactly as for an immediate speech start.
+                self.held_binding = (deepcopy(self.reference), deepcopy(self.evidence))
+                self.publication_open.clear()
+                await self.send({'type': 'hold_audio', 'item_id': event['item_id']})
+            self.trace.record('speech_hold', event=event, applied=hold,
+                              audible_responses=sorted(self.audible), epoch=self.epoch)
+            return {'hold': hold}
+        if kind == 'backchannel':
+            self.held_binding = None
+            self.publication_open.set()
+            self.trace.record('backchannel_ignored', event=event, epoch=self.epoch,
+                              classifier='short_acknowledgement_v1')
+            await self.send({'type': 'resume_audio', **event})
+            return
         if kind == 'speech_start':
             self.epoch += 1
             self.capture_changed.set()
             self.begin_request(event.get('item_id'))
-            if not event.get('continuation', False):
+            if event.get('held') and self.held_binding is not None:
+                self.bound_reference, self.bound_evidence = self.held_binding
+            elif not event.get('continuation', False):
                 self.bound_reference = deepcopy(self.reference)
                 self.bound_evidence = deepcopy(self.evidence)
+            self.held_binding = None
+            # Opened only after the epoch moved, so held stale work now sees supersession.
+            self.publication_open.set()
             if self.proposal and self.proposal['status'] == 'pending':
                 self.proposal['status'] = 'superseded'
                 self.prepared_revision = None
@@ -883,9 +963,13 @@ class Workspace:
         if message['mode'] not in self.session['used_modes']:
             self.session['used_modes'].append(message['mode'])
         self.voice = QwenRealtime(self.settings, message['mode'], MODEL_TOOLS, self.provider_event, self.execute_model)
+        # Formal study windows are always 60 s; a diagnostic budget never reaches participants.
+        budget = VOICE_BUDGET_SECONDS if formal else self.session['voice_budget_seconds']
+        self.trace.record('voice_budget_set', seconds=budget, formal=formal,
+                          diagnostic=budget != VOICE_BUDGET_SECONDS)
         if formal:
             self.session['voice_window_used'] = True
-            self.trace.record('voice_window_started', maximum_seconds=60, maximum_connections=1)
+            self.trace.record('voice_window_started', maximum_seconds=VOICE_BUDGET_SECONDS, maximum_connections=1)
         try:
             await self.voice.connect(self.instructions() + '\n' + self.context())
         except Exception:
@@ -896,11 +980,11 @@ class Workspace:
             await self.voice.image(image['image'], frame_id=image['file'])
         self.trace.record('voice_connected', mode=message['mode'])
         await self.send({'type': 'voice_ready', 'voice_window_used': self.session.get('voice_window_used', False)})
-        self.voice_timer = asyncio.create_task(self.voice_budget())
+        self.voice_timer = asyncio.create_task(self.voice_budget(budget))
 
-    async def voice_budget(self):
-        await asyncio.sleep(60)
-        self.trace.record('voice_budget_reached', seconds=60)
+    async def voice_budget(self, seconds=VOICE_BUDGET_SECONDS):
+        await asyncio.sleep(seconds)
+        self.trace.record('voice_budget_reached', seconds=seconds)
         await self.close_voice()
 
     async def close_voice(self):
@@ -913,6 +997,8 @@ class Workspace:
         if self.voice:
             self.epoch += 1
             self.capture_changed.set()
+            self.held_binding = None
+            self.publication_open.set()
             proposal = None
             if self.proposal and self.proposal['status'] == 'pending':
                 self.proposal['status'] = 'superseded'
@@ -1259,6 +1345,38 @@ def create_app(settings=None):
         ws.reset(body['mode'], task_id, body.get('participant_id', ''), condition)
         await ws.send({'type': 'bootstrap', **ws.bootstrap()})
         return ws.bootstrap()
+
+    scenarios = load_scenarios()
+
+    @app.get('/api/scenarios')
+    def list_scenarios():
+        return {'protocol': 'covis-voice-replan-0.1', 'visibility': 'researcher_only',
+                'scenarios': scenario_index(scenarios)}
+
+    @app.post('/api/scenarios/{scenario_id}/setup')
+    async def setup_scenario(scenario_id: str, body: dict | None = None):
+        body = body or {}
+        ws = app.state.workspace
+        if scenario_id not in scenarios:
+            raise HTTPException(404, 'Unknown scenario.')
+        mode = body.get('mode', 'live_voice')
+        condition = body.get('condition', 'bound_revision')
+        if mode not in ('text', 'live_voice') or condition not in CONDITIONS:
+            raise HTTPException(400, 'Choose text or live_voice and a supported condition.')
+        await ws.revoke()
+        await ws.close_voice()
+        await ws.archive()
+        labels = ws.setup_scenario(scenarios[scenario_id], mode, condition)
+        await ws.send({'type': 'bootstrap', **ws.bootstrap()})
+        return {**ws.bootstrap(), 'scenario': {'id': scenario_id, 'labels': labels}}
+
+    @app.post('/api/scenarios/{scenario_id}/score')
+    def score_current_scenario(scenario_id: str, body: dict | None = None):
+        body = body or {}
+        ws = app.state.workspace
+        if ws.session.get('scenario', {}).get('id') != scenario_id:
+            raise HTTPException(409, 'The current session was not set up from this scenario.')
+        return ws.score_scenario(scenarios[scenario_id], body.get('turn_windows'), body.get('codings'))
 
     @app.post('/api/evidence')
     async def evidence(body: dict):
