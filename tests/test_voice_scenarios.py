@@ -52,17 +52,20 @@ def members_for_source(source):
     return [row["label"] for row in StandInData().query(source)["rows"]]
 
 
-def test_sixteen_scenarios_five_to_nine_turns_and_valid_fields(scenarios):
+def test_sixteen_scenarios_five_to_nine_user_voice_turns_and_valid_fields(scenarios):
     assert sorted(scenarios) == [f"S{n:02d}" for n in range(1, 17)]
     metrics = set(SOURCE_SCHEMA["properties"]["metric"]["enum"])
+    regions = set(SOURCE_SCHEMA["properties"]["region"]["enum"])
     for scenario in scenarios.values():
-        assert 5 <= len(scenario["turns"]) <= 9
+        users = [turn for turn in scenario["turns"] if turn["speaker"] == "user"]
+        assert 5 <= len(users) <= 9, scenario["id"]
+        assert all(spec["region"] in regions for spec in scenario["setup"]["current"].values())
         for turn in scenario["turns"]:
             if turn["speaker"] != "user":
                 continue
             assert (turn["expect"]["action"] == "edit") == bool(turn["expect"]["changed_views"])
             for spec in turn["expect"]["state_after"].values():
-                assert spec["metric"] in metrics
+                assert spec["metric"] in metrics and spec["region"] in regions
     listing = scenario_index(scenarios)
     assert all("goal" not in item and "expect" not in str(item) for item in listing)
 
@@ -114,6 +117,7 @@ def test_critical_words_fold_accents_hyphens_and_case():
     assert missing_critical_words("Use the Sao Paulo categories, low review rate.",
                                   ["São Paulo", "low-review rate"]) == []
     assert missing_critical_words("These fixed categories", ["Release", "fixed"]) == ["Release"]
+    assert missing_critical_words("chart one, São Paulo's own top three", ["São Paulo", "top three"]) == []
 
 
 def test_compare_view_distinguishes_rule_ranking_and_members():

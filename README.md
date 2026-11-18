@@ -50,7 +50,7 @@ The model now sees six tools (`read_dashboard`, `list_evidence_candidates`, `rev
 `create_chart`, `style_charts`, `manage_dashboard`). In live voice a short acknowledgement such as
 "mm-hm" over assistant speech no longer cancels work. Sixteen multi-turn scenarios
 ([spec](docs/VOICE_REPLAN_SCENARIOS.md)) test intent re-planning under barge-in, self-repair,
-pauses and backchannels:
+pauses and backchannels. Each has 5–9 user voice turns and lists the expected views after every turn:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\prepare_scenario_speech.py --output-dir traces\scenario-speech            # text only

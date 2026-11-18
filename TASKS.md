@@ -1,5 +1,21 @@
 # Implementation and acceptance — 2026-11-13
 
+## Olist scope repair and 5–9 user-turn scenarios — 2026-11-17, local-only
+
+- **Olist schema** (`backend/data.py`): `region` restricted to the 27 state codes (+ null) with spoken
+  names in the description; unknown category IDs and periods outside the data now fail with an
+  explicit message (closest ID suggested) instead of rendering an empty chart. All existing task
+  regions are valid codes.
+- **Scenarios**: every scenario now has 5–9 user voice turns (101 user turns, 197 messages; 6–9 per
+  scenario, S16 has 9). The spec shows the expected views of all three charts after every user turn.
+  New moves include measure/ranking follow-ups, a second barge-in during a tool (S08), freezing a
+  ranking's earlier members (S14), and a request that starts with "mm-hm" (S04). Estimated voice
+  time 63–105 s per scenario; diagnostic budget default 150 s.
+- **Verification run here**: test_voice_scenarios (39, all 16 scenarios set up and scored perfect for
+  an exact agent), test_olist_scope (5), test_backchannel_hold (17), test_model_contract (28 non-data)
+  passed with import stubs only. Full backend suite, frontend build and model runs not executed.
+
+
 ## Voice re-planning rebuild: six tools, acknowledgement hold, 16 scenarios — 2026-11-17, local-only
 
 - **Six model tools** (`backend/model_tools.py`): read_dashboard (optional revision),

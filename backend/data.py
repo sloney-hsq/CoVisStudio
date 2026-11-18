@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 from datetime import date
+from difflib import get_close_matches
 from pathlib import Path
 from threading import Lock
 
@@ -14,6 +15,16 @@ METRICS = {
     "revenue": {"label": "Revenue", "unit": "BRL", "definition": "Sum of selected item prices, excluding freight."},
     "low_review_rate": {"label": "Low-review rate", "unit": "ratio", "definition": "Orders with canonical review score 1 or 2 divided by orders with a valid score from 1 to 5. One review per order, selected by latest creation date then review ID. Missing reviews are excluded."},
     "avg_delivery_days": {"label": "Average delivery time", "unit": "days", "definition": "Mean elapsed days between purchase and customer delivery, with one weight per order per group. Only delivered orders with non-negative duration enter the mean."},
+}
+# Olist customer states. Spoken names must be resolved to these codes; an unknown
+# region used to return an empty chart silently.
+STATES = {
+    "AC": "Acre", "AL": "Alagoas", "AM": "Amazonas", "AP": "Amapá", "BA": "Bahia", "CE": "Ceará",
+    "DF": "Distrito Federal", "ES": "Espírito Santo", "GO": "Goiás", "MA": "Maranhão",
+    "MG": "Minas Gerais", "MS": "Mato Grosso do Sul", "MT": "Mato Grosso", "PA": "Pará",
+    "PB": "Paraíba", "PE": "Pernambuco", "PI": "Piauí", "PR": "Paraná", "RJ": "Rio de Janeiro",
+    "RN": "Rio Grande do Norte", "RO": "Rondônia", "RR": "Roraima", "RS": "Rio Grande do Sul",
+    "SC": "Santa Catarina", "SE": "Sergipe", "SP": "São Paulo", "TO": "Tocantins",
 }
 DIMENSIONS = {"category": "Product category", "month": "Purchase month", "state": "Customer state"}
 DEFAULT_SOURCE = {
@@ -28,11 +39,16 @@ SOURCE_PROPERTIES = {
         "avg_delivery_days = mean elapsed delivery days. Rates and means are within-group values: "
         "never sum, average or renormalize them across groups."},
     "dimension": {"type": "string", "enum": list(DIMENSIONS)},
-    "region": {"type": ["string", "null"]},
+    "region": {"type": ["string", "null"], "enum": [*STATES, None], "description":
+        "Two-letter customer-state code, or null for all regions. Map spoken names to codes: "
+        + ", ".join(f"{name} = {code}" for code, name in STATES.items()) + "."},
     "start": {"type": "string", "description": "Inclusive ISO date."},
     "end": {"type": "string", "description": "Exclusive ISO date."},
     "status": {"type": "string", "enum": ["delivered", "shipped", "canceled", "unavailable", "invoiced", "processing", "approved", "created"]},
-    "categories": {"type": ["array", "null"], "items": {"type": "string"}, "minItems": 1, "uniqueItems": True, "description": "Exact category IDs to retain. Set top_n to null when supplying a fixed list."},
+    "categories": {"type": ["array", "null"], "items": {"type": "string"}, "minItems": 1, "uniqueItems": True, "description":
+        "Exact snake_case category IDs as shown by read_dashboard or list_evidence_candidates "
+        "(a spoken \"health and beauty\" is health_beauty). Unknown IDs are rejected, never shown as an "
+        "empty chart. Set top_n to null when supplying a fixed list."},
     "top_n": {"type": ["integer", "null"], "minimum": 1, "description": "Dynamic ranking size; null shows all matching groups. Cannot be combined with fixed categories."},
     "rank_by": {"type": "string", "enum": list(METRICS), "description":
         "Rank by the same metric definitions as metric; ranks are computed within each group."},
@@ -97,8 +113,26 @@ class OlistData:
     def close(self):
         self.connection.close()
 
+    def check_scope(self, source):
+        """Reject inputs that would otherwise render a silently empty chart."""
+        known = self._catalog["categories"]
+        if source["categories"] is not None:
+            unknown = [name for name in source["categories"] if name not in known]
+            if unknown:
+                hints = []
+                for name in unknown:
+                    close = get_close_matches(name.lower().replace(" and ", "_").replace(" ", "_"), known, n=2, cutoff=.6)
+                    hints.append(f"{name}" + (f" (closest: {', '.join(close)})" if close else ""))
+                raise ValueError("Unknown category IDs: " + "; ".join(hints) +
+                                 ". Use exact IDs from read_dashboard or list_evidence_candidates.")
+        first, end = self._catalog["date_range"]["start"], self._catalog["date_range"]["end"]
+        if source["end"] <= first or source["start"] >= end:
+            raise ValueError(f"No Olist purchases fall in {source['start']} to {source['end']}; "
+                             f"the data covers {first} to {end} (exclusive).")
+
     def query(self, source):
         source = normalize_source(source)
+        self.check_scope(source)
         metric, dimension = source["metric"], source["dimension"]
         parameters = []
         item_filter = ""

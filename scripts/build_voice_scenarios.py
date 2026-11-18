@@ -25,6 +25,7 @@ Q3 = ("2017-07-01", "2017-10-01")
 Q4 = ("2017-10-01", "2018-01-01")
 H2_2017 = ("2017-07-01", "2018-01-01")
 Y2018 = ("2018-01-01", "2019-01-01")
+H1_2018 = ("2018-01-01", "2018-07-01")
 METRIC = {"v1": "orders", "v2": "low_review_rate", "v3": "avg_delivery_days"}
 VIEWS = ("v1", "v2", "v3")
 REGION_WORDS = {"RJ": "Rio de Janeiro", "MG": "Minas Gerais", "SP": "São Paulo"}
@@ -426,6 +427,180 @@ S.append(dict(
     ]))
 
 # Calibrated against archived real runs: <=25-word replies took ~8 s; explanations 10-15 s.
+# Later re-planning turns: every scenario has 5-9 user turns ------------------
+EXTRA = {
+    "S01": [
+        U("Show chart one as revenue.", critical=["chart one", "revenue"],
+          patch={"v1": {"metric": "revenue"}}, tags=["REPLACE"],
+          note="Measure only; v1 stays this quarter's top three by orders."),
+        A("confirm"),
+        U("And rank it by revenue too.", timing="barge_in", offset_s=1.0, critical=["rank", "revenue"],
+          patch={"v1": {"membership": ranked(3, "revenue")}}, tags=["BI", "ELLIPSIS"]),
+        A("confirm"),
+    ],
+    "S02": [
+        U("Make it the top five in chart one only.", critical=["top five", "chart one only"],
+          patch={"v1": {"membership": ranked(5)}}, tags=["NUM", "RETARGET"]),
+        A("confirm"),
+        U("Actually, top four.", timing="barge_in", offset_s=1.0, critical=["top four"],
+          patch={"v1": {"membership": ranked(4)}}, tags=["BI", "SUPERSEDE", "NUM"]),
+        A("confirm"),
+    ],
+    "S03": [
+        U("Put charts two and three on the second half of 2017.", critical=["two and three", "second half"],
+          patch={"v2": dates(H2_2017), "v3": dates(H2_2017)}, tags=["NUM"]),
+        A("confirm"),
+        U("Keep the same categories there.", timing="barge_in", offset_s=1.0, action="no_edit",
+          tags=["BI", "RETAIN"], note="Retention confirmation; re-ranking v2/v3 is an error."),
+        A("answer"),
+        U("And chart one too, same half.", critical=["chart one", "same half"],
+          patch={"v1": dates(H2_2017)}, tags=["ELLIPSIS"]),
+        A("confirm"),
+    ],
+    "S04": [
+        U("Switch to Minas Gerais.", critical=["Minas Gerais"],
+          patch={v: {"region": "MG"} for v in VIEWS}, tags=["NM"]),
+        A("confirm"),
+        U("Okay.", timing="backchannel", offset_s=1.0, action="no_edit", tags=["BC"]),
+        A("confirm"),
+        U("Mm-hm, and chart two by revenue.", critical=["chart two", "revenue"],
+          patch={"v2": {"metric": "revenue"}}, tags=["LEX"],
+          note="Starts with an acknowledgement but is a request; must not be held as a backchannel."),
+        A("confirm"),
+    ],
+    "S05": [
+        U("Read me the delivery times for those.", action="answer", tags=["NO-OP"]),
+        A("answer"),
+        U("Change chart one to revenue.", timing="barge_in", offset_s=2.0, critical=["chart one", "revenue"],
+          patch={"v1": {"metric": "revenue"}}, tags=["BI", "REPLACE"]),
+        A("confirm"),
+        U("Leave the categories frozen.", action="no_edit", tags=["RETAIN"]),
+        A("answer"),
+    ],
+    "S06": [
+        U("Now the fourth quarter for all three.", critical=["fourth quarter", "all three"],
+          patch={v: dates(Q4) for v in VIEWS}, tags=["NUM"]),
+        A("confirm"),
+        U("No, sorry, just charts two and three; chart one stays in the third quarter.",
+          timing="barge_in", offset_s=1.0, critical=["just charts two and three", "third quarter"],
+          patch={"v1": dates(Q3)}, tags=["BI", "SC", "RETARGET"]),
+        A("confirm"),
+        U("Is chart three still the delivery time?", action="answer", tags=["NO-OP"]),
+        A("answer"),
+    ],
+    "S07": [
+        U("Chart one... back to orders.", pauses=[(2, 900)], critical=["chart one", "orders"],
+          patch={"v1": {"metric": "orders"}}, tags=["FR", "REVERT"]),
+        A("confirm"),
+        U("And for all three, only canceled... no, keep delivered orders.", action="no_edit",
+          critical=["no", "delivered"], tags=["SC", "CANCEL"], note="Any status change is an error."),
+        A("answer"),
+        U("Use the first quarter of 2017 for charts two and three.", critical=["first quarter", "two and three"],
+          patch={"v2": dates(Q1), "v3": dates(Q1)}, tags=["NUM"]),
+        A("confirm"),
+    ],
+    "S08": [
+        U("Make charts one and two revenue.", critical=["one and two", "revenue"],
+          patch={"v1": {"metric": "revenue"}, "v2": {"metric": "revenue"}}, tags=["REPLACE"],
+          note="Intermediate; superseded by the next turn for chart two."),
+        U("Only chart one.", timing="during_tool", offset_s=0.3, critical=["Only", "chart one"],
+          patch={"v2": {"metric": "low_review_rate"}}, tags=["BT", "SUPERSEDE"]),
+        A("confirm"),
+        U("And show chart one for 2018 as well.", critical=["chart one", "2018"],
+          patch={"v1": dates(Y2018)}, tags=["NUM"]),
+        A("confirm"),
+    ],
+    "S09": [
+        U("Actually, rank chart three by its own top five orders again.",
+          critical=["chart three", "top five", "orders"], patch={"v3": {"membership": ranked(5)}},
+          tags=["RELEASE", "REVERT"]),
+        A("confirm"),
+        U("Top three, not five.", timing="barge_in", offset_s=1.0, critical=["top three"],
+          patch={"v3": {"membership": ranked(3)}}, tags=["BI", "SC", "NUM"]),
+        A("confirm"),
+    ],
+    "S10": [
+        U("Show the same for chart one, but keep it ranked.", critical=["chart one", "ranked"],
+          patch={"v1": dates(H1_2017)}, tags=["ELLIPSIS", "RETAIN"],
+          note="'the same' = first half; v1 keeps its MG top-3 ranking."),
+        A("confirm"),
+        U("Which set are charts two and three using now?", action="answer", tags=["NO-OP"],
+          note="Correct answer: the São Paulo set (H2)."),
+        A("answer"),
+    ],
+    "S11": [
+        U("Show charts two and three for São Paulo, same categories.",
+          critical=["two and three", "São Paulo", "same categories"],
+          patch={"v2": {"region": "SP"}, "v3": {"region": "SP"}}, tags=["NM", "RETAIN"]),
+        A("confirm"),
+        U("And chart one too, São Paulo's own top three.", timing="barge_in", offset_s=1.0,
+          critical=["chart one", "São Paulo", "top three"], patch={"v1": {"region": "SP"}},
+          tags=["BI", "NM"]),
+        A("confirm"),
+        U("Use the same three in all charts... I mean the Rio ones.", critical=["Rio"],
+          patch={"v1": {"membership": fixed("H1:v1")}}, tags=["SC"],
+          note="Self-repair resolves 'the same three' to the RJ set; v1 stays in SP."),
+        A("confirm"),
+    ],
+    "S12": [
+        U("Show charts two and three for 2018.", critical=["two and three", "2018"],
+          patch={"v2": dates(Y2018), "v3": dates(Y2018)}, tags=["NUM"]),
+        A("confirm"),
+        U("Hmm, only the first half of 2018.", timing="barge_in", offset_s=1.0, critical=["first half", "2018"],
+          patch={"v2": dates(H1_2018), "v3": dates(H1_2018)}, tags=["BI", "SUPERSEDE", "NUM"]),
+        A("confirm"),
+    ],
+    "S13": [
+        U("Show chart two by month for these categories, all of Brazil.",
+          critical=["chart two", "month", "all of Brazil"],
+          patch={"v2": {"dimension": "month", "region": None}}, tags=["DIMENSION"]),
+        A("confirm"),
+        U("Actually, chart two only for São Paulo.", timing="barge_in", offset_s=1.0,
+          critical=["chart two", "São Paulo"], patch={"v2": {"region": "SP"}}, tags=["BI", "NM"]),
+        A("confirm"),
+        U("Back to categories for chart two.", critical=["categories", "chart two"],
+          patch={"v2": {"dimension": "category"}}, tags=["REVERT"]),
+        A("confirm"),
+    ],
+    "S14": [
+        U("Now the first half of 2017 for everything.", critical=["first half", "everything"],
+          patch={v: dates(H1_2017) for v in VIEWS}, tags=["NUM"],
+          note="v1 is still a dynamic ranking, so its members may change; v2/v3 stay frozen."),
+        A("confirm"),
+        U("But don't let chart one re-rank; keep the categories it had.", timing="barge_in", offset_s=1.0,
+          critical=["chart one", "re-rank", "categories it had"],
+          patch={"v1": {"membership": fixed("after:T7:v1")}}, tags=["BI", "FREEZE"],
+          note="Members = v1's full-year RJ top five before the date change; H1 dates kept."),
+        A("confirm"),
+    ],
+    "S15": [
+        U("What would chart one look like for Rio?", action="answer", tags=["NO-OP"],
+          acceptable=["clarify"], note="Hypothetical; editing now is a premature commit."),
+        A("answer"),
+        U("Go ahead.", critical=["Go ahead"], patch={"v1": {"region": "RJ"}}, tags=["ELLIPSIS"]),
+        A("confirm"),
+        U("And the other two as well.", timing="barge_in", offset_s=1.0, critical=["other two"],
+          patch={"v2": {"region": "RJ"}, "v3": {"region": "RJ"}}, tags=["BI", "ELLIPSIS"]),
+        A("confirm"),
+    ],
+    "S16": [
+        A("confirm"),
+        U("Change chart three to revenue.", critical=["chart three", "revenue"],
+          patch={"v3": {"metric": "revenue"}}, tags=["REPLACE"]),
+        A("confirm"),
+        U("Keep the Rio set there.", timing="barge_in", offset_s=1.0, action="no_edit",
+          critical=["Rio"], tags=["BI", "RETAIN"]),
+        A("answer"),
+        U("And put chart one on the first quarter too.", critical=["chart one", "first quarter"],
+          patch={"v1": dates(Q1)}, tags=["ELLIPSIS"]),
+        A("confirm"),
+        U("Done, thanks.", action="no_edit", tags=["NO-OP"], note="Closing; any edit is an error."),
+        A("answer"),
+    ],
+}
+for _scenario in S:
+    _scenario["turns"].extend(EXTRA[_scenario["id"]])
+
 ASSISTANT_SECONDS = {"explain": 12.0, "answer": 7.0, "confirm": 7.0, "clarify": 5.0}
 
 
@@ -455,8 +630,8 @@ def build():
                     full = nxt["timing"].get("offset_s") or 4.0
                 est += full + 2.0  # response latency
             turns.append(turn)
-        assert 5 <= len(turns) <= 9, sc["id"]
         users = [t for t in turns if t["speaker"] == "user"]
+        assert 5 <= len(users) <= 9, (sc["id"], len(users))
         out.append({**{k: v for k, v in sc.items() if k != "turns"}, "turns": turns,
                     "final_state": state,
                     "summary": {"turns": len(turns), "user_turns": len(users),
@@ -525,7 +700,7 @@ def markdown(data):
             for tag in t.get("tags", []):
                 tag_counts[tag] = tag_counts.get(tag, 0) + 1
     lines += [
-        "# Voice re-planning scenarios (16 × 5–9 turns)",
+        "# Voice re-planning scenarios (16 scenarios × 5–9 user voice turns)",
         "",
         "Evaluator-private. Never place this file, its ground truth or its notes in model context.",
         f"Generated by `scripts/build_voice_scenarios.py`; {len(data)} scenarios, {total_turns} turns, "
@@ -578,7 +753,7 @@ def markdown(data):
         "",
         "## Overview",
         "",
-        "| ID | Title | Turns | User | Edits | No-edit | Clarify | Est. voice s | Re-plan types |",
+        "| ID | Title | Messages | User turns | Edits | No-edit | Clarify | Est. voice s | Re-plan types |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for s in data:
@@ -591,10 +766,11 @@ def markdown(data):
     lines += ["", f"Estimated voice time is {min(estimates)}–{max(estimates)} s per scenario (user speech at "
               "2.5 words/s; assistant confirmations ~7 s and explanations ~12 s, calibrated against archived "
               "runs; replies cut at barge-in points; 2 s response latency; 1.5 s per committed tool). "
-              + (f"{len(over)} scenario(s) ({', '.join(over)}) exceed" if over else "Several scenarios approach")
-              + " the hard-coded 60 s voice window (`app.py` `voice_budget`). Earlier runs lost otherwise "
-              "correct trials to this budget, so diagnostic runs need a separate, recorded budget "
-              "(for example 150 s); formal-study tasks keep 60 s.", ""]
+              + (f"{len(over)} of {len(estimates)} scenarios exceed" if over else "Several scenarios approach")
+              + " the 60 s formal-study voice window, and earlier runs lost otherwise correct trials to that "
+              "budget. Diagnostic runs therefore use a separate, recorded budget "
+              "(`run_voice_scenarios.py --budget-seconds`, default 150 s, sets `COVIS_VOICE_BUDGET_SECONDS`; "
+              f"the longest estimate plus a 30 s margin is {int(max(estimates)) + 30} s). Formal-study tasks keep 60 s.", ""]
     for s in data:
         lines += [f"## {s['id']} — {s['title']}", "", f"**Goal.** {s['goal']}", ""]
         setup = s["setup"]
@@ -620,9 +796,17 @@ def markdown(data):
             else:
                 c = f": {t['constraint']}" if t["constraint"] else ""
                 lines.append(f"| T{t['turn']} | Assistant | — | _{t['expect']['kind']}{c}_ | — | |")
-        lines += ["", "**Final ground truth.**", ""]
-        for v in VIEWS:
-            lines.append(f"- {v}: {fmt_view(s['final_state'][v])}")
+        lines += ["", "**Expected views after each user turn** (bold = changed by that turn).", "",
+                  "| After | v1 | v2 | v3 |", "| --- | --- | --- | --- |"]
+        lines.append("| setup | " + " | ".join(fmt_view(setup["current"][v]) for v in VIEWS) + " |")
+        for t in s["turns"]:
+            if t["speaker"] != "user":
+                continue
+            cells = []
+            for v in VIEWS:
+                cell = fmt_view(t["expect"]["state_after"][v])
+                cells.append(f"**{cell}**" if v in t["expect"]["changed_views"] else cell)
+            lines.append(f"| T{t['turn']} | " + " | ".join(cells) + " |")
         lines.append("")
     return "\n".join(lines)
 

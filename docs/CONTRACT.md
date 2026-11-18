@@ -32,7 +32,13 @@ disables the hold; each session records `backchannel_hold`.
 `COVIS_VOICE_BUDGET_SECONDS` (default 60); `voice_budget_set` records the value and whether it is
 diagnostic.
 
-**Scenarios** (`backend/scenarios.py`, `docs/voice_replan_scenarios.json`). Researcher routes:
+**Olist scope checks** (`backend/data.py`). `region` is one of the 27 customer-state codes or null;
+its description maps spoken names to codes (Minas Gerais = MG). `OlistData.check_scope` rejects
+unknown category IDs (naming the closest ID) and periods with no Olist purchase (data covers
+2016-09-04 to 2018-10-17), so these errors are tool failures instead of silently empty charts.
+
+**Scenarios** (`backend/scenarios.py`, `docs/voice_replan_scenarios.json`; 16 scenarios, 5–9 user
+voice turns each, expected views after every user turn). Researcher routes:
 `GET /api/scenarios` (utterances and timing only), `POST /api/scenarios/{id}/setup {mode, condition}`
 (reset, then build history and current canvas through real chart operations) and
 `POST /api/scenarios/{id}/score {turn_windows?, codings?}`. Scores compare each user turn's

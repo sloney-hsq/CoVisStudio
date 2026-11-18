@@ -123,7 +123,8 @@ def expected_turn_sources(scenario, labels, snapshots, members_for_source, codin
 # Scoring ----------------------------------------------------------------------
 def _fold(text):
     text = unicodedata.normalize("NFKD", text or "").encode("ascii", "ignore").decode().lower()
-    return " ".join(re.findall(r"[a-z0-9']+", text.replace("-", " ")))
+    text = re.sub(r"['\u2019]s\b", "", text).replace("'", "").replace("-", " ")
+    return " ".join(re.findall(r"[a-z0-9]+", text))
 
 
 def missing_critical_words(transcript, critical):
